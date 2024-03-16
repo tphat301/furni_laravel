@@ -16,30 +16,35 @@
         </li>
 
         {{-- Module product --}}
-        @if (config('admin.product.module') === true)
+        @if (config('admin.product.active') === true)
           <li class="nav-item has-treeview menu-group {{session('module_active') === 'product_index' || session('module_active') === 'product_create' ? 'menu-open' : '' }}">
-            <a class="nav-link" title="Quản lý Sản phẩm">
+            <a class="nav-link {{session('module_active') === 'product_index' || session('module_active') === 'product_create' ? 'active' : '' }}" title="{{ config('admin.product.name') }}">
               <i class="nav-icon text-sm fas fa-layer-group"></i>
               <p>
-                Quản lý Sản phẩm<i class="right fas fa-angle-left"></i>
+                {{ config('admin.product.name') }}<i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              @if (config('admin.product.category') === true)
+              @if (config('admin.product.category.active') === true)
                 <li class="nav-item has-treeview">
-                  <a class="nav-link" href="#" title="Danh mục Sản phẩm">
+                  <a class="nav-link" href="#" title="{{ config('admin.product.category.name') }}">
                     <i class="nav-icon text-sm fas fa-boxes"></i>
                     <p>
-                      Danh mục Sản phẩm
+                      {{ config('admin.product.category.name') }}
                       <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 1">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 1
-                      </a>
-                    </li>
+                    {{-- Category 1 --}}
+                    @if(config('admin.product.category.category1.active') === true)
+                      <li class="nav-item">
+                        <a class="nav-link" href="" title="{{ config('admin.product.category.category1.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.product.category.category1.name') }}
+                        </a>
+                      </li>
+                    @endif
+
+                    {{-- Category 2 --}}
                     <li class="nav-item">
                       <a class="nav-link" href="" title="Danh mục cấp 2">
                         <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 2
@@ -84,75 +89,97 @@
           </li>
         @endif
 
-        {{-- Quản lý tin tức --}}
-        <li class="nav-item has-treeview menu-group">
-          <a class="nav-link" title="Quản lý tin tức">
-            <i class="nav-icon text-sm fas fa-layer-group"></i>
-            <p>
-              Quản lý tin tức<i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item has-treeview">
-              <a class="nav-link" href="#" title="Danh mục tin tức">
-                <i class="nav-icon text-sm fas fa-boxes"></i>
-                <p>
-                  Danh mục tin tức
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a class="nav-link" href="" title="Danh mục cấp 1">
-                    <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 1
+        {{-- Module news --}}
+        @if (config('admin.news.active') === true)
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'news_index' || session('module_active') === 'news_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{session('module_active') === 'news_index' || session('module_active') === 'news_create' ? 'active' : '' }}" title="{{ config('admin.news.name') }}">
+              <i class="nav-icon text-sm fas fa-layer-group"></i>
+              <p>
+                {{ config('admin.news.name') }}<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              @if (config('admin.news.category.active') === true)
+                <li class="nav-item has-treeview">
+                  <a class="nav-link" href="#" title="{{ config('admin.news.category.name') }}">
+                    <i class="nav-icon text-sm fas fa-boxes"></i>
+                    <p>
+                      {{ config('admin.news.category.name') }}
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
                   </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="" title="Danh mục cấp 2">
-                    <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 2
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="" title="Danh mục cấp 2">
-                    <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 3
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="" title="Danh mục cấp 2">
-                    <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 4
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Tin tức">
-                <i class="nav-icon text-sm fas fa-boxes"></i><p>Tin tức</p>
-              </a>
-            </li>
-          </ul>
-        </li>
+                  <ul class="nav nav-treeview">
+                    {{-- Category 1 --}}
+                    @if(config('admin.news.category.category1.active') === true)
+                      <li class="nav-item">
+                        <a class="nav-link" href="" title="{{ config('admin.news.category.category1.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.news.category.category1.name') }}
+                        </a>
+                      </li>
+                    @endif
 
-        {{-- Quản lý bài viết --}}
-        <li class="nav-item has-treeview menu-group">
-          <a class="nav-link" title="Quản lý bài viết">
-            <i class="nav-icon text-sm fas fa-boxes"></i>
-            <p>
-              Quản lý bài viết<i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Tiêu chí">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Tiêu chí</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Chính sách">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Chính sách</p>
-              </a>
-            </li>
-          </ul>
-        </li>
+                    {{-- Category 2 --}}
+                    <li class="nav-item">
+                      <a class="nav-link" href="" title="Danh mục cấp 2">
+                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 2
+                      </a>
+                    </li>
+
+                    {{-- Category 3 --}}
+                    <li class="nav-item">
+                      <a class="nav-link" href="" title="Danh mục cấp 2">
+                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 3
+                      </a>
+                    </li>
+
+                    {{-- Category 4 --}}
+                    <li class="nav-item">
+                      <a class="nav-link" href="" title="Danh mục cấp 2">
+                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 4
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              @endif
+              <li class="nav-item">
+                <a class="nav-link {{session('module_active') === 'news_index' || session('module_active') === 'news_create' ? 'active' : '' }}" href="{{url('admin/news')}}" title="Tin tức">
+                  <i class="nav-icon text-sm fas fa-boxes"></i><p>Tin tức</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        @endif
+
+        {{-- Module post --}}
+        @if (config('admin.post.active') === true)
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'policy_index' || session('module_active') === 'policy_create' || session('module_active') === 'criteria_index' || session('module_active') === 'criteria_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{session('module_active') === 'policy_index' || session('module_active') === 'policy_create' || session('module_active') === 'criteria_index' || session('module_active') === 'criteria_create' ? 'active' : '' }}" title="{{ config('admin.post.name') }}">
+              <i class="nav-icon text-sm fas fa-boxes"></i>
+              <p>
+                {{ config('admin.post.name') }}<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              {{-- Criteria --}}
+              @if (config('admin.post.criteria.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'criteria_index' ? 'active' : '' }}" href="{{ route('admin.criteria.index') }}" title="{{ config('admin.post.criteria.name') }}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{ config('admin.post.criteria.name') }}</p>
+                  </a>
+                </li>
+              @endif
+
+              {{-- Policy --}}
+              @if (config('admin.post.policy.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'policy_index' ? 'active' : '' }}" href="{{ route('admin.policy.index') }}" title="{{ config('admin.post.policy.name') }}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{ config('admin.post.policy.name') }}</p>
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </li>
+        @endif
 
         {{-- Quản lý hình ảnh --}}
         <li class="nav-item has-treeview menu-group">

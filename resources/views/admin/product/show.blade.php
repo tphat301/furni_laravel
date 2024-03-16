@@ -1,6 +1,6 @@
 @extends('admin.index')
 
-@section('title', 'Thêm sản phẩm')
+@section('title', 'Chi tiết sản phẩm')
 
 @section('content')
   <section class="content-header text-sm">
@@ -13,7 +13,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            Thêm Sản phẩm
+            Chi tiết Sản phẩm
           </li>
         </ol>
       </div>
@@ -21,8 +21,7 @@
   </section>
 
   <section class="content">
-    <form action="{{ route('admin.product.save') }}" class="validation-form" method="POST" enctype="multipart/form-data">
-      @csrf
+    <form action="" class="validation-form" method="POST" enctype="multipart/form-data">
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
@@ -35,46 +34,39 @@
       <div class="row">
         <div class="col-xl-8">
           {{-- Slug --}}
-          @if(config('admin.product.slug') === true)
-            <div class="card card-primary card-outline text-sm">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Đường dẫn
-                </h3>
-                <span class="pl-2 text-danger">
-                  (Vui lòng không nhập trùng tiêu đề)
-                </span>
-              </div>
-              <div class="card-body card-slug">
-                <div class="card card-primary card-outline card-outline-tabs">
-                  <div class="card-header p-0 border-bottom-0">
-                    <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link active" id="tabs-lang" data-toggle="pill" href="javscript:void()" role="tab" aria-selected="true">Tiếng Việt</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="card-body">
-                    <div class="tab-content" id="custom-tabs-three-tabContent-lang">
-                      <div class="tab-pane fade show active" id="tabs-sluglang-vi" role="tabpanel" aria-labelledby="tabs-lang">
-                        <div class="form-gourp mb-0">
-                          <label class="d-block">
-                            Đường dẫn mẫu:<span class="pl-2 font-weight-normal" id="slugurlpreviewvi"><strong class="text-info"></strong></span>
-                          </label>
-                          <input type="text" class="slug-seo form-control slug-input no-validate text-sm" name="slug" id="slug" placeholder="Đường dẫn mẫu"/>
-                          @error('slug')
-                            <small class="text-sm text-danger">
-                              {{ $message }}
-                            </small>
-                          @enderror
-                        </div>
+          <div class="card card-primary card-outline text-sm">
+            <div class="card-header">
+              <h3 class="card-title">
+                Đường dẫn
+              </h3>
+              <span class="pl-2 text-danger">
+                (Vui lòng không nhập trùng tiêu đề)
+              </span>
+            </div>
+            <div class="card-body card-slug">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                  <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="tabs-lang" data-toggle="pill" href="javscript:void()" role="tab" aria-selected="true">Tiếng Việt</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content" id="custom-tabs-three-tabContent-lang">
+                    <div class="tab-pane fade show active" id="tabs-sluglang-vi" role="tabpanel" aria-labelledby="tabs-lang">
+                      <div class="form-gourp mb-0">
+                        <label class="d-block">
+                          Đường dẫn mẫu:<span class="pl-2 font-weight-normal" id="slugurlpreviewvi"><strong class="text-info"></strong></span>
+                        </label>
+                        <input type="text" class="slug-seo form-control slug-input no-validate text-sm" name="slug" id="slug" value="" placeholder="Đường dẫn mẫu"/>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          @endif
+          </div>
 
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
@@ -103,12 +95,7 @@
 
                       <div class="form-group">
                         <label for="title">Tiêu đề:</label>
-                        <input type="text" class="for-seo form-control text-sm" name="title" id="title" placeholder="Tiêu đề"/>
-                        @error('title')
-                          <small class="text-sm text-danger">
-                            {{ $message }}
-                          </small>
-                        @enderror
+                        <input type="text" class="for-seo form-control text-sm" name="title" id="title" placeholder="Tiêu đề" required=""/>
                       </div>
 
                       @if (config('admin.product.desc') === true)

@@ -21,14 +21,15 @@
   </section>
 
   <section class="content">
-    <form class="form-product-list" method="POST">
-      {{-- Action --}}
+    <form class="form-product-list" action="{{ route('admin.product.action') }}" method="GET">
+
       <div class="card-footer text-sm sticky-top">
         <a class="btn btn-sm bg-gradient-primary text-white" href="{{route('admin.product.create')}}" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
 
-        <a class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all" href="javascript:void()" title="Xóa tất cả" data-url="http://localhost/euphoria_pdo/admin/product/delete_all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+        <button type="submit" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</button>
 
-        <div class="form-inline form-search d-inline-block align-middle ml-3">
+
+        {{-- <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
             <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="" data-url="admin/product/index"/>
             <div class="input-group-append bg-primary rounded-right">
@@ -37,11 +38,10 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> --}}
       </div>
-
       {{-- Tab category --}}
-      @if (config('admin.product.category') === true)
+      @if (config('admin.product.category.active') === true)
         <div class="card-footer form-group-category text-sm bg-light row">
           <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
             <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" data-field="id_parent1" tabindex="-1" data-url="admin/product/index" aria-hidden="true">
@@ -49,7 +49,7 @@
               <option value="68">Thời trang nổi bật nữ 2024</option>
               <option value="69">Thời trang nổi bật nam 2024</option>
             </select>
-            <input type="hidden" name="_token_filter_category" value="1710333248"/>
+            {{-- <input type="hidden" name="_token_filter_category" value="1710333248"/> --}}
           </div>
 
           <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
@@ -66,7 +66,7 @@
       <div class="card card-primary card-outline text-sm mb-0 rendering">
         <div class="card-header">
           <h3 class="card-title">
-            Danh sách Sản phẩm
+            Danh sách sản phẩm
           </h3>
         </div>
         <div class="card-body table-responsive p-0">
@@ -75,81 +75,82 @@
               <tr>
                 <th class="align-middle" width="5%">
                   <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" class="checkall custom-control-input" id="selectall-checkbox">
+                    <input type="checkbox" class="checkall custom-control-input" id="selectall-checkbox"/>
                     <label for="selectall-checkbox" class="custom-control-label"></label>
                   </div>
                 </th>
                 <th class="align-middle text-center" width="10%">STT</th>
                 <th class="align-middle">Hình ảnh</th>
                 <th class="align-middle" style="width:30%">Tiêu đề</th>
-                <th class="align-middle text-center">Bán chạy</th>
-                <th class="align-middle text-center">Nổi bật</th>
-                <th class="align-middle text-center">Hiển thị</th>
+                @foreach (config('admin.product.status') as $key => $value)
+                  <th class="align-middle text-center">{{$value}}</th>
+                @endforeach
                 <th class="align-middle text-center">Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="align-middle">
-                  <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" name="checkitem[]" class="checkitem custom-control-input select-checkbox" id="select-checkbox-36" value="293"/>
-                    <input type="hidden" name="hashes[]" value="s44k"/>
-                    <label for="select-checkbox-36" class="custom-control-label"></label>
-                  </div>
-                </td>
-                <td class="align-middle">
-                  <input type="number" class="update-num-product form-control form-control-mini m-auto" min="0" value="1" data-id="293" data-table="products"/>
-                  <input name="_token_num" value="1710333778" type="hidden"/>
-                </td>
-                <td class="align-middle">
-                  <a href="http://localhost/euphoria_pdo/admin/product/show?id=293" title="Black Sweatshirt">
-                    <img class="rounded img-preview img-fluid" src="http://localhost/euphoria_pdo/upload/product/Rectangle 25.png" alt="Black Sweatshirt" width="70" height="50" style="object-fit: contain;"/>
-                  </a>
-                </td>
-                <td class="align-middle">
-                  <a class="text-dark text-break" href="http://localhost/euphoria_pdo/admin/product/show?id=293" title="Black Sweatshirt">
-                    Black Sweatshirt
-                  </a>
-                </td>
-                <td class="align-middle text-center">
-                  <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" id="check-sst-product" class="check-sst-product custom-control-input show-checkbox" data-table="products" name="banchay" data-id="293" checked=""/>
-                    <label for="check-sst-product" class="custom-control-label"></label>
-                    <input name="_token" value="1710333778" type="hidden"/>
-                  </div>
-                </td>
-                <td class="align-middle text-center">
-                  <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" id="check-sst-product" class="check-sst-product custom-control-input show-checkbox" data-table="products" name="noibat" data-id="293" checked=""/>
-                    <label for="check-sst-product" class="custom-control-label"></label>
-                    <input name="_token" value="1710333778" type="hidden"/>
-                  </div>
-                </td>
-                <td class="align-middle text-center">
-                  <div class="custom-control custom-checkbox my-checkbox">
-                    <input type="checkbox" id="check-sst-product" class="check-sst-product custom-control-input show-checkbox" data-table="products" name="hienthi" data-id="293" checked=""/>
-                    <label for="check-sst-product" class="custom-control-label"></label>
-                    <input name="_token" value="1710333778" type="hidden"/>
-                  </div>
-                </td>
-                <td class="align-middle text-center text-md text-nowrap">
-                  <a class="text-primary mr-2" href="http://localhost/euphoria_pdo/admin/product/show?id=293" title="Chỉnh sửa">
-                    <i class="fas fa-edit"></i>
-                  </a>
-                  <div class="dropdown d-inline-block align-middle">
-                    <a id="dropdownCopy" href="http://localhost/euphoria_pdo/admin/product/duplicate?id=293" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link text-success p-0 pr-2" title="Copy">
-                      <i class="far fa-clone"></i>
-                    </a>
-                  </div>
-                  <a href="javascript:void()" class="text-danger" data-url="http://localhost/euphoria_pdo/admin/product/delete?id=293&amp;hash=s44k" id="delete-item" title="Xóa vĩnh viễn">
-                    <i class="fas fa-trash-alt"></i>
-                  </a>
-                </td>
-              </tr>
+              @if ($rows->total() > 0)
+                @foreach ($rows as $key => $row)
+                  <tr>
+                    <td class="align-middle">
+                      <div class="custom-control custom-checkbox my-checkbox">
+                        <input type="checkbox" name="checkitem[]" class="checkitem custom-control-input select-checkbox" id="select-checkbox-{{ $row->id }}" value="{{ $row->id }}"/>
+                        <input type="hidden" name="hashes[]" value="{{ $row->hash }}"/>
+                        <label for="select-checkbox-{{ $row->id }}" class="custom-control-label"></label>
+                      </div>
+                    </td>
+                    <td class="align-middle">
+                      <input type="number" class="update-num-product form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-table="{{ config('admin.product.table') }}"/>
+                      {{-- <input name="_token_num" value="{{ time() }}" type="hidden"/> --}}
+                    </td>
+                    <td class="align-middle">
+                      <a href="{{ route('admin.product.show', [$row->id]) }}" title="{{ $row->title }}">
+                        @if (!empty($row->photo1))
+                          <img class="rounded img-preview img-fluid" src="{{ url("public/upload/product/$row->photo1")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
+                        @else
+                          <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
+                        @endif
+                      </a>
+                    </td>
+                    <td class="align-middle">
+                      <a class="text-dark text-break" href="{{ route('admin.product.show', [$row->id]) }}" title="{{ $row->title }}">
+                        {{ $row->title }}
+                      </a>
+                    </td>
+                    @foreach (config('admin.product.status') as $key => $value)
+                      <td class="align-middle text-center">
+                        <div class="custom-control custom-checkbox">
+                          @php
+                            $status = !empty($row->status) ? explode(",", $row->status) : [];
+                          @endphp
+                          <input type="checkbox" id="check-sst-product" class="check-sst-product custom-control-input" data-table="{{ config('admin.product.table') }}" name="{{ $key }}" data-id="{{ $row->id }}" {{ in_array($key, $status) ? 'checked' : '' }} />
+                          <label for="check-sst-product" class="custom-control-label"></label>
+                          <input name="_token" value="{{ time() }}" type="hidden"/>
+                        </div>
+                      </td>
+                    @endforeach
+                    <td class="align-middle text-center text-md text-nowrap">
+                      <a class="text-primary mr-2" href="{{ route('admin.product.show', [$row->id]) }}" title="Chỉnh sửa">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <div class="dropdown d-inline-block align-middle">
+                        <a id="dropdownCopy" href="{{ route('admin.product.copy', [$row->id]) }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link text-success p-0 pr-2" title="Copy">
+                          <i class="far fa-clone"></i>
+                        </a>
+                      </div>
+                      <a class="text-danger" data-url="{{route('admin.product.destroy', ['id' => $row->id, 'hash' => $row->hash])}}" id="delete-row" title="Xóa">
+                        <i class="fas fa-trash-alt"></i>
+                      </a>
+                    </td>
+                  </tr>
+                @endforeach
+              @endif
             </tbody>
           </table>
         </div>
       </div>
+
+      {{-- Phân trang --}}
     </form>
   </section>
 @endsection

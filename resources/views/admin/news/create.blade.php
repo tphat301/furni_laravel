@@ -1,6 +1,6 @@
 @extends('admin.index')
 
-@section('title', 'Thêm sản phẩm')
+@section('title', 'Thêm tin tức')
 
 @section('content')
   <section class="content-header text-sm">
@@ -13,7 +13,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            Thêm Sản phẩm
+            Thêm tin tức
           </li>
         </ol>
       </div>
@@ -21,13 +21,12 @@
   </section>
 
   <section class="content">
-    <form action="{{ route('admin.product.save') }}" class="validation-form" method="POST" enctype="multipart/form-data">
-      @csrf
+    <form action="" class="validation-form" method="POST" enctype="multipart/form-data">
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.product') }}" title="Thoát">
+        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.news') }}" title="Thoát">
           <i class="fas fa-sign-out-alt mr-2"></i>Thoát
         </a>
       </div>
@@ -35,46 +34,39 @@
       <div class="row">
         <div class="col-xl-8">
           {{-- Slug --}}
-          @if(config('admin.product.slug') === true)
-            <div class="card card-primary card-outline text-sm">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Đường dẫn
-                </h3>
-                <span class="pl-2 text-danger">
-                  (Vui lòng không nhập trùng tiêu đề)
-                </span>
-              </div>
-              <div class="card-body card-slug">
-                <div class="card card-primary card-outline card-outline-tabs">
-                  <div class="card-header p-0 border-bottom-0">
-                    <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link active" id="tabs-lang" data-toggle="pill" href="javscript:void()" role="tab" aria-selected="true">Tiếng Việt</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="card-body">
-                    <div class="tab-content" id="custom-tabs-three-tabContent-lang">
-                      <div class="tab-pane fade show active" id="tabs-sluglang-vi" role="tabpanel" aria-labelledby="tabs-lang">
-                        <div class="form-gourp mb-0">
-                          <label class="d-block">
-                            Đường dẫn mẫu:<span class="pl-2 font-weight-normal" id="slugurlpreviewvi"><strong class="text-info"></strong></span>
-                          </label>
-                          <input type="text" class="slug-seo form-control slug-input no-validate text-sm" name="slug" id="slug" placeholder="Đường dẫn mẫu"/>
-                          @error('slug')
-                            <small class="text-sm text-danger">
-                              {{ $message }}
-                            </small>
-                          @enderror
-                        </div>
+          <div class="card card-primary card-outline text-sm">
+            <div class="card-header">
+              <h3 class="card-title">
+                Đường dẫn
+              </h3>
+              <span class="pl-2 text-danger">
+                (Vui lòng không nhập trùng tiêu đề)
+              </span>
+            </div>
+            <div class="card-body card-slug">
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                  <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="tabs-lang" data-toggle="pill" href="javscript:void()" role="tab" aria-selected="true">Tiếng Việt</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content" id="custom-tabs-three-tabContent-lang">
+                    <div class="tab-pane fade show active" id="tabs-sluglang-vi" role="tabpanel" aria-labelledby="tabs-lang">
+                      <div class="form-gourp mb-0">
+                        <label class="d-block">
+                          Đường dẫn mẫu:<span class="pl-2 font-weight-normal" id="slugurlpreviewvi"><strong class="text-info"></strong></span>
+                        </label>
+                        <input type="text" class="slug-seo form-control slug-input no-validate text-sm" name="slug" id="slug" value="" placeholder="Đường dẫn mẫu"/>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          @endif
+          </div>
 
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
@@ -103,25 +95,20 @@
 
                       <div class="form-group">
                         <label for="title">Tiêu đề:</label>
-                        <input type="text" class="for-seo form-control text-sm" name="title" id="title" placeholder="Tiêu đề"/>
-                        @error('title')
-                          <small class="text-sm text-danger">
-                            {{ $message }}
-                          </small>
-                        @enderror
+                        <input type="text" class="for-seo form-control text-sm" name="title" id="title" placeholder="Tiêu đề" required=""/>
                       </div>
 
-                      @if (config('admin.product.desc') === true)
+                      @if (config('admin.news.desc') === true)
                         <div class="form-group">
                           <label for="desc">Mô tả:</label>
-                          <textarea name="description" class="form-control text-sm {{ config('admin.product.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
+                          <textarea name="description" class="form-control text-sm {{ config('admin.news.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
                         </div>
                       @endif
 
-                      @if (config('admin.product.content') === true)
+                      @if (config('admin.news.content') === true)
                         <div class="form-group">
                           <label for="content">Nội dung:</label>
-                          <textarea name="content" class="form-control text-sm {{ config('admin.product.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
+                          <textarea name="content" class="form-control text-sm {{ config('admin.news.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
                         </div>
                       @endif
                     </div>
@@ -134,7 +121,7 @@
 
         <div class="col-xl-4">
           {{-- Category --}}
-          @if (config('admin.product.category.active') === true)
+          @if (config('admin.news.category.active') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Danh mục</h3>
@@ -146,15 +133,14 @@
               </div>
               <div class="card-body">
                 <div class="form-group-category row">
-
                   {{-- Category 1 --}}
-                  @if(config('admin.product.category.category1.active') === true)
+                  @if(config('admin.news.category.category1.active') === true)
                   <div class="form-group col-xl-6 col-sm-4">
                     <label class="d-block" for="id_parent1">
-                      {{ config('admin.product.category.category1.name') }}:
+                      {{ config('admin.news.category.category1.name') }}:
                     </label>
                     <select id="id_parent1" name="id_parent1" class="form-control filter-category select2-hidden-accessible" data-url="admin/product/filter_category" tabindex="-1" aria-hidden="true">
-                      <option>{{ config('admin.product.category.category1.name') }}</option>
+                      <option>{{ config('admin.news.category.category1.name') }}</option>
                       <option value="68">Thời trang nổi bật nữ 2024</option>
                       <option value="69">Thời trang nổi bật nam 2024</option>
                     </select>
@@ -213,68 +199,16 @@
                   </div>
                 </div>
               </div>
-
-              <div class="row">
-                {{-- Number --}}
-                <div class="form-group col-md-6">
-                  <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="numb" placeholder="Số thứ tự" value="1"/>
-                </div>
-
-                {{-- Quantity --}}
-                <div class="form-group col-md-6">
-                  <label for="quantity" class="d-inline-block align-middle mb-0 mr-2">Số lượng:</label>
-                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="quantity" id="quantity" placeholder="Số lượng" value="1"/>
-                </div>
-              </div>
-
-              <div class="row">
-                <!-- Code -->
-                <div class="form-group col-md-6">
-                  <label class="d-block" for="code">Mã sản phẩm:</label>
-                  <input type="text" class="form-control text-sm" name="code" id="code" placeholder="Mã sản phẩm"/>
-                </div>
-
-                <!-- Sale price -->
-                <div class="form-group col-md-6">
-                  <label class="d-block" for="sale_price">Giá bán:</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control format-price sale_price text-sm" name="sale_price" id="sale_price" placeholder="Giá mới"/>
-                    <div class="input-group-append">
-                      <div class="input-group-text">
-                        <strong>VNĐ</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Regular price -->
-                <div class="form-group col-md-6">
-                  <label class="d-block" for="regular_price">Giá cũ (nếu có):</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control format-price regular_price text-sm" name="regular_price" id="regular_price" placeholder="Giá bán"/>
-                    <div class="input-group-append">
-                      <div class="input-group-text"><strong>VNĐ</strong></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Discount -->
-                <div class="form-group col-md-6">
-                  <label class="d-block" for="discount">Chiết khấu:</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control discount text-sm" name="discount" id="discount" placeholder="Chiết khấu" value="" maxlength="3" readonly=""/>
-                    <div class="input-group-append">
-                      <div class="input-group-text"><strong>%</strong></div>
-                    </div>
-                  </div>
-                </div>
+              <!-- STT -->
+              <div class="form-group">
+                <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
+                <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="numb" placeholder="Số thứ tự" value="1"/>
               </div>
             </div>
           </div>
 
           {{-- Photo 1 --}}
-          @if (config('admin.product.photo1') === true)
+          @if (config('admin.news.photo1') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 1</h3>
@@ -297,7 +231,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.thumb1') }}
+                    {{ config('admin.news.thumb1') }}
                   </div>
                 </div>
               </div>
@@ -305,7 +239,7 @@
           @endif
 
           {{-- Photo 2 --}}
-          @if (config('admin.product.photo2') === true)
+          @if (config('admin.news.photo2') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 2</h3>
@@ -328,7 +262,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.thumb2') }}
+                    {{ config('admin.news.thumb2') }}
                   </div>
                 </div>
               </div>
@@ -336,7 +270,7 @@
           @endif
 
           {{-- Photo 3 --}}
-          @if (config('admin.product.photo3') === true)
+          @if (config('admin.news.photo3') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 3</h3>
@@ -359,7 +293,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.thumb3') }}
+                    {{ config('admin.news.thumb3') }}
                   </div>
                 </div>
               </div>
@@ -367,7 +301,7 @@
           @endif
 
           {{-- Photo 4 --}}
-          @if (config('admin.product.photo4') === true)
+          @if (config('admin.news.photo4') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 4</h3>
@@ -390,7 +324,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.thumb4') }}
+                    {{ config('admin.news.thumb4') }}
                   </div>
                 </div>
               </div>
@@ -400,7 +334,7 @@
       </div>
 
       {{-- SEO --}}
-      @if (config('admin.product.seo') === true)
+      @if (config('admin.news.seo') === true)
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung SEO</h3>
@@ -422,7 +356,7 @@
                   <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                     <div class="tab-pane fade show active" id="tabs-seolang-vi" role="tabpanel" aria-labelledby="tabs-lang">
 
-                      @if (config('admin.product.seo_title') === true)
+                      @if (config('admin.news.seo_title') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="titlevi">SEO Title:</label>
@@ -431,7 +365,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.product.seo_keyword') === true)
+                      @if (config('admin.news.seo_keyword') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="keywords_seo">SEO Keywords (tối đa 70 ký tự):</label>
@@ -440,7 +374,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.product.seo_desc') === true)
+                      @if (config('admin.news.seo_desc') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="description_seo">SEO Description (tối đa 160 ký tự):</label>
@@ -448,7 +382,6 @@
                           <textarea class="form-control check-seo description-seo text-sm" name="description_seo" id="description_seo" rows="5" placeholder="SEO Description"></textarea>
                         </div>
                       @endif
-
                     </div>
                   </div>
                 </div>
