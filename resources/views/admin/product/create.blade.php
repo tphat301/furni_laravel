@@ -191,27 +191,15 @@
             {{-- Status --}}
             <div class="card-body">
               <div class="form-group">
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input type="checkbox" class="custom-control-input banchay-checkbox" name="status[]" id="banchay-checkbox" value="banchay"/>
-                    <label for="banchay-checkbox" class="custom-control-label"></label>
+                @foreach (config('admin.product.status') as $key => $value)
+                  <div class="form-group d-inline-block mb-2 mr-2">
+                    <label for="{{$key}}-checkbox" class="d-inline-block align-middle mb-0 mr-2">{{$value}}:</label>
+                    <div class="custom-control custom-checkbox d-inline-block align-middle">
+                      <input type="checkbox" class="custom-control-input {{$key}}-checkbox" name="status[]" id="{{$key}}-checkbox" value="{{$key}}"/>
+                      <label for="{{$key}}-checkbox" class="custom-control-label"></label>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input type="checkbox" class="custom-control-input banchay-checkbox" name="status[]" id="banchay-checkbox" value="banchay"/>
-                    <label for="banchay-checkbox" class="custom-control-label"></label>
-                  </div>
-                </div>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input type="checkbox" class="custom-control-input banchay-checkbox" name="status[]" id="banchay-checkbox" value="banchay"/>
-                    <label for="banchay-checkbox" class="custom-control-label"></label>
-                  </div>
-                </div>
+                @endforeach
               </div>
 
               <div class="row">

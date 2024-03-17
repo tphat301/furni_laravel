@@ -21,15 +21,13 @@
   </section>
 
   <section class="content">
-    <form class="form-product-list" action="{{ route('admin.product.action') }}" method="GET">
-
+    {!! Form::open(['name' => 'form-product-list', 'class' => ['form-product-list'], 'method' => 'GET']) !!}
       <div class="card-footer text-sm sticky-top">
         <a class="btn btn-sm bg-gradient-primary text-white" href="{{route('admin.product.create')}}" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
 
-        <button type="submit" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</button>
+        <a data-url="{{ route('admin.product.destroy') }}" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
 
-
-        {{-- <div class="form-inline form-search d-inline-block align-middle ml-3">
+        <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
             <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="" data-url="admin/product/index"/>
             <div class="input-group-append bg-primary rounded-right">
@@ -38,7 +36,7 @@
               </button>
             </div>
           </div>
-        </div> --}}
+        </div>
       </div>
       {{-- Tab category --}}
       @if (config('admin.product.category.active') === true)
@@ -100,8 +98,7 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <input type="number" class="update-num-product form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-table="{{ config('admin.product.table') }}"/>
-                      {{-- <input name="_token_num" value="{{ time() }}" type="hidden"/> --}}
+                      <input type="number" class="update-num form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-url="{{ route('admin.product.update_number') }}"/>
                     </td>
                     <td class="align-middle">
                       <a href="{{ route('admin.product.show', [$row->id]) }}" title="{{ $row->title }}">
@@ -123,9 +120,8 @@
                           @php
                             $status = !empty($row->status) ? explode(",", $row->status) : [];
                           @endphp
-                          <input type="checkbox" id="check-sst-product" class="check-sst-product custom-control-input" data-table="{{ config('admin.product.table') }}" name="{{ $key }}" data-id="{{ $row->id }}" {{ in_array($key, $status) ? 'checked' : '' }} />
-                          <label for="check-sst-product" class="custom-control-label"></label>
-                          <input name="_token" value="{{ time() }}" type="hidden"/>
+                          <input type="checkbox" id="update-status-{{$key}}" class="update-status custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route('admin.product.update_status')}}" {{ in_array($key, $status) ? 'checked' : '' }} />
+                          <label for="update-status-{{$key}}" class="custom-control-label"></label>
                         </div>
                       </td>
                     @endforeach
@@ -133,24 +129,36 @@
                       <a class="text-primary mr-2" href="{{ route('admin.product.show', [$row->id]) }}" title="Chỉnh sửa">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <div class="dropdown d-inline-block align-middle">
-                        <a id="dropdownCopy" href="{{ route('admin.product.copy', [$row->id]) }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link text-success p-0 pr-2" title="Copy">
-                          <i class="far fa-clone"></i>
-                        </a>
-                      </div>
-                      <a class="text-danger" data-url="{{route('admin.product.destroy', ['id' => $row->id, 'hash' => $row->hash])}}" id="delete-row" title="Xóa">
+
+                      @if(config('admin.product.copy') === true)
+                        <div class="dropdown d-inline-block align-middle">
+                          <a href="{{ route('admin.product.copy', [$row->id]) }}" class="nav-link text-success p-0 pr-2" title="Copy">
+                            <i class="far fa-clone"></i>
+                          </a>
+                        </div>
+                      @endif
+
+                      <a class="text-danger delete-row" data-url="{{route('admin.product.delete', ['id' => $row->id, 'hash' => $row->hash])}}" title="Xóa" style="cursor: pointer">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
                   </tr>
                 @endforeach
+              @else
+              <tr>
+                  <td colspan="12"><span class="text-danger">Danh sách sản phẩm trống</span></td>
+                </tr>
               @endif
             </tbody>
           </table>
         </div>
       </div>
 
-      {{-- Phân trang --}}
-    </form>
+    {{-- Phân trang --}}
+    {!! Form::close() !!}
+
+    {!! Form::open(['name' => 'form_delete_row', 'class' => ['card__body','form_delete_row']]) !!}
+      @method('DELETE')
+    {!! Form::close() !!}
   </section>
 @endsection

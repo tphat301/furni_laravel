@@ -33,7 +33,7 @@ class ProductController extends Controller
     return view('admin.product.create');
   }
 
-  /* Product saved */
+  /* Product insert */
   public function save(Request $request)
   {
     $validator = Validator::make(
@@ -69,19 +69,19 @@ class ProductController extends Controller
       $data = [
         'slug' => htmlspecialchars($request->slug),
         'title' => htmlspecialchars($request->title),
-        'status' => htmlspecialchars($request->status) ?: 'hienthi',
-        'code' => htmlspecialchars($request->code) ?: null,
-        'quantity' => htmlspecialchars($request->quantity) ?: 1,
-        'sale_price' => str_replace(',', '', $request->sale_price) ?: 0,
-        'regular_price' => str_replace(',', '', $request->regular_price) ?: 0,
-        'discount' => htmlspecialchars($request->discount) ?: 0,
+        'status' => !empty($request->status) ? htmlspecialchars($request->status) : 'hienthi',
+        'code' => !empty($request->code) ? htmlspecialchars($request->code) : null,
+        'quantity' => !empty($request->quantity) ? htmlspecialchars($request->quantity) : 1,
+        'sale_price' => !empty($request->sale_price) ? str_replace(',', '', $request->sale_price) : 0,
+        'regular_price' => !empty($request->regular_price) ? str_replace(',', '', $request->regular_price) : 0,
+        'discount' => !empty($request->discount) ? htmlspecialchars($request->discount) : 0,
         'hash' => Str::lower(Str::random(4)),
         'type' => config('admin.product.type'),
         'num' => 0,
-        'photo1' => $photo1 ?: null,
-        'photo2' => $photo2 ?: null,
-        'photo3' => $photo3 ?: null,
-        'photo4' => $photo4 ?: null,
+        'photo1' => !empty($photo1) ? $photo1 : null,
+        'photo2' => !empty($photo2) ? $photo2 : null,
+        'photo3' => !empty($photo3) ? $photo3 : null,
+        'photo4' => !empty($photo4) ? $photo4 : null,
       ];
       Product::create($data);
       return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.product'));
@@ -90,13 +90,13 @@ class ProductController extends Controller
     }
   }
 
-  /* Product show */
+  /* Product detail */
   public function show($id)
   {
     //
   }
 
-  /* Product copy */
+  /* Product duplicate */
   public function copy($id)
   {
     $row = Product::where('type', config('admin.product.type'))->find($id);
@@ -117,8 +117,8 @@ class ProductController extends Controller
     return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.product'));
   }
 
-  /* Product destroy */
-  public function destroy($id, $hash)
+  /* Product delete static */
+  public function delete($id, $hash)
   {
     $uploadProduct = "public/upload/product/";
     $product = Product::where('type', config('admin.product.type'))->where('hash', $hash)->find($id);
@@ -126,22 +126,51 @@ class ProductController extends Controller
     $photo2 = isset($product->photo2) && !empty($product->photo2) ? $product->photo2 : "";
     $photo3 = isset($product->photo3) && !empty($product->photo3) ? $product->photo3 : "";
     $photo4 = isset($product->photo4) && !empty($product->photo4) ? $product->photo4 : "";
-    $filePhotoProduct1 = $uploadProduct . $photo1;
-    $filePhotoProduct2 = $uploadProduct . $photo2;
-    $filePhotoProduct3 = $uploadProduct . $photo3;
-    $filePhotoProduct4 = $uploadProduct . $photo4;
-    if (file_exists($filePhotoProduct1) && !empty($photo1)) unlink($filePhotoProduct1);
-    if (file_exists($filePhotoProduct2) && !empty($photo2)) unlink($filePhotoProduct2);
-    if (file_exists($filePhotoProduct3) && !empty($photo3)) unlink($filePhotoProduct3);
-    if (file_exists($filePhotoProduct4) && !empty($photo4)) unlink($filePhotoProduct4);
+    if (file_exists($uploadProduct . $photo1) && !empty($photo1)) unlink($uploadProduct . $photo1);
+    if (file_exists($uploadProduct . $photo2) && !empty($photo2)) unlink($uploadProduct . $photo2);
+    if (file_exists($uploadProduct . $photo3) && !empty($photo3)) unlink($uploadProduct . $photo3);
+    if (file_exists($uploadProduct . $photo4) && !empty($photo4)) unlink($uploadProduct . $photo4);
     $product->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
   }
 
-  /* Product action */
-  public function action(Request $request)
+  /* Product delete mutiple */
+  public function destroy(Request $request)
   {
+    $uploadProduct = "public/upload/product/";
+    $product = Product::where('type', config('admin.product.type'))->find($request->checkitem);
+    foreach ($product as $v) {
+      $photo1 = isset($v->photo1) && !empty($v->photo1) ? $v->photo1 : "";
+      $photo2 = isset($v->photo2) && !empty($v->photo2) ? $v->photo2 : "";
+      $photo3 = isset($v->photo3) && !empty($v->photo3) ? $v->photo3 : "";
+      $photo4 = isset($v->photo4) && !empty($v->photo4) ? $v->photo4 : "";
+      if (file_exists($uploadProduct . $photo1) && !empty($photo1)) unlink($uploadProduct . $photo1);
+      if (file_exists($uploadProduct . $photo2) && !empty($photo2)) unlink($uploadProduct . $photo2);
+      if (file_exists($uploadProduct . $photo3) && !empty($photo3)) unlink($uploadProduct . $photo3);
+      if (file_exists($uploadProduct . $photo4) && !empty($photo4)) unlink($uploadProduct . $photo4);
+    }
     Product::destroy($request->checkitem);
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
+  }
+
+  /* Product update number ajax */
+  public function updateNumber(Request $request)
+  {
+    Product::where('id', $request->id)->where('type', config('admin.product.type'))->update(['num' => $request->value]);
+  }
+
+  /* Product update status ajax */
+  public function updateStatus(Request $request)
+  {
+    $status = Product::select('status')->where('type', config('admin.product.type'))->find($request->id)->status;
+    $status = !empty($status) ? explode(',', $status) : [];
+    if (array_search($request->value, $status) !== false) {
+      $key = array_search($request->value, $status);
+      unset($status[$key]);
+    } else {
+      array_push($status, $request->value);
+    }
+    $statusStr = implode(',', $status);
+    Product::where('id', $request->id)->where('type', config('admin.product.type'))->update(['status' => $statusStr]);
   }
 }

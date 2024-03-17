@@ -253,102 +253,77 @@ $(document).ready(function () {
     });
   }
 
-  /* Notify */
-  function notifyDialog(
-    content = "",
-    title = "Thông báo",
-    icon = "fas fa-exclamation-triangle",
-    type = "blue"
-  ) {
-    $.alert({
-      title: title,
-      icon: icon, // font awesome
-      type: type, // red, green, orange, blue, purple, dark
-      content: content, // html, text
-      backgroundDismiss: true,
-      animationSpeed: 600,
-      animation: "zoom",
-      closeAnimation: "scale",
-      typeAnimated: true,
-      animateFromElement: false,
-      autoClose: "accept|3000",
-      escapeKey: "accept",
-      buttons: {
-        accept: {
-          text: '<i class="fas fa-check align-middle mr-2"></i>Đồng ý',
-          btnClass: "btn-blue btn-sm bg-gradient-primary",
-        },
-      },
-    });
-  }
-
-  /* ConfirmDialog */
-  function confirmDialog(
-    action,
-    text,
-    value,
-    title = "Thông báo",
-    icon = "fas fa-exclamation-triangle",
-    type = "blue"
-  ) {
-    $.confirm({
-      title: title,
-      icon: icon, // font awesome
-      type: type, // red, green, orange, blue, purple, dark
-      content: text, // html, text
-      backgroundDismiss: true,
-      animationSpeed: 600,
-      animation: "zoom",
-      closeAnimation: "scale",
-      typeAnimated: true,
-      animateFromElement: false,
-      autoClose: "cancel|3000",
-      escapeKey: "cancel",
-      buttons: {
-        success: {
-          text: '<i class="fas fa-check align-middle mr-2"></i>Đồng ý',
-          btnClass: "btn-blue btn-sm bg-gradient-primary",
-          action: function () {
-            // if (action == "delete-photo") document.location = value;
-            // if (action == "delete-photo2") document.location = value;
-            if (action == "delete-row") document.location = value;
-            // if (action == "restore-item") document.location = value;
-            // if (action == "restore-all") {
-            //   if ($(".form-product-list").length) {
-            //     $(".form-product-list").attr("action", value);
-            //     $(".form-product-list").submit();
-            //   }
-            // }
-          },
-        },
-        cancel: {
-          text: '<i class="fas fa-times align-middle mr-2"></i>Hủy',
-          btnClass: "btn-red btn-sm bg-gradient-danger",
-        },
-      },
-    });
-  }
-
-  /* Handle Delete One Row */
-  if ($("#delete-row").length) {
-    $("body").on("click", "#delete-row", function () {
+  /* Handle delete all row */
+  if ($(".delete-all")) {
+    $(".delete-all").click(function () {
       const url = $(this).data("url");
-      confirmDialog("delete-row", "Bạn có chắc muốn xóa mục này không ?", url);
-    });
-  }
-
-  /* Handle Delete All Data */
-  if ($("#delete-all").length) {
-    $("body").on("click", "#delete-all", function () {
       const itemIsChecked = $('input[name="checkitem[]"]:checked');
       if (itemIsChecked) {
         if (itemIsChecked.length === 0) {
-          notifyDialog("Bạn hãy chọn ít nhất 1 mục để xóa");
+          confirm("Bạn hãy chọn ít nhất 1 mục để xóa");
           return false;
         } else {
-          confirm("Bạn có chắc muốn xóa mục này không ?");
+          $(".form-product-list").attr("action", url);
+          const message = confirm("Bạn có chắc muốn xóa mục này không ?");
+          if (message) $(".form-product-list").submit();
+          return false;
         }
       }
+    });
+  }
+
+  if ($(".delete-row")) {
+    /* Handle delete one row */
+    $(".delete-row").click(function () {
+      const message = confirm("Bạn có chắc muốn xóa mục này không ?");
+      const url = $(this).data("url");
+      $(".form_delete_row").attr("action", url);
+      if (message) $(".form_delete_row").submit();
+      return false;
+    });
+  }
+
+  /* Handle update num */
+  if ($(".update-num")) {
+    $(".update-num").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "GET",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).val(),
+        },
+        dataType: "text",
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
+
+  /* Handle update status */
+  if ($(".update-status")) {
+    $(".update-status").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "GET",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).attr("name"),
+        },
+        dataType: "text",
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
     });
   }
 });

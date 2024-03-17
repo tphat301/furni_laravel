@@ -22,7 +22,7 @@
 							<strong class="product-price">$50.00</strong>
 
 							<span class="icon-cross">
-								<img src="{{url('resources/images/cross.svg')}}" class="img-fluid">
+								<img src="{{url('resources/images/cross.svg')}}" class="img-fluid"/>
 							</span>
 						</a>
 					</div>

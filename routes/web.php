@@ -50,9 +50,11 @@ Route::prefix('admin')->group(function () {
   Route::get('product/show/{id}', [ProductController::class, 'show'])->name('admin.product.show');
   Route::get('product/copy/{id}', [ProductController::class, 'copy'])->name('admin.product.copy');
   Route::get('product/create', [ProductController::class, 'create'])->name('admin.product.create');
+  Route::get('product/update_number', [ProductController::class, 'updateNumber'])->name('admin.product.update_number');
+  Route::get('product/update_status', [ProductController::class, 'updateStatus'])->name('admin.product.update_status');
+  Route::get('product/destroy', [ProductController::class, 'destroy'])->name('admin.product.destroy');
   Route::post('product/save', [ProductController::class, 'save'])->name('admin.product.save');
-  Route::get('product/destroy/{id}/{hash}', [ProductController::class, 'destroy'])->name('admin.product.destroy');
-  Route::get('product/action', [ProductController::class, 'action'])->name('admin.product.action');
+  Route::delete('product/delete/{id}/{hash}', [ProductController::class, 'delete'])->name('admin.product.delete');
 
   // News Admin
   Route::get('news', [NewsController::class, 'index'])->name('admin.news');
