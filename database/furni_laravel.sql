@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2024 at 03:41 PM
+-- Generation Time: Mar 18, 2024 at 05:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -116,7 +116,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2024_03_13_100111_create_admin_password_reset_tokens_table', 3),
 (10, '2024_03_14_161649_create_products_table', 4),
 (11, '2024_03_16_202637_create_gallery_table', 5),
-(12, '2024_03_16_203024_create_seo_table', 6);
+(12, '2024_03_16_203024_create_seo_table', 6),
+(13, '2024_03_18_161129_add_desc_to_products_table', 7),
+(14, '2024_03_18_161427_add_content_to_products_table', 8);
 
 -- --------------------------------------------------------
 
@@ -186,6 +188,8 @@ CREATE TABLE `products` (
   `file_mp4` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
+  `desc` mediumtext DEFAULT NULL,
+  `content` mediumtext DEFAULT NULL,
   `num` varchar(255) DEFAULT NULL,
   `hash` varchar(255) DEFAULT NULL,
   `quantity` varchar(255) DEFAULT NULL,
@@ -201,9 +205,8 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `id_parent1`, `id_parent2`, `id_parent3`, `id_parent4`, `id_brand`, `slug`, `title`, `photo1`, `photo2`, `photo3`, `photo4`, `code`, `file_attach`, `file_youtube`, `file_mp4`, `status`, `type`, `num`, `hash`, `quantity`, `sale_price`, `regular_price`, `discount`, `options`, `created_at`, `updated_at`) VALUES
-(21, NULL, NULL, NULL, NULL, NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaaaaa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hienthi', 'product', '1', '7bzl', '1', 0, 0, 0, NULL, '2024-03-17 13:19:56', '2024-03-17 14:35:29'),
-(22, NULL, NULL, NULL, NULL, NULL, 'bbbbbbbbbbbbbbbbbbbb', 'bbbbbbbbbbbbbbbbbbbb', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hienthi', 'product', '2', 'cvof', '1', 0, 0, 0, NULL, '2024-03-17 14:39:23', '2024-03-17 14:39:27');
+INSERT INTO `products` (`id`, `id_parent1`, `id_parent2`, `id_parent3`, `id_parent4`, `id_brand`, `slug`, `title`, `photo1`, `photo2`, `photo3`, `photo4`, `code`, `file_attach`, `file_youtube`, `file_mp4`, `status`, `type`, `desc`, `content`, `num`, `hash`, `quantity`, `sale_price`, `regular_price`, `discount`, `options`, `created_at`, `updated_at`) VALUES
+(84, NULL, NULL, NULL, NULL, NULL, 'ten-san-pham', 'Tên sản phẩm', NULL, NULL, NULL, NULL, 'ISM#1', NULL, NULL, NULL, 'hienthi', 'product', NULL, '&lt;p&gt;Nội dung&lt;/p&gt;', '0', 'cbbp', '1', 123123, 1231231, 90, NULL, '2024-03-18 15:53:50', '2024-03-18 16:22:22');
 
 -- --------------------------------------------------------
 
@@ -223,6 +226,13 @@ CREATE TABLE `seo` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `seo`
+--
+
+INSERT INTO `seo` (`id`, `id_parent`, `type`, `hash_seo`, `title_seo`, `keywords`, `description_seo`, `schema`, `created_at`, `updated_at`) VALUES
+(3, 84, 'product', 'cbbp', 'Tên sản phẩm', 'Tên sản phẩm', 'Tên sản phẩm', NULL, '2024-03-18 15:53:50', '2024-03-18 16:30:27');
 
 -- --------------------------------------------------------
 
@@ -349,7 +359,7 @@ ALTER TABLE `gallery`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -361,13 +371,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `seo`
 --
 ALTER TABLE `seo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`

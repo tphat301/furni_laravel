@@ -84,7 +84,11 @@ $(document).ready(function () {
         titleSeo.val("");
         keywordSeo.val("");
       }
-      desc ? descSeo.val(htmlToText(desc)) : descSeo.val("");
+      if (desc) {
+        descSeo.val(htmlToText(desc));
+      } else {
+        descSeo.val("");
+      }
     });
   }
 

@@ -15,6 +15,7 @@ return [
     'slug' => true,
     'code' => true,
     'copy' => true,
+    'number_per_page' => 10,
     'sale_price' => true,
     'regular_price' => true,
     'discount' => true,

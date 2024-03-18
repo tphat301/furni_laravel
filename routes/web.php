@@ -53,8 +53,10 @@ Route::prefix('admin')->group(function () {
   Route::get('product/update_number', [ProductController::class, 'updateNumber'])->name('admin.product.update_number');
   Route::get('product/update_status', [ProductController::class, 'updateStatus'])->name('admin.product.update_status');
   Route::get('product/destroy', [ProductController::class, 'destroy'])->name('admin.product.destroy');
-  Route::post('product/save', [ProductController::class, 'save'])->name('admin.product.save');
+  Route::get('product/delete_photo/{id}/{action}', [ProductController::class, 'deletePhoto'])->name('admin.product.delete_photo');
   Route::delete('product/delete/{id}/{hash}', [ProductController::class, 'delete'])->name('admin.product.delete');
+  Route::post('product/save', [ProductController::class, 'save'])->name('admin.product.save');
+  Route::put('product/update/{id}', [ProductController::class, 'update'])->name('admin.product.update');
 
   // News Admin
   Route::get('news', [NewsController::class, 'index'])->name('admin.news');

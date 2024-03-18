@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{{url('resources/admin/css/adminlte.css')}}">
     <link rel="stylesheet" href="{{url('resources/admin/css/adminlte-style.css')}}">
     <link rel="stylesheet" href="{{url('resources/admin/css/fancybox.css')}}">
-    <link rel="stylesheet" href="{{url('resources/admin/css/confirm.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css" />
   </head>
 
@@ -80,7 +79,6 @@
     <script src="{{url('resources/admin/js/priceFormat.js')}}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-    <script src="{{url('resources/admin/js/confirm.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
     <script src="{{url('resources/admin/js/app.js')}}"></script>
   </body>

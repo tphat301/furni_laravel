@@ -114,7 +114,7 @@
                       @if (config('admin.product.desc') === true)
                         <div class="form-group">
                           <label for="desc">Mô tả:</label>
-                          <textarea name="description" class="form-control text-sm {{ config('admin.product.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
+                          <textarea name="desc" class="form-control text-sm {{ config('admin.product.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
                         </div>
                       @endif
 

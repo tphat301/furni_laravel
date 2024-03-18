@@ -55,9 +55,9 @@ return [
     |
     */
 
-  'url' => env('APP_URL', 'http://localhost'),
+  'url' => env('APP_URL', 'http://localhost/furni_laravel/'),
 
-  'asset_url' => env('ASSET_URL'),
+  'asset_url' => env('ASSET_URL', 'http://localhost/furni_laravel/public/'),
 
   /*
     |--------------------------------------------------------------------------

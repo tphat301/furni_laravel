@@ -146,16 +146,17 @@
                 @endforeach
               @else
               <tr>
-                  <td colspan="12"><span class="text-danger">Danh sách sản phẩm trống</span></td>
-                </tr>
+                <td colspan="12"><span class="text-danger">Danh sách sản phẩm trống</span></td>
+              </tr>
               @endif
             </tbody>
           </table>
         </div>
       </div>
+    {!! Form::close() !!}
 
     {{-- Phân trang --}}
-    {!! Form::close() !!}
+    {!! $rows -> links() !!}
 
     {!! Form::open(['name' => 'form_delete_row', 'class' => ['card__body','form_delete_row']]) !!}
       @method('DELETE')

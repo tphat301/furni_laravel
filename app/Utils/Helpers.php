@@ -157,6 +157,60 @@ final class Helpers
     return FALSE;
   }
 
+  /* Structdata JSON Schema Product */
+  public function buildSchemaProduct($id, $title, $image, $code, $brand, $description, $salePrice, $author, $url)
+  {
+    $str = '{';
+    $str .= '"@context": "https://schema.org/",';
+    $str .= '"@type": "Product",';
+    $str .= '"name": "' . $title . '",';
+    $str .= '"image":';
+    $str .= '[';
+    $str .= '"' . $image . '"';
+    $str .= '],';
+    $str .= '"description": "' . $description . '",';
+    $str .= '"sku":"SP0' . $id . '",';
+    $str .= '"mpn": "' . $code . '",';
+    $str .= '"brand":';
+    $str .= '{';
+    $str .= '"@type": "Brand",';
+    $str .= '"name": "' . $brand . '"';
+    $str .= '},';
+    $str .= '"review":';
+    $str .= '{';
+    $str .= '"@type": "Review",';
+    $str .= '"reviewRating":';
+    $str .= '{';
+    $str .= '"@type": "Rating",';
+    $str .= '"ratingValue": "5",';
+    $str .= '"bestRating": "5"';
+    $str .= '},';
+    $str .= '"author":';
+    $str .= '{';
+    $str .= '"@type": "Person",';
+    $str .= '"name": "' . $author . '"';
+    $str .= '}';
+    $str .= '},';
+    $str .= '"aggregateRating":';
+    $str .= '{';
+    $str .= '"@type": "AggregateRating",';
+    $str .= '"ratingValue": "4.4",';
+    $str .= '"reviewCount": "89"';
+    $str .= '},';
+    $str .= '"offers":';
+    $str .= '{';
+    $str .= '"@type": "Offer",';
+    $str .= '"url": "' . $url . '",';
+    $str .= '"priceCurrency": "VND",';
+    $str .= '"priceValidUntil": "2099-11-20",';
+    $str .= '"price": "' . $salePrice . '",';
+    $str .= '"itemCondition": "https://schema.org/UsedCondition",';
+    $str .= '"availability": "https://schema.org/InStock"';
+    $str .= '}';
+    $str .= '}';
+    return $str;
+  }
+
   /* Recursive Render */
   public function isChild($data, $id)
   {
