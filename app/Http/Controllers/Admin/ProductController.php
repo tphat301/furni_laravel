@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\GalleryProduct;
 use App\Models\Admin\Product;
 use App\Models\Admin\Seo;
 use App\Utils\Helpers;
@@ -106,10 +107,9 @@ class ProductController extends Controller
   public function show(Request $request)
   {
     $row = Product::where('type', config('admin.product.type'))->find($request->id);
-    // $resultJSON = $this->helper->buildSchemaProduct($row->id, $row->title, config('app.asset_url') . $row->photo1, $row->code, 'Nike', htmlspecialchars_decode($row->desc), $row->sale_price, 'Phat Developer', $row->slug);
-    // return $resultJSON;
     $rowSeo = Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->first();
-    return view('admin.product.show', compact('row', 'rowSeo'));
+    $rowGallery = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    return view('admin.product.show', compact('row', 'rowSeo', 'rowGallery'));
   }
 
   /* Product update */
@@ -149,18 +149,19 @@ class ProductController extends Controller
       'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
       'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
       'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
+      'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
       'hash_seo' => $product->hash,
       'type' => config('admin.product.type'),
       'id_parent' => !empty($product->id) ? $product->id  : null
     ];
     $product->update($data);
     $seo = Seo::where('hash_seo', $product->hash)->first();
-    if ($seo->count() > 0) {
+    if ($seo) {
       Seo::where('hash_seo', $product->hash)->update($dataSeo);
     } else {
       Seo::create($dataSeo);
     }
-    return $this->helper->transfer("Cập nhật dữ liệu", "success", route('admin.product'));
+    return $this->helper->transfer("Cập nhật dữ liệu", "success", route('admin.product.show', ['id' => $product->id]));
   }
 
   /* Product duplicate */
@@ -190,8 +191,10 @@ class ProductController extends Controller
   public function delete($id, $hash)
   {
     $uploadProduct = "public/upload/product/";
+    $uploadGallery = "public/upload/gallery/";
     $product = Product::where('type', config('admin.product.type'))->where('hash', $hash)->find($id);
     $seo = SEO::where('type', config('admin.product.type'))->where('hash_seo', $hash);
+    $gallerys = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $id);
     $photo1 = isset($product->photo1) && !empty($product->photo1) ? $product->photo1 : "";
     $photo2 = isset($product->photo2) && !empty($product->photo2) ? $product->photo2 : "";
     $photo3 = isset($product->photo3) && !empty($product->photo3) ? $product->photo3 : "";
@@ -200,8 +203,15 @@ class ProductController extends Controller
     if (file_exists($uploadProduct . $photo2) && !empty($photo2)) unlink($uploadProduct . $photo2);
     if (file_exists($uploadProduct . $photo3) && !empty($photo3)) unlink($uploadProduct . $photo3);
     if (file_exists($uploadProduct . $photo4) && !empty($photo4)) unlink($uploadProduct . $photo4);
-    $product->delete();
+    if ($gallerys->get()) {
+      foreach ($gallerys->get() as $gallery) {
+        $galleryPhoto = isset($gallery->photo) && !empty($gallery->photo) ? $gallery->photo : "";
+        if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
+      }
+    }
+    Product::where('type', config('admin.product.type'))->where('hash', $hash)->delete($id);
     $seo->delete();
+    $gallerys->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
   }
 
@@ -209,8 +219,9 @@ class ProductController extends Controller
   public function destroy(Request $request)
   {
     $uploadProduct = "public/upload/product/";
+    $uploadGallery = "public/upload/gallery/";
     $product = Product::where('type', config('admin.product.type'))->find($request->checkitem);
-    $seo = Seo::where('type', config('admin.product.type'))->find($request->hashes);
+    $idParent = [];
     foreach ($product as $v) {
       $photo1 = isset($v->photo1) && !empty($v->photo1) ? $v->photo1 : "";
       $photo2 = isset($v->photo2) && !empty($v->photo2) ? $v->photo2 : "";
@@ -220,8 +231,21 @@ class ProductController extends Controller
       if (file_exists($uploadProduct . $photo2) && !empty($photo2)) unlink($uploadProduct . $photo2);
       if (file_exists($uploadProduct . $photo3) && !empty($photo3)) unlink($uploadProduct . $photo3);
       if (file_exists($uploadProduct . $photo4) && !empty($photo4)) unlink($uploadProduct . $photo4);
+      $idParent[] = $v->id;
     }
-    if ($seo->count() > 0) Seo::destroy($request->hashes);
+    if (count($idParent) > 0) {
+      foreach ($idParent as $v) {
+        $gallerys = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $v);
+        if ($gallerys->get()) {
+          foreach ($gallerys->get() as $gallery) {
+            $galleryPhoto = isset($gallery->photo) && !empty($gallery->photo) ? $gallery->photo : "";
+            if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
+          }
+        }
+        $gallerys->delete();
+      }
+    }
+    Seo::where('type', config('admin.product.type'))->whereIn('hash_seo', $request->hashes)->delete();
     Product::destroy($request->checkitem);
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
   }
@@ -260,8 +284,63 @@ class ProductController extends Controller
   }
 
   /* Product schema JSON */
-  public function schemaJSON()
+  public function schema(Request $request)
   {
-    // code
+    $row = Product::where('type', config('admin.product.type'))->find($request->id);
+    $seo = Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->first();
+    $schemaJSON = $this->helper->buildSchemaProduct($row->id, $row->title, config('app.asset_url') . (!empty($row->photo1) ? $row->photo1 : 'noimage.png'), $row->code, 'Tên hãng', htmlspecialchars_decode($row->desc), $row->sale_price, 'Tên tác giả Developer', $row->slug);
+    if ($seo) {
+      Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->update(['schema' => $schemaJSON]);
+      return $this->helper->transfer("Tạo schema JSON", "success", route('admin.product.show', ['id' => $row->id]));
+    } else {
+      echo "<script>alert('Bạn cần có Data SEO để tạo Schema JSON Product')</script>";
+      return $this->helper->transfer("Tạo schema JSON", "danger", route('admin.product.show', ['id' => $row->id]));
+    }
+  }
+
+  /* Product gallery */
+  public function gallery(Request $request)
+  {
+    $typeAllow = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+    $uploadGallery = "public/upload/gallery/";
+    if ($this->helper->hasFile("file")) {
+      $fileResult = $this->helper->uploadFile("file", $typeAllow, $uploadGallery);
+      $dataGallery = [
+        'photo' => $fileResult,
+        'id_parent' => $request->id,
+        'title' => pathinfo($fileResult, PATHINFO_FILENAME),
+        'status' => "hienthi",
+        'num' => 0,
+        'type' => config('admin.product.type')
+      ];
+      GalleryProduct::create($dataGallery);
+    }
+  }
+
+  /* Product gallery delete */
+  public function deleteGallery(Request $request)
+  {
+    $uploadGallery = "public/upload/gallery/";
+    $galleryPhoto = GalleryProduct::where('type', config('admin.product.type'))->find($request->id)->photo;
+    $galleryPhoto = isset($galleryPhoto) && !empty($galleryPhoto) ? $galleryPhoto : "";
+    if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
+    GalleryProduct::where('type', config('admin.product.type'))->where('id', $request->id)->delete();
+    return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
+  }
+
+  /* Product gallery update title */
+  public function galleryTitle(Request $request)
+  {
+    @$id = $request->id;
+    @$title = $request->value;
+    GalleryProduct::where('type', config('admin.product.type'))->where('id', $id)->update(['title' => $title]);
+  }
+
+  /* Product gallery update number */
+  public function galleryNumber(Request $request)
+  {
+    @$id = $request->id;
+    @$num = $request->value;
+    GalleryProduct::where('type', config('admin.product.type'))->where('id', $id)->update(['num' => $num]);
   }
 }

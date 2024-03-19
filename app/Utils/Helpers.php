@@ -208,6 +208,7 @@ final class Helpers
     $str .= '"availability": "https://schema.org/InStock"';
     $str .= '}';
     $str .= '}';
+    $str = json_encode(json_decode($str), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     return $str;
   }
 

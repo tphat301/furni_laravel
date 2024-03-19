@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2024 at 05:31 PM
+-- Generation Time: Mar 19, 2024 at 10:23 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -89,6 +89,13 @@ CREATE TABLE `gallery` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `gallery`
+--
+
+INSERT INTO `gallery` (`id`, `id_parent`, `hash`, `photo`, `title`, `num`, `type`, `status`, `created_at`, `updated_at`) VALUES
+(25, 109, NULL, 'and-machines-vqTWfa4DjEk-unsplash 1.png', 'Album 2', '2', 'product', 'hienthi', '2024-03-19 08:21:20', '2024-03-19 09:02:32');
 
 -- --------------------------------------------------------
 
@@ -206,7 +213,7 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `id_parent1`, `id_parent2`, `id_parent3`, `id_parent4`, `id_brand`, `slug`, `title`, `photo1`, `photo2`, `photo3`, `photo4`, `code`, `file_attach`, `file_youtube`, `file_mp4`, `status`, `type`, `desc`, `content`, `num`, `hash`, `quantity`, `sale_price`, `regular_price`, `discount`, `options`, `created_at`, `updated_at`) VALUES
-(84, NULL, NULL, NULL, NULL, NULL, 'ten-san-pham', 'Tên sản phẩm', NULL, NULL, NULL, NULL, 'ISM#1', NULL, NULL, NULL, 'hienthi', 'product', NULL, '&lt;p&gt;Nội dung&lt;/p&gt;', '0', 'cbbp', '1', 123123, 1231231, 90, NULL, '2024-03-18 15:53:50', '2024-03-18 16:22:22');
+(109, NULL, NULL, NULL, NULL, NULL, 'aaaaaaaaa', 'aaaaaaaaa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hienthi', 'product', NULL, NULL, '0', '5bq2', '1', 0, 0, 0, NULL, '2024-03-19 08:21:11', '2024-03-19 08:21:11');
 
 -- --------------------------------------------------------
 
@@ -232,7 +239,7 @@ CREATE TABLE `seo` (
 --
 
 INSERT INTO `seo` (`id`, `id_parent`, `type`, `hash_seo`, `title_seo`, `keywords`, `description_seo`, `schema`, `created_at`, `updated_at`) VALUES
-(3, 84, 'product', 'cbbp', 'Tên sản phẩm', 'Tên sản phẩm', 'Tên sản phẩm', NULL, '2024-03-18 15:53:50', '2024-03-18 16:30:27');
+(26, NULL, 'product', '5bq2', NULL, NULL, NULL, NULL, '2024-03-19 08:21:11', '2024-03-19 08:21:11');
 
 -- --------------------------------------------------------
 
@@ -353,7 +360,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `gallery`
 --
 ALTER TABLE `gallery`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -371,13 +378,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `seo`
 --
 ALTER TABLE `seo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `users`

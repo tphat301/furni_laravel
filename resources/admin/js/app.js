@@ -330,4 +330,88 @@ $(document).ready(function () {
       });
     });
   }
+
+  /* Handle build-schema */
+  if ($(".build-schema")) {
+    $(".build-schema").click(function () {
+      $(".form-schema").submit();
+      return false;
+    });
+  }
+
+  /* Handle gallery dropzone image */
+  Dropzone.options.dropzoneFrom = {
+    autoProcessQueue: true,
+    acceptedFiles: ".png,.jpg,.gif,.bmp,.jpeg,.webp",
+    init: function () {
+      this.on("complete", function () {
+        if (
+          this.getQueuedFiles().length == 0 &&
+          this.getUploadingFiles().length == 0
+        ) {
+          let _this = this;
+          _this.removeAllFiles();
+        }
+      });
+    },
+  };
+
+  /* Handle Remove Gallery Item */
+  // $(document).on("click", ".remove_image", function () {
+  //   const name = $(this).attr("id");
+  //   const URL = $(this).data("url");
+  //   $.ajax({
+  //     url: `${BASE_URL}${URL}`,
+  //     method: "POST",
+  //     data: {
+  //       name: name,
+  //     },
+  //     success: function (data) {
+  //       renderGalleryList();
+  //     },
+  //   });
+  // });
+
+  /* Handle Update Title Gallery Image */
+  if ($(".gallery-title")) {
+    $(".gallery-title").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "POST",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).val(),
+          _token: $(this).data("token"),
+        },
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
+  /* Handle Update Number Gallery Image */
+  if ($(".update-num-gallery")) {
+    $(".update-num-gallery").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "POST",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).val(),
+          _token: $(this).data("token"),
+        },
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
 });

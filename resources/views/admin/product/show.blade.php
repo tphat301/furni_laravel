@@ -463,13 +463,11 @@
           </div>
         </div>
       @endif
-
-      {{-- Schema SEO --}}
       @if (config('admin.product.schema') === true)
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Schema JSON Product</h3>
-            <button class="btn btn-sm bg-gradient-success float-right submit-check" name="build-schema"><i class="far fa-save mr-2"></i>Lưu và tạo tự động Schema</button>
+            <button class="btn btn-sm bg-gradient-success float-right submit-check build-schema" name="build-schema"><i class="far fa-save mr-2"></i>Lưu và tạo tự động Schema</button>
           </div>
           <div class="card-body">
             <div class="card-seo">
@@ -486,9 +484,9 @@
                     <div class="tab-pane fade show active">
                       <div class="form-group">
                         <div class="label-seo">
-                          <label for="schemavi">Schema JSON:</label>
+                          <label for="schema">Schema JSON:</label>
                         </div>
-                        <textarea class="form-control" name="schema" id="schemavi" rows="15" placeholder="Nếu quý khách không biết cách sử dụng Data Structure vui lòng không nhập nội dung vào khung này để tránh phát sinh lỗi..."></textarea>
+                        <textarea class="form-control" name="schema" id="schema" rows="15" placeholder="Nếu quý khách không biết cách sử dụng Data Structure vui lòng không nhập nội dung vào khung này để tránh phát sinh lỗi...">{!! !empty($rowSeo->schema) ? $rowSeo->schema : '' !!}</textarea>
                       </div>
                     </div>
                   </div>
@@ -498,7 +496,72 @@
           </div>
         </div>
       @endif
+    {!! Form::close() !!}
 
+    <!-- Gallery -->
+    @if (config('admin.product.gallery.active') === true)
+      <div class="card card-primary card-outline text-sm">
+        <div class="card-header">
+          <h3 class="card-title">Bộ sưu tập sản phẩm</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label for="filer-gallery" class="label-filer-gallery mb-3">
+                Album hình ảnh: (.jpg|.gif|.png|.jpeg|.gif)
+              </label>
+              {{-- <button type="submit" class="btn btn-sm bg-gradient-success gallery-sending-hide" id="submit-all">Upload ảnh</button> --}}
+            </div>
+            {!! Form::open(['name' => 'dropzoneFrom', 'route' => ['admin.product.gallery', $row->id],'id' => 'dropzoneFrom','style'=>'background: #f9fbfe;', 'class' => ['jFiler','jFiler-theme-dragdropbox', 'dropzone'],'files' => true]) !!}
+              <div class="jFiler-input-dragDrop" style="border:0">
+                <div class="jFiler-input-inner">
+                  <div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div>
+                </div>
+              </div>
+            {!! Form::close() !!}
+          </div>
+        </div>
+
+        @if (count($rowGallery) > 0)
+          <div>
+            <div class="jFiler-items my-jFiler-items jFiler-row">
+              <ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">
+                @foreach ($rowGallery as $gallery)
+                  <li class="jFiler-item my-jFiler-item my-jFiler-item-66 col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
+                    <div class="jFiler-item-container position-relative">
+                      <div class="jFiler-item-inner">
+                        <div class="jFiler-item-thumb">
+                          <div class="jFiler-item-thumb-image">
+                            @if (!empty($gallery->photo))
+                              <img class="" src="{{ url("public/upload/gallery/$gallery->photo")  }}" alt="{{ $gallery->title }}"/>
+                              <i class="fas fa-arrows-alt"></i>
+                            @else
+                              <img class="h-100 w-100" src="{{ url("resources/images/noimage.png")  }}" alt="No images"/>
+                            @endif
+                          </div>
+                        </div>
+                        <a href="{{ route('admin.product.gallery.delete', ['id' => $gallery->id, 'photo' => $gallery->photo]) }}" class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash text-danger d-block" id="delete-gallery" title="Xóa ảnh">
+                          <i class="fas fa-trash-alt text-white"></i>
+                        </a>
+                        <input type="number" class="form-control form-control-sm my-jFiler-item-info rounded my-1 text-sm update-num-gallery" data-url="{{ route('admin.product.gallery.number', ['id' => $gallery->id]) }}" value="{{ $gallery->num }}" data-id="{{ $gallery->id }}" data-token="{{ csrf_token() }}" />
+                        <input type="text" class="form-control form-control-sm my-jFiler-item-info rounded text-sm gallery-title" data-token="{{ csrf_token() }}" data-id="{{ $gallery->id }}" data-url="{{ route('admin.product.gallery.title', ['id' => $gallery->id]) }}" value="{{ $gallery->title }}" placeholder="{{ $gallery->title }}" />
+                      </div>
+                    </div>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+        @endif
+
+      </div>
+    @endif
+
+    {{-- Schema SEO --}}
+    {!! Form::open(['name' => 'form-schema', 'route' => ['admin.product.schema', $row->id], 'class' => ['form-schema d-none']]) !!}
     {!! Form::close() !!}
   </section>
 @endsection

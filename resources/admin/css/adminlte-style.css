@@ -1,16 +1,19 @@
 .build-seo {
   cursor: pointer;
 }
-
+#delete-gallery {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 5px 8px;
+  background: #dc3545 !important;
+  border-radius: 4px;
+}
 .video-preview {
   max-width: 640px;
 }
 
 .gallery-title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border: 0;
   outline: none;
   padding: 12px 6px;
   width: 100%;
@@ -1045,6 +1048,8 @@
   max-height: 560px;
   overflow-x: hidden;
   overflow-y: scroll;
+  list-style: none;
+  padding-left: 0;
 }
 .jFiler-items-grid .jFiler-item .jFiler-item-container {
   margin: 0px;
@@ -1109,7 +1114,7 @@
   .jFiler-item-container
   .jFiler-item-thumb
   .jFiler-item-thumb-image {
-  max-height: 150px;
+  /* max-height: 150px; */
   position: relative;
 }
 .jFiler-items-grid
@@ -1121,6 +1126,8 @@
   max-width: 100%;
   width: 100%;
   object-fit: cover;
+  height: 250px;
+  border-radius: 8px;
 }
 .jFiler-items-grid
   .jFiler-item

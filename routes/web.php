@@ -54,8 +54,13 @@ Route::prefix('admin')->group(function () {
   Route::get('product/update_status', [ProductController::class, 'updateStatus'])->name('admin.product.update_status');
   Route::get('product/destroy', [ProductController::class, 'destroy'])->name('admin.product.destroy');
   Route::get('product/delete_photo/{id}/{action}', [ProductController::class, 'deletePhoto'])->name('admin.product.delete_photo');
+  Route::get('product/gallery/delete/{id}/{photo}', [ProductController::class, 'deleteGallery'])->name('admin.product.gallery.delete');
   Route::delete('product/delete/{id}/{hash}', [ProductController::class, 'delete'])->name('admin.product.delete');
   Route::post('product/save', [ProductController::class, 'save'])->name('admin.product.save');
+  Route::post('product/schema/{id}', [ProductController::class, 'schema'])->name('admin.product.schema');
+  Route::post('product/gallery/{id}', [ProductController::class, 'gallery'])->name('admin.product.gallery');
+  Route::post('product/gallery/title/{id}', [ProductController::class, 'galleryTitle'])->name('admin.product.gallery.title');
+  Route::post('product/gallery/number/{id}', [ProductController::class, 'galleryNumber'])->name('admin.product.gallery.number');
   Route::put('product/update/{id}', [ProductController::class, 'update'])->name('admin.product.update');
 
   // News Admin
