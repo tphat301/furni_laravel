@@ -29,9 +29,9 @@
 
         <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" aria-label="Tìm kiếm" value="" data-url="admin/product/index"/>
+            <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" name="keyword" value=""/>
             <div class="input-group-append bg-primary rounded-right">
-              <button onclick="onSearch('keyword')" class="btn btn-navbar text-white" type="button">
+              <button class="btn btn-navbar text-white" type="submit">
                 <i class="fas fa-search"></i>
               </button>
             </div>
@@ -41,22 +41,70 @@
       {{-- Tab category --}}
       @if (config('admin.product.category.active') === true)
         <div class="card-footer form-group-category text-sm bg-light row">
-          <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-            <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" data-field="id_parent1" tabindex="-1" data-url="admin/product/index" aria-hidden="true">
-              <option>Danh mục cấp 1</option>
-              <option value="68">Thời trang nổi bật nữ 2024</option>
-              <option value="69">Thời trang nổi bật nam 2024</option>
-            </select>
-            {{-- <input type="hidden" name="_token_filter_category" value="1710333248"/> --}}
-          </div>
 
-          <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
-            <select id="id_parent2" name="id_parent2" class="form-control select2-hidden-accessible filter-category-rendering" data-url="admin/product/index" tabindex="-1" aria-hidden="true">
-              <option>Danh mục cấp 2</option>
-              <option value="70">Thời trang giá rẻ</option>
-              <option value="71">Thời trang cao cấp dành cho nữ</option>
-            </select>
-          </div>
+          {{-- Category 1 --}}
+          @if ($row1 -> count() > 0)
+            <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+              <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                <option value="{{ request()->fullUrlWithQuery(['category1' => '']) }}">
+                  {{ config('admin.product.category.category1.name') }}
+                </option>
+                @foreach ($row1 as $v1)
+                  <option value="{{ request()->fullUrlWithQuery(['category1' => $v1->id]) }}" {{ request()->category1 ==  $v1->id ? 'selected' : ''}}>
+                    {{ $v1->title }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+          @endif
+
+          {{-- Category 2 --}}
+          @if ($row2 -> count() > 0)
+            <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+              <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                <option value="{{ request()->fullUrlWithQuery(['category2' => '']) }}">
+                  {{ config('admin.product.category.category2.name') }}
+                </option>
+                @foreach ($row2 as $v2)
+                  <option value="{{ request()->fullUrlWithQuery(['category2' => $v2->id]) }}" {{ request()->category2 ==  $v2->id ? 'selected' : ''}}>
+                    {{ $v2->title }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+          @endif
+
+          {{-- Category 3 --}}
+          @if ($row3 -> count() > 0)
+            <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+              <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                <option value="{{ request()->fullUrlWithQuery(['category3' => '']) }}">
+                  {{ config('admin.product.category.category3.name') }}
+                </option>
+                @foreach ($row3 as $v3)
+                  <option value="{{ request()->fullUrlWithQuery(['category3' => $v3->id]) }}" {{ request()->category3 ==  $v3->id ? 'selected' : ''}}>
+                    {{ $v3->title }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+          @endif
+
+          {{-- Category 4 --}}
+          @if ($row4 -> count() > 0)
+            <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+              <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                <option value="{{ request()->fullUrlWithQuery(['category4' => '']) }}">
+                  {{ config('admin.product.category.category4.name') }}
+                </option>
+                @foreach ($row4 as $v4)
+                  <option value="{{ request()->fullUrlWithQuery(['category4' => $v4->id]) }}" {{ request()->category4 ==  $v4->id ? 'selected' : ''}}>
+                    {{ $v4->title }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+          @endif
         </div>
       @endif
 

@@ -158,7 +158,7 @@ final class Helpers
   }
 
   /* Structdata JSON Schema Product */
-  public function buildSchemaProduct($id, $title, $image, $code, $brand, $description, $salePrice, $author, $url)
+  public function buildSchemaProduct($id, $title, $photo, $code, $brand, $description, $salePrice, $author, $url)
   {
     $str = '{';
     $str .= '"@context": "https://schema.org/",';
@@ -166,7 +166,7 @@ final class Helpers
     $str .= '"name": "' . $title . '",';
     $str .= '"image":';
     $str .= '[';
-    $str .= '"' . $image . '"';
+    $str .= '"' . $photo . '"';
     $str .= '],';
     $str .= '"description": "' . $description . '",';
     $str .= '"sku":"SP0' . $id . '",';
@@ -206,6 +206,57 @@ final class Helpers
     $str .= '"price": "' . $salePrice . '",';
     $str .= '"itemCondition": "https://schema.org/UsedCondition",';
     $str .= '"availability": "https://schema.org/InStock"';
+    $str .= '}';
+    $str .= '}';
+    $str = json_encode(json_decode($str), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    return $str;
+  }
+
+  /* Structdata JSON Schema Article */
+  public function buildSchemaArticle($id, $title, $photo, $createdAt, $updatedAt, $companyName, $url, $logo, $urlBase)
+  {
+    $str = '{';
+    $str .= '"@context": "https://schema.org",';
+    $str .= '"@type": "NewsArticle",';
+    $str .= '"mainEntityOfPage": ';
+    $str .= '{';
+    $str .= '"@type": "WebPage",';
+    $str .= '"@id": "' . $id . '"';
+    $str .= '},';
+    $str .= '"headline": "' . $title . '",';
+    $str .= '"image":';
+    $str .= '{';
+    $str .= '"@context": "https://schema.org/",';
+    $str .= '"@type": "ImageObject",';
+    $str .= '"contentUrl": "' . $photo . '",';
+    $str .= '"url": "' . $photo . '",';
+    $str .= '"license": "' . $url . '",';
+    $str .= '"acquireLicensePage": "' . $url . '",';
+    $str .= '"creditText": "' . $title . '",';
+    $str .= '"copyrightNotice": "' . $companyName . '",';
+    $str .= '"creator":';
+    $str .= '{';
+    $str .= '"@type": "Organization",';
+    $str .= '"name": "' . $companyName . '"';
+    $str .= '}';
+    $str .= '},';
+    $str .= '"datePublished": "' . date('c', $createdAt) . '",';
+    $str .= '"dateModified": "' . date('c', $updatedAt) . '",';
+    $str .= '"author":';
+    $str .= '{';
+    $str .= '"@type": "Organization",';
+    $str .= '"name": "' . $companyName . '",';
+    $str .= '"url": "' . $urlBase . '"';
+    $str .= '},';
+    $str .= '"publisher": ';
+    $str .= '{';
+    $str .= '"@type": "Organization",';
+    $str .= '"name": "' . $companyName . '",';
+    $str .= '"logo": ';
+    $str .= '{';
+    $str .= '"@type": "ImageObject",';
+    $str .= '"url": "' . $logo . '"';
+    $str .= '}';
     $str .= '}';
     $str .= '}';
     $str = json_encode(json_decode($str), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

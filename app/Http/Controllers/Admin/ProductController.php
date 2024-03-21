@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\CategoryProduct;
 use App\Models\Admin\GalleryProduct;
 use App\Models\Admin\Product;
 use App\Models\Admin\Seo;
@@ -21,18 +22,37 @@ class ProductController extends Controller
   }
 
   /* Product list */
-  public function index()
+  public function index(Request $request)
   {
     session(['module_active' => 'product_index']);
-    $rows = Product::where('type', config('admin.product.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'));
-    return view('admin.product.index', compact('rows'));
+    $row1 = CategoryProduct::where('type', config('admin.product.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryProduct::where('type', config('admin.product.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryProduct::where('type', config('admin.product.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+
+    if ($request->input('keyword')) {
+      $rows = Product::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', config('admin.product.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+    } else {
+      if ($request->category1) {
+        $rows = Product::where('type', config('admin.product.type'))->where('id_parent1', $request->category1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      } elseif ($request->category2) {
+        $rows = Product::where('type', config('admin.product.type'))->where('id_parent2', $request->category2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      } else {
+        $rows = Product::where('type', config('admin.product.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      }
+    }
+    return view('admin.product.index', compact('rows', 'row1', 'row2', 'row3', 'row4'));
   }
 
   /* Product create */
   public function create()
   {
+    $row1 = CategoryProduct::where('type', config('admin.product.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryProduct::where('type', config('admin.product.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryProduct::where('type', config('admin.product.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     session(['module_active' => 'product_create']);
-    return view('admin.product.create');
+    return view('admin.product.create', compact('row1', 'row2', 'row3', 'row4'));
   }
 
   /* Product insert */
@@ -87,6 +107,10 @@ class ProductController extends Controller
         'photo2' => !empty($photo2) ? $photo2 : null,
         'photo3' => !empty($photo3) ? $photo3 : null,
         'photo4' => !empty($photo4) ? $photo4 : null,
+        'id_parent1' => !empty($request->input('id_parent1')) ? $request->input('id_parent1') : 0,
+        'id_parent2' => !empty($request->input('id_parent2')) ? $request->input('id_parent2') : 0,
+        'id_parent3' => !empty($request->input('id_parent3')) ? $request->input('id_parent3') : 0,
+        'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0,
       ];
       $dataSeo = [
         'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
@@ -107,9 +131,13 @@ class ProductController extends Controller
   public function show(Request $request)
   {
     $row = Product::where('type', config('admin.product.type'))->find($request->id);
+    $row1 = CategoryProduct::where('type', config('admin.product.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryProduct::where('type', config('admin.product.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryProduct::where('type', config('admin.product.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $rowSeo = Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->first();
     $rowGallery = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    return view('admin.product.show', compact('row', 'rowSeo', 'rowGallery'));
+    return view('admin.product.show', compact('row', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));
   }
 
   /* Product update */
@@ -143,6 +171,10 @@ class ProductController extends Controller
       'photo2' => !empty($photo2) ? $photo2 : null,
       'photo3' => !empty($photo3) ? $photo3 : null,
       'photo4' => !empty($photo4) ? $photo4 : null,
+      'id_parent1' => !empty($request->input('id_parent1')) ? $request->input('id_parent1') : 0,
+      'id_parent2' => !empty($request->input('id_parent2')) ? $request->input('id_parent2') : 0,
+      'id_parent3' => !empty($request->input('id_parent3')) ? $request->input('id_parent3') : 0,
+      'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0,
     ];
     $product = Product::where('type', config('admin.product.type'))->find($request->id);
     $dataSeo = [
@@ -181,10 +213,14 @@ class ProductController extends Controller
         'num' => 0,
         'quantity' => 1,
         'hash' => Str::lower(Str::random(4)),
-        'status' => 'hienthi'
+        'status' => 'hienthi',
+        'id_parent1' => !empty($row->id_parent1) ? $row->id_parent1 : 0,
+        'id_parent2' => !empty($row->id_parent2) ? $row->id_parent2 : 0,
+        'id_parent3' => !empty($row->id_parent3) ? $row->id_parent3 : 0,
+        'id_parent4' => !empty($row->id_parent4) ? $row->id_parent4 : 0,
       ]
     );
-    return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.product'));
+    return $this->helper->transfer("Sao chép dữ liệu", "success", route('admin.product'));
   }
 
   /* Product delete static */
@@ -288,7 +324,8 @@ class ProductController extends Controller
   {
     $row = Product::where('type', config('admin.product.type'))->find($request->id);
     $seo = Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->first();
-    $schemaJSON = $this->helper->buildSchemaProduct($row->id, $row->title, config('app.asset_url') . (!empty($row->photo1) ? $row->photo1 : 'noimage.png'), $row->code, 'Tên hãng', htmlspecialchars_decode($row->desc), $row->sale_price, 'Tên tác giả Developer', $row->slug);
+    $photo = !empty($row->photo1 ? config('app.asset_url') . "upload/product/$row->photo1" : config('app.url') . "resources/images/noimage.png");
+    $schemaJSON = $this->helper->buildSchemaProduct($row->id, $row->title, $photo, $row->code, 'Tên hãng', htmlspecialchars_decode($row->desc), $row->sale_price, 'Tên tác giả Developer', config('app.url') . "product/" . $row->slug);
     if ($seo) {
       Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->update(['schema' => $schemaJSON]);
       return $this->helper->transfer("Tạo schema JSON", "success", route('admin.product.show', ['id' => $row->id]));
@@ -342,5 +379,35 @@ class ProductController extends Controller
     @$id = $request->id;
     @$num = $request->value;
     GalleryProduct::where('type', config('admin.product.type'))->where('id', $id)->update(['num' => $num]);
+  }
+
+  /* Product filter category */
+  public function filterCategory(Request $request)
+  {
+    @$id = $request->id;
+    @$level = $request->level;
+    $row = CategoryProduct::where('type', config('admin.product.type'))->where('id_parent', $id)->where('level', $level)->get();
+    if ($row->count() > 0) {
+      $output = '';
+      $output .= '<option>Danh mục cấp ' . $level . '</option>';
+      foreach ($row as $v) {
+        $output .= '<option value="' . $v->id . '">
+                    ' . $v->title . '
+                  </option>';
+      }
+      echo $output;
+    } else {
+      $row = CategoryProduct::where('type', config('admin.product.type'))->where('level', $level)->get();
+      if ($row) {
+        $output = '';
+        $output .= '<option>Danh mục cấp ' . $level . '</option>';
+        foreach ($row as $v) {
+          $output .= '<option value="' . $v->id . '">
+                      ' . $v->title . '
+                    </option>';
+        }
+        echo $output;
+      }
+    }
   }
 }

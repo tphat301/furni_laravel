@@ -414,4 +414,54 @@ $(document).ready(function () {
       });
     });
   }
+
+  /* Handle change filter category */
+  if ($(".filter-category")) {
+    $(".filter-category").change(function () {
+      const action = $(this).attr("id");
+      let result;
+      let level;
+      switch (action) {
+        case "id_parent1":
+          result = "id_parent2";
+          level = 2;
+          break;
+        case "id_parent2":
+          result = "id_parent3";
+          level = 3;
+          break;
+        case "id_parent3":
+          result = "id_parent4";
+          level = 4;
+          break;
+
+        default:
+          break;
+      }
+      $.ajax({
+        url: $(this).data("url"),
+        data: {
+          level: level,
+          id: $(this).val(),
+          _token: $(this).data("token"),
+        },
+        method: "POST",
+        success: function (respone) {
+          $("#" + result).html(respone);
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
+  /* Handle change filter rendering category */
+  if ($(".filter-category-rendering")) {
+    $(".filter-category-rendering").change(function () {
+      const url = $(this).find(":selected").val();
+      window.location.href = url;
+    });
+  }
 });

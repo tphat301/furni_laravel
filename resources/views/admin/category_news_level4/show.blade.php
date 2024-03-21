@@ -21,20 +21,19 @@
   </section>
 
   <section class="content">
-    {!! Form::open(['name' => 'form-news-detail', 'route' => ['admin.news.update', $row->id], 'class' => ['form-product-detail'], 'files' => true]) !!}
+    {!! Form::open(['name' => 'form-product-detail', 'route' => ['admin.category_product4.update', $row->id], 'class' => ['form-product-detail'], 'files' => true]) !!}
     @method('PUT')
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.news') }}" title="Thoát">
+        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.category_product4') }}" title="Thoát">
           <i class="fas fa-sign-out-alt mr-2"></i>Thoát
         </a>
       </div>
 
       <div class="row">
         <div class="col-xl-8">
-          {{-- Slug --}}
           <div class="card card-primary card-outline text-sm">
             <div class="card-header">
               <h3 class="card-title">
@@ -58,7 +57,7 @@
                     <div class="tab-pane fade show active" id="tabs-sluglang-vi" role="tabpanel" aria-labelledby="tabs-lang">
                       <div class="form-gourp mb-0">
                         <label class="d-block">
-                          Đường dẫn mẫu:<span class="pl-2 font-weight-normal" id="slugurlpreviewvi"><strong class="text-info"></strong></span>
+                          Đường dẫn mẫu:<span class="pl-2 font-weight-normal"  id="slugurlpreviewvi"><strong class="text-info"></strong></span>
                         </label>
                         <input type="text" class="slug-seo form-control slug-input text-sm" name="slug" id="slug" value="{{ $row->slug }}" placeholder="Đường dẫn mẫu"/>
                       </div>
@@ -99,17 +98,17 @@
                         <input type="text" class="for-seo form-control text-sm" name="title" id="title" value="{{ $row->title }}" placeholder="Tiêu đề"/>
                       </div>
 
-                      @if (config('admin.news.desc') === true)
+                      @if (config('admin.product.category.category4.desc') === true)
                         <div class="form-group">
                           <label for="desc">Mô tả:</label>
-                          <textarea name="description" class="form-control text-sm {{ config('admin.news.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả">{!! $row->desc !!}</textarea>
+                          <textarea name="description" class="form-control text-sm {{ config('admin.product.category.category4.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả">{!! $row->desc !!}</textarea>
                         </div>
                       @endif
 
-                      @if (config('admin.news.content') === true)
+                      @if (config('admin.product.category.category4.content') === true)
                         <div class="form-group">
                           <label for="content">Nội dung:</label>
-                          <textarea name="content" class="form-control text-sm {{ config('admin.news.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung">{!! $row->content !!}</textarea>
+                          <textarea name="content" class="form-control text-sm {{ config('admin.product.category.category4.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung">{!! $row->content !!}</textarea>
                         </div>
                       @endif
                     </div>
@@ -122,7 +121,7 @@
 
         <div class="col-xl-4">
           {{-- Category --}}
-          @if (config('admin.news.category.active') === true)
+          @if (config('admin.product.category.active') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Danh mục</h3>
@@ -134,85 +133,23 @@
               </div>
               <div class="card-body">
                 <div class="form-group-category row">
-
-                  {{-- Category 1 --}}
-                  @if($row1->count() > 0)
-                    <div class="form-group col-xl-6 col-sm-4">
-                      <label class="d-block" for="id_parent1">
-                        {{ config('admin.news.category.category1.name') }}:
-                      </label>
-                      <select id="id_parent1" name="id_parent1" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.news.filter_category') }}" tabindex="-1" aria-hidden="true">
-                        <option value="0">{{ config('admin.news.category.category1.name') }}</option>
-                        @foreach ($row1 as $v1)
-                          <option value="{{ $v1->id }}" {{$v1->id === $row->id_parent1 ? 'selected' : ''}}>
-                            {{$v1->title}}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
-
-                  {{-- Category 2 --}}
-                  @if($row2->count() > 0)
-                    <div class="form-group col-xl-6 col-sm-4">
-                      <label class="d-block" for="id_parent2">
-                        {{ config('admin.news.category.category2.name') }}:
-                      </label>
-                      <select id="id_parent2" name="id_parent2" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.news.filter_category') }}" tabindex="-1" aria-hidden="true">
-                        <option value="0">
-                          {{ config('admin.news.category.category2.name') }}
+                  <div class="form-group col-xl-6 col-sm-4">
+                    <label class="d-block" for="id_parent1">
+                      Danh mục cấp 3:
+                    </label>
+                    <select id="id_parent1" name="id_parent1" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                      <option value="0">Danh mục cấp 3</option>
+                      @foreach ($rowCategory1 as $row1)
+                        <option value="{{ $row1->id }}" {{$row1->id === $row->id_parent ? 'selected' : ''}}>
+                          {{ $row1->title }}
                         </option>
-                        @foreach ($row2 as $v2)
-                          <option value="{{ $v2->id }}" {{$v2->id === $row->id_parent2 ? 'selected' : ''}}>
-                            {{$v2->title}}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
-
-                  {{-- Category 3 --}}
-                  @if($row3->count() > 0)
-                    <div class="form-group col-xl-6 col-sm-4">
-                      <label class="d-block" for="id_parent3">
-                        {{ config('admin.news.category.category3.name') }}:
-                      </label>
-                      <select id="id_parent3" name="id_parent3" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.news.filter_category') }}" tabindex="-1" aria-hidden="true">
-                        <option value="0">
-                          {{ config('admin.news.category.category3.name') }}
-                        </option>
-                        @foreach ($row3 as $v3)
-                          <option value="{{ $v3->id }}" {{$v3->id === $row->id_parent3 ? 'selected' : ''}}>
-                            {{$v3->title}}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
-
-                  {{-- Category 4 --}}
-                  @if($row4->count() > 0)
-                    <div class="form-group col-xl-6 col-sm-4">
-                      <label class="d-block" for="id_parent4">
-                        {{ config('admin.news.category.category4.name') }}:
-                      </label>
-                      <select id="id_parent4" name="id_parent4" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.news.filter_category') }}" tabindex="-1" aria-hidden="true">
-                        <option value="0">
-                          {{ config('admin.news.category.category4.name') }}
-                        </option>
-                        @foreach ($row4 as $v4)
-                          <option value="{{ $v4->id }}" {{$v4->id === $row->id_parent4 ? 'selected' : ''}}>
-                            {{$v4->title}}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                  @endif
+                      @endforeach
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
           @endif
-
 
           {{-- Info --}}
           <div class="card card-primary card-outline text-sm">
@@ -231,7 +168,7 @@
                 @php
                   $status = !empty($row->status) ? explode(",", $row->status) : [];
                 @endphp
-                @foreach (config('admin.news.status') as $key => $value)
+                @foreach (config('admin.product.category.category4.status') as $key => $value)
                   <div class="form-group d-inline-block mb-2 mr-2">
                     <label for="{{$key}}-checkbox" class="d-inline-block align-middle mb-0 mr-2">{{$value}}:</label>
                     <div class="custom-control custom-checkbox d-inline-block align-middle">
@@ -243,7 +180,7 @@
               </div>
 
               <div class="row">
-                {{-- Number --}}
+                <!-- Number -->
                 <div class="form-group col-md-6">
                   <label for="num" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
                   <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="num" placeholder="Số thứ tự" value="{{ $row->num }}"/>
@@ -253,7 +190,7 @@
           </div>
 
           {{-- Photo 1 --}}
-          @if (config('admin.news.photo1') === true)
+          @if (config('admin.product.category.category4.photo1') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 1</h3>
@@ -267,8 +204,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview1">
                     @if (!empty($row->photo1))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/news/$row->photo1")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.news.delete_photo', ['id' => $row->id, 'action' => 'photo1']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product4/$row->photo1")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_product4.delete_photo', ['id' => $row->id, 'action' => 'photo1']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -283,7 +220,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.news.thumb1') }}
+                    {{ config('admin.product.category.category4.thumb1') }}
                   </div>
                 </div>
               </div>
@@ -291,7 +228,7 @@
           @endif
 
           {{-- Photo 2 --}}
-          @if (config('admin.news.photo2') === true)
+          @if (config('admin.product.category.category4.photo2') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 2</h3>
@@ -305,8 +242,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview2">
                     @if (!empty($row->photo2))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/news/$row->photo2")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.news.delete_photo', ['id' => $row->id, 'action' => 'photo2']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product4/$row->photo2")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_product4.delete_photo', ['id' => $row->id, 'action' => 'photo2']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -321,7 +258,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.news.thumb2') }}
+                    {{ config('admin.product.category.category4.thumb2') }}
                   </div>
                 </div>
               </div>
@@ -329,7 +266,7 @@
           @endif
 
           {{-- Photo 3 --}}
-          @if (config('admin.news.photo3') === true)
+          @if (config('admin.product.category.category4.photo3') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 3</h3>
@@ -343,12 +280,12 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview3">
                     @if (!empty($row->photo3))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/news/$row->photo3")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.news.delete_photo', ['id' => $row->id, 'action' => 'photo3']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product4/$row->photo3")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_product4.delete_photo', ['id' => $row->id, 'action' => 'photo3']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
-                      <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}"/>
+                      <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png") }}" alt="{{ $row->title }}"/>
                     @endif
                   </div>
                   <label class="photoUpload-file" id="photo-zone3" for="file-zone3">
@@ -359,7 +296,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.news.thumb3') }}
+                    {{ config('admin.product.category.category4.thumb3') }}
                   </div>
                 </div>
               </div>
@@ -367,7 +304,7 @@
           @endif
 
           {{-- Photo 4 --}}
-          @if (config('admin.news.photo4') === true)
+          @if (config('admin.product.category.category4.photo4') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 4</h3>
@@ -381,8 +318,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview4">
                     @if (!empty($row->photo4))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/news/$row->photo4")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.news.delete_photo', ['id' => $row->id, 'action' => 'photo4']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product4/$row->photo4")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_product4.delete_photo', ['id' => $row->id, 'action' => 'photo4']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -397,7 +334,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.news.thumb4') }}
+                    {{ config('admin.product.category.category4.thumb4') }}
                   </div>
                 </div>
               </div>
@@ -407,7 +344,7 @@
       </div>
 
       {{-- SEO --}}
-      @if (config('admin.news.seo') === true)
+      @if (config('admin.product.category.category4.seo') === true)
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung SEO</h3>
@@ -429,7 +366,7 @@
                   <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                     <div class="tab-pane fade show active" id="tabs-seolang-vi" role="tabpanel" aria-labelledby="tabs-lang">
 
-                      @if (config('admin.news.seo_title') === true)
+                      @if (config('admin.product.category.category4.seo_title') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="titlevi">SEO Title:</label>
@@ -438,7 +375,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.news.seo_keyword') === true)
+                      @if (config('admin.product.category.category4.seo_keyword') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="keywords_seo">SEO Keywords (tối đa 70 ký tự):</label>
@@ -447,7 +384,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.news.seo_desc') === true)
+                      @if (config('admin.product.category.category4.seo_desc') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="description_seo">SEO Description (tối đa 160 ký tự):</label>
@@ -463,103 +400,6 @@
           </div>
         </div>
       @endif
-      @if (config('admin.news.schema') === true)
-        <div class="card card-primary card-outline text-sm">
-          <div class="card-header">
-            <h3 class="card-title">Schema JSON Article</h3>
-            <button class="btn btn-sm bg-gradient-success float-right submit-check build-schema" name="build-schema"><i class="far fa-save mr-2"></i>Lưu và tạo tự động Schema</button>
-          </div>
-          <div class="card-body">
-            <div class="card-seo">
-              <div class="card card-primary card-outline card-outline-tabs">
-                <div class="card-header p-0 border-bottom-0">
-                  <ul class="nav nav-tabs" id="custom-tabs-one-tab-lang" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active">Schema JSON</a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="card-body">
-                  <div class="tab-content" id="custom-tabs-one-tabContent-lang">
-                    <div class="tab-pane fade show active">
-                      <div class="form-group">
-                        <div class="label-seo">
-                          <label for="schema">Schema JSON:</label>
-                        </div>
-                        <textarea class="form-control" name="schema" id="schema" rows="15" placeholder="Nếu quý khách không biết cách sử dụng Data Structure vui lòng không nhập nội dung vào khung này để tránh phát sinh lỗi...">{!! !empty($rowSeo->schema) ? $rowSeo->schema : '' !!}</textarea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      @endif
-    {!! Form::close() !!}
-
-    <!-- Gallery -->
-    @if (config('admin.news.gallery.active') === true)
-      <div class="card card-primary card-outline text-sm">
-        <div class="card-header">
-          <h3 class="card-title">Bộ sưu tập sản phẩm</h3>
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <label for="filer-gallery" class="label-filer-gallery mb-3">
-                Album hình ảnh: (.jpg|.gif|.png|.jpeg|.gif)
-              </label>
-            </div>
-            {!! Form::open(['name' => 'dropzoneFrom', 'route' => ['admin.product.gallery', $row->id],'id' => 'dropzoneFrom','style'=>'background: #f9fbfe;', 'class' => ['jFiler','jFiler-theme-dragdropbox', 'dropzone'],'files' => true]) !!}
-              <div class="jFiler-input-dragDrop" style="border:0">
-                <div class="jFiler-input-inner">
-                  <div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div>
-                </div>
-              </div>
-            {!! Form::close() !!}
-          </div>
-        </div>
-
-        @if (count($rowGallery) > 0)
-          <div>
-            <div class="jFiler-items my-jFiler-items jFiler-row">
-              <ul class="jFiler-items-list jFiler-items-grid row scroll-bar" id="jFilerSortable">
-                @foreach ($rowGallery as $gallery)
-                  <li class="jFiler-item my-jFiler-item my-jFiler-item-66 col-xl-2 col-lg-3 col-md-3 col-sm-4 col-6">
-                    <div class="jFiler-item-container position-relative">
-                      <div class="jFiler-item-inner">
-                        <div class="jFiler-item-thumb">
-                          <div class="jFiler-item-thumb-image">
-                            @if (!empty($gallery->photo))
-                              <img class="" src="{{ url("public/upload/gallery/$gallery->photo")  }}" alt="{{ $gallery->title }}"/>
-                              <i class="fas fa-arrows-alt"></i>
-                            @else
-                              <img class="h-100 w-100" src="{{ url("resources/images/noimage.png")  }}" alt="No images"/>
-                            @endif
-                          </div>
-                        </div>
-                        <a href="{{ route('admin.news.gallery.delete', ['id' => $gallery->id, 'photo' => $gallery->photo]) }}" class="icon-jfi-trash jFiler-item-trash-action my-jFiler-item-trash text-danger d-block" id="delete-gallery" title="Xóa ảnh">
-                          <i class="fas fa-trash-alt text-white"></i>
-                        </a>
-                        <input type="number" class="form-control form-control-sm my-jFiler-item-info rounded my-1 text-sm update-num-gallery" data-url="{{ route('admin.news.gallery.number', ['id' => $gallery->id]) }}" value="{{ $gallery->num }}" data-id="{{ $gallery->id }}" data-token="{{ csrf_token() }}" />
-                        <input type="text" class="form-control form-control-sm my-jFiler-item-info rounded text-sm gallery-title" data-token="{{ csrf_token() }}" data-id="{{ $gallery->id }}" data-url="{{ route('admin.news.gallery.title', ['id' => $gallery->id]) }}" value="{{ $gallery->title }}" placeholder="{{ $gallery->title }}" />
-                      </div>
-                    </div>
-                  </li>
-                @endforeach
-              </ul>
-            </div>
-          </div>
-        @endif
-      </div>
-    @endif
-
-    {{-- Schema SEO --}}
-    {!! Form::open(['name' => 'form-schema', 'route' => ['admin.news.schema', $row->id], 'class' => ['form-schema d-none']]) !!}
     {!! Form::close() !!}
   </section>
 @endsection

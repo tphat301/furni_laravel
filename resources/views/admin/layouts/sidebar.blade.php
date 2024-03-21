@@ -15,10 +15,10 @@
           </a>
         </li>
 
-        {{-- Module product --}}
+        {{-- MODULE PRODUCT --}}
         @if (config('admin.product.active') === true)
-          <li class="nav-item has-treeview menu-group {{session('module_active') === 'product_index' || session('module_active') === 'product_create' ? 'menu-open' : '' }}">
-            <a class="nav-link {{session('module_active') === 'product_index' || session('module_active') === 'product_create' ? 'active' : '' }}" title="{{ config('admin.product.name') }}">
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'product_index' || session('module_active') === 'product_create' || session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{session('module_active') === 'product_index' || session('module_active') === 'product_create' || session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' ? 'active' : '' }}" title="{{ config('admin.product.name') }}">
               <i class="nav-icon text-sm fas fa-layer-group"></i>
               <p>
                 {{ config('admin.product.name') }}<i class="right fas fa-angle-left"></i>
@@ -26,7 +26,7 @@
             </a>
             <ul class="nav nav-treeview">
               @if (config('admin.product.category.active') === true)
-                <li class="nav-item has-treeview">
+                <li class="nav-item has-treeview {{session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' ? 'menu-open' : '' }}">
                   <a class="nav-link" href="#" title="{{ config('admin.product.category.name') }}">
                     <i class="nav-icon text-sm fas fa-boxes"></i>
                     <p>
@@ -38,28 +38,38 @@
                     {{-- Category 1 --}}
                     @if(config('admin.product.category.category1.active') === true)
                       <li class="nav-item">
-                        <a class="nav-link" href="" title="{{ config('admin.product.category.category1.name') }}">
+                        <a href="{{ route('admin.category_product1') }}" class="nav-link {{session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' ? 'active' : '' }}" title="{{ config('admin.product.category.category1.name') }}">
                           <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.product.category.category1.name') }}
                         </a>
                       </li>
                     @endif
 
                     {{-- Category 2 --}}
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 2">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 2
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 2">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 3
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 2">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 4
-                      </a>
-                    </li>
+                    @if(config('admin.product.category.category2.active') === true)
+                      <li class="nav-item">
+                        <a href="{{ route('admin.category_product2') }}" class="nav-link {{session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' ? 'active' : '' }}" title="{{ config('admin.product.category.category2.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.product.category.category2.name') }}
+                        </a>
+                      </li>
+                    @endif
+
+                    {{-- Category 3 --}}
+                    @if(config('admin.product.category.category3.active') === true)
+                      <li class="nav-item">
+                        <a href="{{ route('admin.category_product3') }}" class="nav-link {{session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' ? 'active' : '' }}" title="{{ config('admin.product.category.category3.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.product.category.category3.name') }}
+                        </a>
+                      </li>
+                    @endif
+
+                    {{-- Category 4 --}}
+                    @if(config('admin.product.category.category4.active') === true)
+                      <li class="nav-item">
+                        <a href="{{ route('admin.category_product4') }}" class="nav-link {{session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' ? 'active' : '' }}" title="{{ config('admin.product.category.category4.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.product.category.category4.name') }}
+                        </a>
+                      </li>
+                    @endif
                   </ul>
                 </li>
               @endif
@@ -91,8 +101,8 @@
 
         {{-- Module news --}}
         @if (config('admin.news.active') === true)
-          <li class="nav-item has-treeview menu-group {{session('module_active') === 'news_index' || session('module_active') === 'news_create' ? 'menu-open' : '' }}">
-            <a class="nav-link {{session('module_active') === 'news_index' || session('module_active') === 'news_create' ? 'active' : '' }}" title="{{ config('admin.news.name') }}">
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'news_index' || session('module_active') === 'news_create' || session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{session('module_active') === 'news_index' || session('module_active') === 'news_create' || session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'active' : '' }}" title="{{ config('admin.news.name') }}">
               <i class="nav-icon text-sm fas fa-layer-group"></i>
               <p>
                 {{ config('admin.news.name') }}<i class="right fas fa-angle-left"></i>
@@ -100,7 +110,7 @@
             </a>
             <ul class="nav nav-treeview">
               @if (config('admin.news.category.active') === true)
-                <li class="nav-item has-treeview">
+                <li class="nav-item has-treeview {{session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'menu-open' : '' }}">
                   <a class="nav-link" href="#" title="{{ config('admin.news.category.name') }}">
                     <i class="nav-icon text-sm fas fa-boxes"></i>
                     <p>
@@ -112,32 +122,38 @@
                     {{-- Category 1 --}}
                     @if(config('admin.news.category.category1.active') === true)
                       <li class="nav-item">
-                        <a class="nav-link" href="" title="{{ config('admin.news.category.category1.name') }}">
+                        <a href="{{ route('admin.category_news1') }}" class="nav-link {{session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' ? 'active' : '' }}" title="{{ config('admin.news.category.category1.name') }}">
                           <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.news.category.category1.name') }}
                         </a>
                       </li>
                     @endif
 
                     {{-- Category 2 --}}
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 2">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 2
-                      </a>
-                    </li>
+                    @if(config('admin.news.category.category2.active') === true)
+                      <li class="nav-item">
+                        <a href="{{ route('admin.category_news2') }}" class="nav-link {{session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' ? 'active' : '' }}" title="{{ config('admin.news.category.category2.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.news.category.category2.name') }}
+                        </a>
+                      </li>
+                    @endif
 
                     {{-- Category 3 --}}
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 2">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 3
-                      </a>
-                    </li>
+                    @if(config('admin.news.category.category3.active') === true)
+                      <li class="nav-item">
+                        <a href="{{ route('admin.category_news3') }}" class="nav-link {{session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' ? 'active' : '' }}" title="{{ config('admin.news.category.category3.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.news.category.category3.name') }}
+                        </a>
+                      </li>
+                    @endif
 
                     {{-- Category 4 --}}
-                    <li class="nav-item">
-                      <a class="nav-link" href="" title="Danh mục cấp 2">
-                        <i class="nav-icon text-sm far fa-caret-square-right"></i>Danh mục cấp 4
-                      </a>
-                    </li>
+                    @if(config('admin.news.category.category4.active') === true)
+                      <li class="nav-item">
+                        <a href="{{ route('admin.category_news4') }}" class="nav-link {{session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'active' : '' }}" href="" title="{{ config('admin.news.category.category4.name') }}">
+                          <i class="nav-icon text-sm far fa-caret-square-right"></i>{{ config('admin.news.category.category4.name') }}
+                        </a>
+                      </li>
+                    @endif
                   </ul>
                 </li>
               @endif
@@ -149,6 +165,7 @@
             </ul>
           </li>
         @endif
+
 
         {{-- Module post --}}
         @if (config('admin.post.active') === true)

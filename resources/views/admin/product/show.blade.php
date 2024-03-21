@@ -1,6 +1,6 @@
 @extends('admin.index')
 
-@section('title', 'Chi tiết sản phẩm')
+@section('title', $row->title)
 
 @section('content')
   <section class="content-header text-sm">
@@ -13,7 +13,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            Chi tiết sản phẩm
+            {{ $row->title }}
           </li>
         </ol>
       </div>
@@ -136,29 +136,78 @@
                 <div class="form-group-category row">
 
                   {{-- Category 1 --}}
-                  @if(config('admin.product.category.category1.active') === true)
-                  <div class="form-group col-xl-6 col-sm-4">
-                    <label class="d-block" for="id_parent1">
-                      {{ config('admin.product.category.category1.name') }}:
-                    </label>
-                    <select id="id_parent1" name="id_parent1" class="form-control filter-category select2-hidden-accessible" data-url="admin/product/filter_category" tabindex="-1" aria-hidden="true">
-                      <option>{{ config('admin.product.category.category1.name') }}</option>
-                      <option value="68">Thời trang nổi bật nữ 2024</option>
-                      <option value="69">Thời trang nổi bật nam 2024</option>
-                    </select>
-                    <input type="hidden" name="_token_filter_category" value="1710336692"/>
-                  </div>
+                  @if($row1->count() > 0)
+                    <div class="form-group col-xl-6 col-sm-4">
+                      <label class="d-block" for="id_parent1">
+                        {{ config('admin.product.category.category1.name') }}:
+                      </label>
+                      <select id="id_parent1" name="id_parent1" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.product.filter_category') }}" tabindex="-1" aria-hidden="true">
+                        <option value="0">{{ config('admin.product.category.category1.name') }}</option>
+                        @foreach ($row1 as $v1)
+                          <option value="{{ $v1->id }}" {{$v1->id === $row->id_parent1 ? 'selected' : ''}}>
+                            {{$v1->title}}
+                          </option>
+                        @endforeach
+                      </select>
+                    </div>
                   @endif
 
                   {{-- Category 2 --}}
-                  <div class="form-group col-xl-6 col-sm-4">
-                    <label class="d-block" for="id_parent2">Danh mục cấp 2:</label>
-                    <select id="id_parent2" name="id_parent2" class="form-control filter-category select2-hidden-accessible" data-url="admin/product/filter_category" tabindex="-1" aria-hidden="true">
-                      <option>Danh mục cấp 2</option>
-                      <option value="68">Thời trang nổi bật nữ 2024</option>
-                      <option value="69">Thời trang nổi bật nam 2024</option>
-                    </select>
-                  </div>
+                  @if($row2->count() > 0)
+                    <div class="form-group col-xl-6 col-sm-4">
+                      <label class="d-block" for="id_parent2">
+                        {{ config('admin.product.category.category2.name') }}:
+                      </label>
+                      <select id="id_parent2" name="id_parent2" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.product.filter_category') }}" tabindex="-1" aria-hidden="true">
+                        <option value="0">
+                          {{ config('admin.product.category.category2.name') }}
+                        </option>
+                        @foreach ($row2 as $v2)
+                          <option value="{{ $v2->id }}" {{$v2->id === $row->id_parent2 ? 'selected' : ''}}>
+                            {{$v2->title}}
+                          </option>
+                        @endforeach
+                      </select>
+                    </div>
+                  @endif
+
+                  {{-- Category 3 --}}
+                  @if($row3->count() > 0)
+                    <div class="form-group col-xl-6 col-sm-4">
+                      <label class="d-block" for="id_parent3">
+                        {{ config('admin.product.category.category3.name') }}:
+                      </label>
+                      <select id="id_parent3" name="id_parent3" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.product.filter_category') }}" tabindex="-1" aria-hidden="true">
+                        <option value="0">
+                          {{ config('admin.product.category.category3.name') }}
+                        </option>
+                        @foreach ($row3 as $v3)
+                          <option value="{{ $v3->id }}" {{$v3->id === $row->id_parent3 ? 'selected' : ''}}>
+                            {{$v3->title}}
+                          </option>
+                        @endforeach
+                      </select>
+                    </div>
+                  @endif
+
+                  {{-- Category 4 --}}
+                  @if($row4->count() > 0)
+                    <div class="form-group col-xl-6 col-sm-4">
+                      <label class="d-block" for="id_parent4">
+                        {{ config('admin.product.category.category4.name') }}:
+                      </label>
+                      <select id="id_parent4" name="id_parent4" class="form-control filter-category select2-hidden-accessible" data-token="{{ csrf_token() }}" data-url="{{ route('admin.product.filter_category') }}" tabindex="-1" aria-hidden="true">
+                        <option value="0">
+                          {{ config('admin.product.category.category4.name') }}
+                        </option>
+                        @foreach ($row4 as $v4)
+                          <option value="{{ $v4->id }}" {{$v4->id === $row->id_parent4 ? 'selected' : ''}}>
+                            {{$v4->title}}
+                          </option>
+                        @endforeach
+                      </select>
+                    </div>
+                  @endif
                 </div>
               </div>
             </div>
@@ -513,7 +562,6 @@
               <label for="filer-gallery" class="label-filer-gallery mb-3">
                 Album hình ảnh: (.jpg|.gif|.png|.jpeg|.gif)
               </label>
-              {{-- <button type="submit" class="btn btn-sm bg-gradient-success gallery-sending-hide" id="submit-all">Upload ảnh</button> --}}
             </div>
             {!! Form::open(['name' => 'dropzoneFrom', 'route' => ['admin.product.gallery', $row->id],'id' => 'dropzoneFrom','style'=>'background: #f9fbfe;', 'class' => ['jFiler','jFiler-theme-dragdropbox', 'dropzone'],'files' => true]) !!}
               <div class="jFiler-input-dragDrop" style="border:0">
