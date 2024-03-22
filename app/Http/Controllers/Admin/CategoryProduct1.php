@@ -85,7 +85,7 @@ class CategoryProduct1 extends Controller
         'photo4' => !empty($photo4) ? $photo4 : null,
         'level' => 1,
         'id_parent' => 0,
-        'num' => 0,
+        'num' => !empty($request->input('num')) ? $request->input('num') : 0,
         'hash' => $hashKey
       ];
       $dataSeo = [

@@ -1,6 +1,6 @@
 @extends('admin.index')
 
-@section('title', 'Thêm tiêu chí')
+@section('title', $row->title)
 
 @section('content')
   <section class="content-header text-sm">
@@ -13,7 +13,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            Thêm tiêu chí
+            {{ $row->title }}
           </li>
         </ol>
       </div>
@@ -21,8 +21,8 @@
   </section>
 
   <section class="content">
-    <form action="{{ route('admin.criteria.save') }}" class="validation-form" method="POST" enctype="multipart/form-data">
-      @csrf
+    {!! Form::open(['name' => 'form-criteria-detail', 'route' => ['admin.criteria.update', $row->id], 'class' => ['form-product-detail'], 'files' => true]) !!}
+    @method('PUT')
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
@@ -48,7 +48,7 @@
                 <div class="card-header p-0 border-bottom-0">
                   <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
                     <li class="nav-item">
-                      <a class="nav-link active" id="tabs-lang" data-toggle="pill" href="javscript:void()" role="tab" aria-controls="tabs-lang-vi" aria-selected="true">
+                      <a class="nav-link active">
                         Tiếng Việt
                       </a>
                     </li>
@@ -61,25 +61,20 @@
 
                       <div class="form-group">
                         <label for="title">Tiêu đề:</label>
-                        <input type="text" class="form-control text-sm" name="title" id="title" placeholder="Tiêu đề"/>
-                        @error('title')
-                          <small class="text-sm text-danger">
-                            {{ $message }}
-                          </small>
-                        @enderror
+                        <input type="text" class="form-control text-sm" name="title" id="title" value="{{ $row->title }}" placeholder="Tiêu đề"/>
                       </div>
 
                       @if (config('admin.post.criteria.desc') === true)
                         <div class="form-group">
                           <label for="desc">Mô tả:</label>
-                          <textarea name="desc" class="form-control text-sm {{ config('admin.post.criteria.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
+                          <textarea name="description" class="form-control text-sm {{ config('admin.post.criteria.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả">{!! $row->desc !!}</textarea>
                         </div>
                       @endif
 
                       @if (config('admin.post.criteria.content') === true)
                         <div class="form-group">
                           <label for="content">Nội dung:</label>
-                          <textarea name="content" class="form-control text-sm {{ config('admin.post.criteria.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
+                          <textarea name="content" class="form-control text-sm {{ config('admin.post.criteria.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung">{!! $row->content !!}</textarea>
                         </div>
                       @endif
                     </div>
@@ -105,11 +100,14 @@
             {{-- Status --}}
             <div class="card-body">
               <div class="form-group">
+                @php
+                  $status = !empty($row->status) ? explode(",", $row->status) : [];
+                @endphp
                 @foreach (config('admin.post.criteria.status') as $key => $value)
                   <div class="form-group d-inline-block mb-2 mr-2">
                     <label for="{{$key}}-checkbox" class="d-inline-block align-middle mb-0 mr-2">{{$value}}:</label>
                     <div class="custom-control custom-checkbox d-inline-block align-middle">
-                      <input type="checkbox" class="custom-control-input {{$key}}-checkbox" name="status[]" id="{{$key}}-checkbox" value="{{$key}}"/>
+                      <input type="checkbox" class="custom-control-input {{$key}}-checkbox" name="status[]" id="{{$key}}-checkbox" value="{{$key}}" {{ in_array($key, $status) ? 'checked' : '' }}/>
                       <label for="{{$key}}-checkbox" class="custom-control-label"></label>
                     </div>
                   </div>
@@ -119,8 +117,8 @@
               <div class="row">
                 {{-- Number --}}
                 <div class="form-group col-md-6">
-                  <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="numb" placeholder="Số thứ tự" value="1"/>
+                  <label for="num" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
+                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="num" placeholder="Số thứ tự" value="{{ $row->num }}"/>
                 </div>
               </div>
             </div>
@@ -140,7 +138,14 @@
               <div class="card-body">
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview1">
-                    <img class="rounded" src="{{ url('resources/images/noimage.png') }}" alt="Hình ảnh 1"/>
+                    @if (!empty($row->photo1))
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/post/$row->photo1")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.criteria.delete_photo', ['id' => $row->id, 'action' => 'photo1']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                        <i class="far fa-trash-alt text-white"></i>
+                      </a>
+                    @else
+                      <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}"/>
+                    @endif
                   </div>
                   <label class="photoUpload-file" id="photo-zone1" for="file-zone1">
                     <input type="file" name="photo1" id="file-zone1"/>
@@ -171,7 +176,14 @@
               <div class="card-body">
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview2">
-                    <img class="rounded" src="{{ url('resources/images/noimage.png') }}" alt="Hình ảnh 2"/>
+                    @if (!empty($row->photo2))
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/post/$row->photo2")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.criteria.delete_photo', ['id' => $row->id, 'action' => 'photo2']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                        <i class="far fa-trash-alt text-white"></i>
+                      </a>
+                    @else
+                      <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}"/>
+                    @endif
                   </div>
                   <label class="photoUpload-file" id="photo-zone2" for="file-zone2">
                     <input type="file" name="photo2" id="file-zone2"/>
@@ -202,7 +214,14 @@
               <div class="card-body">
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview3">
-                    <img class="rounded" src="{{ url('resources/images/noimage.png') }}" alt="Hình ảnh 3"/>
+                    @if (!empty($row->photo3))
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/post/$row->photo3")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.criteria.delete_photo', ['id' => $row->id, 'action' => 'photo3']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                        <i class="far fa-trash-alt text-white"></i>
+                      </a>
+                    @else
+                      <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}"/>
+                    @endif
                   </div>
                   <label class="photoUpload-file" id="photo-zone3" for="file-zone3">
                     <input type="file" name="photo3" id="file-zone3"/>
@@ -233,7 +252,14 @@
               <div class="card-body">
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview4">
-                    <img class="rounded" src="{{ url('resources/images/noimage.png') }}" alt="Hình ảnh 4"/>
+                    @if (!empty($row->photo4))
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/post/$row->photo4")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.criteria.delete_photo', ['id' => $row->id, 'action' => 'photo4']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                        <i class="far fa-trash-alt text-white"></i>
+                      </a>
+                    @else
+                      <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}"/>
+                    @endif
                   </div>
                   <label class="photoUpload-file" id="photo-zone4" for="file-zone4">
                     <input type="file" name="photo4" id="file-zone4"/>
@@ -251,6 +277,6 @@
           @endif
         </div>
       </div>
-    </form>
+    {!! Form::close() !!}
   </section>
 @endsection

@@ -21,20 +21,20 @@
   </section>
 
   <section class="content">
-    <form action="" class="validation-form" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.policy.save') }}" class="validation-form" method="POST" enctype="multipart/form-data">
+      @csrf
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.news') }}" title="Thoát">
+        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.policy') }}" title="Thoát">
           <i class="fas fa-sign-out-alt mr-2"></i>Thoát
         </a>
       </div>
 
       <div class="row">
         <div class="col-xl-8">
-          {{-- Slug --}}
-          @if (config('admin.post.policy.slug') === true)
+          @if(config('admin.post.policy.slug') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">
@@ -60,7 +60,12 @@
                           <label class="d-block">
                             Đường dẫn mẫu:<span class="pl-2 font-weight-normal" id="slugurlpreviewvi"><strong class="text-info"></strong></span>
                           </label>
-                          <input type="text" class="slug-seo form-control slug-input no-validate text-sm" name="slug" id="slug" value="" placeholder="Đường dẫn mẫu"/>
+                          <input type="text" class="slug-seo form-control slug-input no-validate text-sm" name="slug" id="slug" placeholder="Đường dẫn mẫu"/>
+                          @error('slug')
+                            <small class="text-sm text-danger">
+                              {{ $message }}
+                            </small>
+                          @enderror
                         </div>
                       </div>
                     </div>
@@ -97,14 +102,25 @@
 
                       <div class="form-group">
                         <label for="title">Tiêu đề:</label>
-                        <input type="text" class="for-seo form-control text-sm" name="title" id="title" placeholder="Tiêu đề" required=""/>
+                        <input type="text" class="for-seo form-control text-sm" name="title" id="title" placeholder="Tiêu đề"/>
+                        @error('title')
+                          <small class="text-sm text-danger">
+                            {{ $message }}
+                          </small>
+                        @enderror
                       </div>
+
+                      @if (config('admin.post.policy.desc') === true)
+                        <div class="form-group">
+                          <label for="desc">Mô tả:</label>
+                          <textarea name="desc" class="form-control text-sm {{ config('admin.post.policy.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
+                        </div>
+                      @endif
 
                       @if (config('admin.post.policy.content') === true)
                         <div class="form-group">
-                          <label for="content">
-                            Nội dung:</label>
-                          <textarea name="content" class="form-control text-sm {{ config('admin.post.policy.content_tiny') === true ? 'tiny' : '' }}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
+                          <label for="content">Nội dung:</label>
+                          <textarea name="content" class="form-control text-sm {{ config('admin.post.policy.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
                         </div>
                       @endif
                     </div>
@@ -130,32 +146,23 @@
             {{-- Status --}}
             <div class="card-body">
               <div class="form-group">
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input type="checkbox" class="custom-control-input banchay-checkbox" name="status[]" id="banchay-checkbox" value="banchay"/>
-                    <label for="banchay-checkbox" class="custom-control-label"></label>
+                @foreach (config('admin.post.policy.status') as $key => $value)
+                  <div class="form-group d-inline-block mb-2 mr-2">
+                    <label for="{{$key}}-checkbox" class="d-inline-block align-middle mb-0 mr-2">{{$value}}:</label>
+                    <div class="custom-control custom-checkbox d-inline-block align-middle">
+                      <input type="checkbox" class="custom-control-input {{$key}}-checkbox" name="status[]" id="{{$key}}-checkbox" value="{{$key}}"/>
+                      <label for="{{$key}}-checkbox" class="custom-control-label"></label>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input type="checkbox" class="custom-control-input banchay-checkbox" name="status[]" id="banchay-checkbox" value="banchay"/>
-                    <label for="banchay-checkbox" class="custom-control-label"></label>
-                  </div>
-                </div>
-                <div class="form-group d-inline-block mb-2 mr-2">
-                  <label for="banchay-checkbox" class="d-inline-block align-middle mb-0 mr-2">Bán chạy:</label>
-                  <div class="custom-control custom-checkbox d-inline-block align-middle">
-                    <input type="checkbox" class="custom-control-input banchay-checkbox" name="status[]" id="banchay-checkbox" value="banchay"/>
-                    <label for="banchay-checkbox" class="custom-control-label"></label>
-                  </div>
-                </div>
+                @endforeach
               </div>
-              <!-- STT -->
-              <div class="form-group">
-                <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-                <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="numb" placeholder="Số thứ tự" value="1"/>
+
+              <div class="row">
+                {{-- Number --}}
+                <div class="form-group col-md-6">
+                  <label for="numb" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
+                  <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="numb" value="1"/>
+                </div>
               </div>
             </div>
           </div>
@@ -309,7 +316,7 @@
                   <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                     <div class="tab-pane fade show active" id="tabs-seolang-vi" role="tabpanel" aria-labelledby="tabs-lang">
 
-                      @if (config('admin.news.seo_title') === true)
+                      @if (config('admin.post.policy.seo_title') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="titlevi">SEO Title:</label>
@@ -318,7 +325,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.news.seo_keyword') === true)
+                      @if (config('admin.post.policy.seo_keyword') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="keywords_seo">SEO Keywords (tối đa 70 ký tự):</label>
@@ -327,7 +334,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.news.seo_desc') === true)
+                      @if (config('admin.post.policy.seo_desc') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="description_seo">SEO Description (tối đa 160 ký tự):</label>

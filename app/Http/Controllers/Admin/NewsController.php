@@ -11,34 +11,67 @@ use App\Utils\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class NewsController extends Controller
 {
   protected $helper;
+  protected $type;
+  protected $numberPerPage;
+  protected $withGallery;
+  protected $with1;
+  protected $with2;
+  protected $with3;
+  protected $with4;
+  protected $heightGallery;
+  protected $height1;
+  protected $height2;
+  protected $height3;
+  protected $height4;
+  protected $uploadNews;
   public function __construct()
   {
     $this->middleware('admin.auth');
     $this->helper = new Helpers();
+    $this->type = config('admin.news.type');
+    $this->numberPerPage = config('admin.news.number_per_page');
+    $this->withGallery = config("admin.news.gallery.width");
+    $this->with1 = config("admin.news.width1");
+    $this->with2 = config("admin.news.width2");
+    $this->with3 = config("admin.news.width3");
+    $this->with4 = config("admin.news.width4");
+    $this->height1 = config("admin.news.height1");
+    $this->height2 = config("admin.news.height2");
+    $this->height3 = config("admin.news.height3");
+    $this->height4 = config("admin.news.height4");
+    $this->heightGallery = config("admin.news.gallery.height");
+    $this->uploadNews = "public/upload/news";
   }
 
   /* News list */
   public function index(Request $request)
   {
+    $categoryAppendQueryString = ['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4];
     session(['module_active' => 'news_index']);
     $row1 = CategoryNews::where('type', config('admin.news.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row2 = CategoryNews::where('type', config('admin.news.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row3 = CategoryNews::where('type', config('admin.news.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row4 = CategoryNews::where('type', config('admin.news.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-
     if ($request->input('keyword')) {
-      $rows = News::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', config('admin.news.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.news.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      $rows = News::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', $this->type)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
     } else {
       if ($request->category1) {
-        $rows = News::where('type', config('admin.news.type'))->where('id_parent1', $request->category1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.news.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = News::where('type', $this->type)->where('id_parent1', $request->category1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       } elseif ($request->category2) {
-        $rows = News::where('type', config('admin.news.type'))->where('id_parent2', $request->category2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.news.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = News::where('type', $this->type)->where('id_parent2', $request->category2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
+      } elseif ($request->category3) {
+        $rows = News::where('type', $this->type)->where('id_parent3', $request->category3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
+      } elseif ($request->category4) {
+        $rows = News::where('type', $this->type)->where('id_parent4', $request->category4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       } else {
-        $rows = News::where('type', config('admin.news.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.news.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = News::where('type', $this->type)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       }
     }
     return view('admin.news.index', compact('rows', 'row1', 'row2', 'row3', 'row4'));
@@ -59,43 +92,69 @@ class NewsController extends Controller
   public function save(Request $request)
   {
     $hashKey = Str::lower(Str::random(4));
+    if (!file_exists($this->uploadNews)) {
+      mkdir($this->uploadNews, 0777, true);
+    }
     $validator = Validator::make(
       $request->all(),
       [
-        'slug' => ['required', 'unique:news', 'max:255'],
-        'title' => ['required', 'unique:news', 'max:255']
+        'slug' => ['required', 'unique:news'],
+        'title' => ['required', 'unique:news'],
+        "photo1" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+        "photo2" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+        "photo3" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+        "photo4" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520']
       ],
       [
         'required' => ':attribute không được để trống',
         'unique' => ':attribute đã tồn tại. :attribute truy cập mục này có thể bị trùng lặp.',
         'string' => ':attribute phải ở dạng chuỗi ký tự',
-        'max' => ':attribute chỉ cho phép nhập vào tối đa là :max ký tự',
+        'image' => ':attribute chỉ cho phép upload định dạng là hình ảnh.',
+        'mimes' => ':attribute chỉ cho phép upload các định dạng :mimes',
+        'max' => ':attribute chỉ cho upload tối đa là :max MB'
       ],
       [
         'slug' => 'Đường dẫn',
         'title' => 'Tiêu đề',
+        'photo1' => 'Hình ảnh 1',
+        'photo2' => 'Hình ảnh 2',
+        'photo3' => 'Hình ảnh 3',
+        'photo4' => 'Hình ảnh 4'
       ]
     );
-    if ($this->helper->hasFile("photo1")) {
-      $photo1 = $this->helper->uploadFile("photo1", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
-    }
-    if ($this->helper->hasFile("photo2")) {
-      $photo2 = $this->helper->uploadFile("photo2", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
-    }
-    if ($this->helper->hasFile("photo3")) {
-      $photo3 = $this->helper->uploadFile("photo3", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
-    }
-    if ($this->helper->hasFile("photo4")) {
-      $photo4 = $this->helper->uploadFile("photo4", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
-    }
     if (!$validator->fails()) {
+      $manager = new ImageManager(new Driver());
+      if ($request->hasFile('photo1')) {
+        $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+        $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
+        $path = public_path('upload/news');
+        $image->save($path . "/" . $photo1);
+      }
+      if ($request->hasFile('photo2')) {
+        $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+        $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
+        $path = public_path('upload/news');
+        $image->save($path . "/" . $photo2);
+      }
+      if ($request->hasFile('photo3')) {
+        $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+        $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
+        $path = public_path('upload/news');
+        $image->save($path . "/" . $photo3);
+      }
+      if ($request->hasFile('photo4')) {
+        $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+        $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
+        $path = public_path('upload/news');
+        $image->save($path . "/" . $photo4);
+      }
       $data = [
         'slug' => htmlspecialchars($request->input('slug')),
         'title' => htmlspecialchars($request->input('title')),
         'status' => !empty($request->input('status')) ? htmlspecialchars(implode(',', $request->input('status'))) : 'hienthi',
         'hash' => $hashKey,
-        'type' => config('admin.news.type'),
-        'num' => 0,
+        'type' => $this->type,
+        'num' => !empty($request->input('num')) ? $request->input('num') : 0,
         'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
         'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
         'photo1' => !empty($photo1) ? $photo1 : null,
@@ -110,7 +169,7 @@ class NewsController extends Controller
       $dataSeo = [
         'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
         'hash_seo' => $hashKey,
-        'type' => config('admin.news.type'),
+        'type' => $this->type,
         'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
         'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
       ];
@@ -118,37 +177,53 @@ class NewsController extends Controller
       Seo::create($dataSeo);
       return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.news'));
     } else {
-      return redirect()->route('admin.news.create')->withErrors($validator)->withInput();;
+      return redirect()->route('admin.news.create')->withErrors($validator)->withInput();
     }
   }
 
   /* News detail */
   public function show(Request $request)
   {
-    $row = News::where('type', config('admin.news.type'))->find($request->id);
+    $row = News::where('type', $this->type)->find($request->id);
     $row1 = CategoryNews::where('type', config('admin.news.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row2 = CategoryNews::where('type', config('admin.news.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row3 = CategoryNews::where('type', config('admin.news.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row4 = CategoryNews::where('type', config('admin.news.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $rowSeo = Seo::where('type', config('admin.news.type'))->where('hash_seo', $row->hash)->first();
-    $rowGallery = GalleryProduct::where('type', config('admin.news.type'))->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $rowSeo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
+    $rowGallery = GalleryProduct::where('type', $this->type)->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     return view('admin.news.show', compact('row', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));
   }
 
   /* News update */
   public function update(Request $request)
   {
-    if ($this->helper->hasFile("photo1")) {
-      $photo1 = $this->helper->uploadFile("photo1", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
+    if (!file_exists($this->uploadNews)) {
+      mkdir($this->uploadNews, 0777, true);
     }
-    if ($this->helper->hasFile("photo2")) {
-      $photo2 = $this->helper->uploadFile("photo2", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
+    $manager = new ImageManager(new Driver());
+    if ($request->hasFile('photo1')) {
+      $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+      $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
+      $path = public_path('upload/news');
+      $image->save($path . "/" . $photo1);
     }
-    if ($this->helper->hasFile("photo3")) {
-      $photo3 = $this->helper->uploadFile("photo3", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
+    if ($request->hasFile('photo2')) {
+      $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+      $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
+      $path = public_path('upload/news');
+      $image->save($path . "/" . $photo2);
     }
-    if ($this->helper->hasFile("photo4")) {
-      $photo4 = $this->helper->uploadFile("photo4", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/news/");
+    if ($request->hasFile('photo3')) {
+      $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+      $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
+      $path = public_path('upload/news');
+      $image->save($path . "/" . $photo3);
+    }
+    if ($request->hasFile('photo4')) {
+      $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+      $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
+      $path = public_path('upload/news');
+      $image->save($path . "/" . $photo4);
     }
     $data = [
       'slug' => htmlspecialchars($request->input('slug')),
@@ -164,16 +239,16 @@ class NewsController extends Controller
       'id_parent1' => !empty($request->input('id_parent1')) ? $request->input('id_parent1') : 0,
       'id_parent2' => !empty($request->input('id_parent2')) ? $request->input('id_parent2') : 0,
       'id_parent3' => !empty($request->input('id_parent3')) ? $request->input('id_parent3') : 0,
-      'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0,
+      'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0
     ];
-    $news = News::where('type', config('admin.news.type'))->find($request->id);
+    $news = News::where('type', $this->type)->find($request->id);
     $dataSeo = [
       'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
       'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
       'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
       'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
       'hash_seo' => $news->hash,
-      'type' => config('admin.news.type'),
+      'type' => $this->type,
       'id_parent' => !empty($news->id) ? $news->id  : null
     ];
     $news->update($data);
@@ -189,7 +264,7 @@ class NewsController extends Controller
   /* News duplicate */
   public function copy($id)
   {
-    $row = News::where('type', config('admin.news.type'))->find($id);
+    $row = News::where('type', $this->type)->find($id);
     $titleCopy = $row->title . " copy " . str_repeat(Str::lower(Str::random(4)), 1);
     $slugCopy = $this->helper->changeTitle($titleCopy);
     News::create(
@@ -198,7 +273,7 @@ class NewsController extends Controller
         'title' => htmlspecialchars($titleCopy),
         'desc' => !empty($row->desc) ? htmlspecialchars(htmlspecialchars_decode($row->desc)) : null,
         'content' => !empty($row->content) ? htmlspecialchars(htmlspecialchars_decode($row->content)) : null,
-        'type' => config('admin.news.type'),
+        'type' => $this->type,
         'num' => 0,
         'hash' => Str::lower(Str::random(4)),
         'status' => 'hienthi',
@@ -216,9 +291,9 @@ class NewsController extends Controller
   {
     $uploadNews = "public/upload/news/";
     $uploadGallery = "public/upload/gallery/";
-    $news = News::where('type', config('admin.news.type'))->where('hash', $hash)->find($id);
-    $seo = SEO::where('type', config('admin.news.type'))->where('hash_seo', $hash);
-    $gallerys = GalleryProduct::where('type', config('admin.news.type'))->where('id_parent', $id);
+    $news = News::where('type', $this->type)->where('hash', $hash)->find($id);
+    $seo = SEO::where('type', $this->type)->where('hash_seo', $hash);
+    $gallerys = GalleryProduct::where('type', $this->type)->where('id_parent', $id);
     $photo1 = isset($news->photo1) && !empty($news->photo1) ? $news->photo1 : "";
     $photo2 = isset($news->photo2) && !empty($news->photo2) ? $news->photo2 : "";
     $photo3 = isset($news->photo3) && !empty($news->photo3) ? $news->photo3 : "";
@@ -233,7 +308,7 @@ class NewsController extends Controller
         if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
       }
     }
-    News::where('type', config('admin.news.type'))->where('hash', $hash)->delete($id);
+    News::where('type', $this->type)->where('hash', $hash)->delete($id);
     $seo->delete();
     $gallerys->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.news'));
@@ -244,7 +319,7 @@ class NewsController extends Controller
   {
     $uploadNews = "public/upload/news/";
     $uploadGallery = "public/upload/gallery/";
-    $news = News::where('type', config('admin.news.type'))->find($request->checkitem);
+    $news = News::where('type', $this->type)->find($request->checkitem);
     $idParent = [];
     foreach ($news as $v) {
       $photo1 = isset($v->photo1) && !empty($v->photo1) ? $v->photo1 : "";
@@ -259,7 +334,7 @@ class NewsController extends Controller
     }
     if (count($idParent) > 0) {
       foreach ($idParent as $v) {
-        $gallerys = GalleryProduct::where('type', config('admin.news.type'))->where('id_parent', $v);
+        $gallerys = GalleryProduct::where('type', $this->type)->where('id_parent', $v);
         if ($gallerys->get()) {
           foreach ($gallerys->get() as $gallery) {
             $galleryPhoto = isset($gallery->photo) && !empty($gallery->photo) ? $gallery->photo : "";
@@ -269,7 +344,7 @@ class NewsController extends Controller
         $gallerys->delete();
       }
     }
-    Seo::where('type', config('admin.news.type'))->whereIn('hash_seo', $request->hashes)->delete();
+    Seo::where('type', $this->type)->whereIn('hash_seo', $request->hashes)->delete();
     News::destroy($request->checkitem);
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.news'));
   }
@@ -277,13 +352,13 @@ class NewsController extends Controller
   /* News update number ajax */
   public function updateNumber(Request $request)
   {
-    News::where('id', $request->id)->where('type', config('admin.news.type'))->update(['num' => $request->value]);
+    News::where('id', $request->id)->where('type', $this->type)->update(['num' => $request->value]);
   }
 
   /* News update status ajax */
   public function updateStatus(Request $request)
   {
-    $status = News::select('status')->where('type', config('admin.news.type'))->find($request->id)->status;
+    $status = News::select('status')->where('type', $this->type)->find($request->id)->status;
     $status = !empty($status) ? explode(',', $status) : [];
     if (array_search($request->value, $status) !== false) {
       $key = array_search($request->value, $status);
@@ -292,7 +367,7 @@ class NewsController extends Controller
       array_push($status, $request->value);
     }
     $statusStr = implode(',', $status);
-    News::where('id', $request->id)->where('type', config('admin.news.type'))->update(['status' => $statusStr]);
+    News::where('id', $request->id)->where('type', $this->type)->update(['status' => $statusStr]);
   }
 
   /* News delete photo */
@@ -300,22 +375,22 @@ class NewsController extends Controller
   {
     $uploadNews = "public/upload/news/";
     $action = $request->action;
-    $photo = News::where('type', config('admin.news.type'))->find($request->id)->$action;
+    $photo = News::where('type', $this->type)->find($request->id)->$action;
     $photo = isset($photo) && !empty($photo) ? $photo : "";
     if (file_exists($uploadNews . $photo) && !empty($photo)) unlink($uploadNews . $photo);
-    News::where('id', $request->id)->where('type', config('admin.news.type'))->update([$action => null]);
+    News::where('id', $request->id)->where('type', $this->type)->update([$action => null]);
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.news.show', ['id' => $request->id]));
   }
 
   /* News schema JSON */
   public function schema(Request $request)
   {
-    $row = News::where('type', config('admin.news.type'))->find($request->id);
-    $seo = Seo::where('type', config('admin.news.type'))->where('hash_seo', $row->hash)->first();
+    $row = News::where('type', $this->type)->find($request->id);
+    $seo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
     $photo = !empty($row->photo1 ? config('app.asset_url') . "upload/news/$row->photo1" : config('app.url') . "resources/images/noimage.png");
-    $schemaJSON = $this->helper->buildSchemaArticle($row->id, $row->title, $photo, $row->created_at, $row->updated_at, 'Tên công ty', config('app.url') . "news/" . $row->slug, "Logo", config('app.url'));
+    $schemaJSON = $this->helper->buildSchemaArticle($row->id, $row->title, $photo, Carbon::createFromFormat('Y-m-d H:i:s', $row->created_at)->format('d/m/Y H:i:s'), Carbon::createFromFormat('Y-m-d H:i:s', $row->updated_at)->format('d/m/Y H:i:s'), 'Tên công ty', config('app.url') . "news/" . $row->slug, "Logo", config('app.url'));
     if ($seo) {
-      Seo::where('type', config('admin.news.type'))->where('hash_seo', $row->hash)->update(['schema' => $schemaJSON]);
+      Seo::where('type', $this->type)->where('hash_seo', $row->hash)->update(['schema' => $schemaJSON]);
       return $this->helper->transfer("Tạo schema JSON Article", "success", route('admin.news.show', ['id' => $row->id]));
     } else {
       echo "<script>alert('Bạn cần có Data SEO để tạo Schema JSON Article')</script>";
@@ -326,19 +401,45 @@ class NewsController extends Controller
   /* News gallery */
   public function gallery(Request $request)
   {
-    $typeAllow = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
     $uploadGallery = "public/upload/gallery/";
-    if ($this->helper->hasFile("file")) {
-      $fileResult = $this->helper->uploadFile("file", $typeAllow, $uploadGallery);
-      $dataGallery = [
-        'photo' => $fileResult,
-        'id_parent' => $request->id,
-        'title' => pathinfo($fileResult, PATHINFO_FILENAME),
-        'status' => "hienthi",
-        'num' => 0,
-        'type' => config('admin.news.type')
-      ];
-      GalleryProduct::create($dataGallery);
+    if (!file_exists($uploadGallery)) {
+      mkdir($uploadGallery, 0777, true);
+    }
+    $validator = Validator::make(
+      $request->all(),
+      [
+        "file" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+      ],
+      [
+        'image' => ':attribute chỉ cho phép upload định dạng là hình ảnh.',
+        'mimes' => ':attribute chỉ cho phép upload các định dạng :mimes',
+        'max' => ':attribute chỉ cho upload tối đa là :max MB',
+      ],
+      [
+        "file" => 'Hình ảnh'
+      ]
+    );
+
+    if (!$validator->fails()) {
+      $manager = new ImageManager(new Driver());
+      if ($request->hasFile('file')) {
+        $image = $manager->read($request->file)->resize($this->withGallery, $this->heightGallery);
+        $photo = hexdec(uniqid()) . "." . $request->file->getClientOriginalName();
+        $path = public_path('upload/gallery');
+        $image->save($path . "/" . $photo);
+        $dataGallery = [
+          'photo' => $photo,
+          'id_parent' => $request->id,
+          'title' => pathinfo($photo, PATHINFO_FILENAME),
+          'status' => "hienthi",
+          'num' => 0,
+          'type' => $this->type
+        ];
+        GalleryProduct::create($dataGallery);
+      }
+      return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.news'));
+    } else {
+      return $this->helper->transfer("Thêm dữ liệu", "danger", route('admin.news'));
     }
   }
 
@@ -346,10 +447,10 @@ class NewsController extends Controller
   public function deleteGallery(Request $request)
   {
     $uploadGallery = "public/upload/gallery/";
-    $galleryPhoto = GalleryProduct::where('type', config('admin.news.type'))->find($request->id)->photo;
+    $galleryPhoto = GalleryProduct::where('type', $this->type)->find($request->id)->photo;
     $galleryPhoto = isset($galleryPhoto) && !empty($galleryPhoto) ? $galleryPhoto : "";
     if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
-    GalleryProduct::where('type', config('admin.news.type'))->where('id', $request->id)->delete();
+    GalleryProduct::where('type', $this->type)->where('id', $request->id)->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.news'));
   }
 
@@ -358,7 +459,7 @@ class NewsController extends Controller
   {
     @$id = $request->id;
     @$title = $request->value;
-    GalleryProduct::where('type', config('admin.news.type'))->where('id', $id)->update(['title' => $title]);
+    GalleryProduct::where('type', $this->type)->where('id', $id)->update(['title' => $title]);
   }
 
   /* News gallery update number */
@@ -366,7 +467,7 @@ class NewsController extends Controller
   {
     @$id = $request->id;
     @$num = $request->value;
-    GalleryProduct::where('type', config('admin.news.type'))->where('id', $id)->update(['num' => $num]);
+    GalleryProduct::where('type', $this->type)->where('id', $id)->update(['num' => $num]);
   }
 
   /* News filter category */
@@ -374,7 +475,7 @@ class NewsController extends Controller
   {
     @$id = $request->id;
     @$level = $request->level;
-    $row = CategoryNews::where('type', config('admin.news.type'))->where('id_parent', $id)->where('level', $level)->get();
+    $row = CategoryNews::where('type', $this->type)->where('id_parent', $id)->where('level', $level)->get();
     if ($row->count() > 0) {
       $output = '';
       $output .= '<option>Danh mục cấp ' . $level . '</option>';
@@ -385,7 +486,7 @@ class NewsController extends Controller
       }
       echo $output;
     } else {
-      $row = CategoryNews::where('type', config('admin.news.type'))->where('level', $level)->get();
+      $row = CategoryNews::where('type', $this->type)->where('level', $level)->get();
       if ($row) {
         $output = '';
         $output .= '<option>Danh mục cấp ' . $level . '</option>';

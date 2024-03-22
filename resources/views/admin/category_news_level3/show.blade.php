@@ -21,13 +21,13 @@
   </section>
 
   <section class="content">
-    {!! Form::open(['name' => 'form-product-detail', 'route' => ['admin.category_product3.update', $row->id], 'class' => ['form-product-detail'], 'files' => true]) !!}
+    {!! Form::open(['name' => 'form-news-detail', 'route' => ['admin.category_news3.update', $row->id], 'class' => ['form-news-detail'], 'files' => true]) !!}
     @method('PUT')
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.category_product3') }}" title="Thoát">
+        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.category_news3') }}" title="Thoát">
           <i class="fas fa-sign-out-alt mr-2"></i>Thoát
         </a>
       </div>
@@ -98,17 +98,17 @@
                         <input type="text" class="for-seo form-control text-sm" name="title" id="title" value="{{ $row->title }}" placeholder="Tiêu đề"/>
                       </div>
 
-                      @if (config('admin.product.category.category3.desc') === true)
+                      @if (config('admin.news.category.category3.desc') === true)
                         <div class="form-group">
                           <label for="desc">Mô tả:</label>
-                          <textarea name="description" class="form-control text-sm {{ config('admin.product.category.category3.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả">{!! $row->desc !!}</textarea>
+                          <textarea name="description" class="form-control text-sm {{ config('admin.news.category.category3.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả">{!! $row->desc !!}</textarea>
                         </div>
                       @endif
 
-                      @if (config('admin.product.category.category3.content') === true)
+                      @if (config('admin.news.category.category3.content') === true)
                         <div class="form-group">
                           <label for="content">Nội dung:</label>
-                          <textarea name="content" class="form-control text-sm {{ config('admin.product.category.category3.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung">{!! $row->content !!}</textarea>
+                          <textarea name="content" class="form-control text-sm {{ config('admin.news.category.category3.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung">{!! $row->content !!}</textarea>
                         </div>
                       @endif
                     </div>
@@ -121,7 +121,7 @@
 
         <div class="col-xl-4">
           {{-- Category --}}
-          @if (config('admin.product.category.active') === true)
+          @if (config('admin.news.category.active') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Danh mục</h3>
@@ -168,7 +168,7 @@
                 @php
                   $status = !empty($row->status) ? explode(",", $row->status) : [];
                 @endphp
-                @foreach (config('admin.product.category.category3.status') as $key => $value)
+                @foreach (config('admin.news.category.category3.status') as $key => $value)
                   <div class="form-group d-inline-block mb-2 mr-2">
                     <label for="{{$key}}-checkbox" class="d-inline-block align-middle mb-0 mr-2">{{$value}}:</label>
                     <div class="custom-control custom-checkbox d-inline-block align-middle">
@@ -190,7 +190,7 @@
           </div>
 
           {{-- Photo 1 --}}
-          @if (config('admin.product.category.category3.photo1') === true)
+          @if (config('admin.news.category.category3.photo1') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 1</h3>
@@ -204,8 +204,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview1">
                     @if (!empty($row->photo1))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product3/$row->photo1")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.category_product3.delete_photo', ['id' => $row->id, 'action' => 'photo1']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_news3/$row->photo1")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_news3.delete_photo', ['id' => $row->id, 'action' => 'photo1']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -220,7 +220,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category3.thumb1') }}
+                    {{ config('admin.news.category.category3.thumb1') }}
                   </div>
                 </div>
               </div>
@@ -228,7 +228,7 @@
           @endif
 
           {{-- Photo 2 --}}
-          @if (config('admin.product.category.category3.photo2') === true)
+          @if (config('admin.news.category.category3.photo2') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 2</h3>
@@ -242,8 +242,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview2">
                     @if (!empty($row->photo2))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product3/$row->photo2")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.category_product3.delete_photo', ['id' => $row->id, 'action' => 'photo2']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_news3/$row->photo2")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_news3.delete_photo', ['id' => $row->id, 'action' => 'photo2']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -258,7 +258,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category3.thumb2') }}
+                    {{ config('admin.news.category.category3.thumb2') }}
                   </div>
                 </div>
               </div>
@@ -266,7 +266,7 @@
           @endif
 
           {{-- Photo 3 --}}
-          @if (config('admin.product.category.category3.photo3') === true)
+          @if (config('admin.news.category.category3.photo3') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 3</h3>
@@ -280,8 +280,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview3">
                     @if (!empty($row->photo3))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product3/$row->photo3")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.category_product3.delete_photo', ['id' => $row->id, 'action' => 'photo3']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_news3/$row->photo3")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_news3.delete_photo', ['id' => $row->id, 'action' => 'photo3']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -296,7 +296,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category3.thumb3') }}
+                    {{ config('admin.news.category.category3.thumb3') }}
                   </div>
                 </div>
               </div>
@@ -304,7 +304,7 @@
           @endif
 
           {{-- Photo 4 --}}
-          @if (config('admin.product.category.category3.photo4') === true)
+          @if (config('admin.news.category.category3.photo4') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 4</h3>
@@ -318,8 +318,8 @@
                 <div class="photoUpload-zone">
                   <div class="photoUpload-detail" id="photoUpload-preview4">
                     @if (!empty($row->photo4))
-                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product3/$row->photo4")  }}" alt="{{ $row->title }}"/>
-                      <a class="delete-photo" href="{{ route('admin.category_product3.delete_photo', ['id' => $row->id, 'action' => 'photo4']) }}" style="cursor: pointer" title="Xóa hình ảnh">
+                      <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_news3/$row->photo4")  }}" alt="{{ $row->title }}"/>
+                      <a class="delete-photo" href="{{ route('admin.category_news3.delete_photo', ['id' => $row->id, 'action' => 'photo4']) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
                     @else
@@ -334,7 +334,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category3.thumb4') }}
+                    {{ config('admin.news.category.category3.thumb4') }}
                   </div>
                 </div>
               </div>
@@ -344,7 +344,7 @@
       </div>
 
       {{-- SEO --}}
-      @if (config('admin.product.category.category3.seo') === true)
+      @if (config('admin.news.category.category3.seo') === true)
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung SEO</h3>
@@ -366,7 +366,7 @@
                   <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                     <div class="tab-pane fade show active" id="tabs-seolang-vi" role="tabpanel" aria-labelledby="tabs-lang">
 
-                      @if (config('admin.product.category.category3.seo_title') === true)
+                      @if (config('admin.news.category.category3.seo_title') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="titlevi">SEO Title:</label>
@@ -375,7 +375,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.product.category.category3.seo_keyword') === true)
+                      @if (config('admin.news.category.category3.seo_keyword') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="keywords_seo">SEO Keywords (tối đa 70 ký tự):</label>
@@ -384,7 +384,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.product.category.category3.seo_desc') === true)
+                      @if (config('admin.news.category.category3.seo_desc') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="description_seo">SEO Description (tối đa 160 ký tự):</label>

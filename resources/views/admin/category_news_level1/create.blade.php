@@ -21,20 +21,20 @@
   </section>
 
   <section class="content">
-    <form action="{{ route('admin.category_product1.save') }}" class="validation-form" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.category_news1.save') }}" class="validation-form" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.category_product1') }}" title="Thoát">
+        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.category_news1') }}" title="Thoát">
           <i class="fas fa-sign-out-alt mr-2"></i>Thoát
         </a>
       </div>
 
       <div class="row">
         <div class="col-xl-8">
-          @if(config('admin.product.category.category1.slug') === true)
+          @if(config('admin.news.category.category1.slug') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">
@@ -110,17 +110,17 @@
                         @enderror
                       </div>
 
-                      @if (config('admin.product.category.category1.desc') === true)
+                      @if (config('admin.news.category.category1.desc') === true)
                         <div class="form-group">
                           <label for="desc">Mô tả:</label>
-                          <textarea name="desc" class="form-control text-sm {{ config('admin.product.category.category1.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
+                          <textarea name="desc" class="form-control text-sm {{ config('admin.news.category.category1.desc_tiny') === true ? 'tiny' : ''}}" id="desc" cols="30" rows="10" placeholder="Mô tả"></textarea>
                         </div>
                       @endif
 
-                      @if (config('admin.product.category.category1.content') === true)
+                      @if (config('admin.news.category.category1.content') === true)
                         <div class="form-group">
                           <label for="content">Nội dung:</label>
-                          <textarea name="content" class="form-control text-sm {{ config('admin.product.category.category1.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
+                          <textarea name="content" class="form-control text-sm {{ config('admin.news.category.category1.content_tiny') === true ? 'tiny' : ''}}" id="content" cols="30" rows="10" placeholder="Nội dung"></textarea>
                         </div>
                       @endif
                     </div>
@@ -146,7 +146,7 @@
             {{-- Status --}}
             <div class="card-body">
               <div class="form-group">
-                @foreach (config('admin.product.category.category1.status') as $key => $value)
+                @foreach (config('admin.news.category.category1.status') as $key => $value)
                   <div class="form-group d-inline-block mb-2 mr-2">
                     <label for="{{$key}}-checkbox" class="d-inline-block align-middle mb-0 mr-2">{{$value}}:</label>
                     <div class="custom-control custom-checkbox d-inline-block align-middle">
@@ -168,7 +168,7 @@
           </div>
 
           <!-- Photo 1 -->
-          @if (config('admin.product.category.category1.photo1') === true)
+          @if (config('admin.news.category.category1.photo1') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 1</h3>
@@ -191,7 +191,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category1.thumb1') }}
+                    {{ config('admin.news.category.category1.thumb1') }}
                   </div>
                 </div>
               </div>
@@ -199,7 +199,7 @@
           @endif
 
           {{-- Photo 2 --}}
-          @if (config('admin.product.category.category1.photo2') === true)
+          @if (config('admin.news.category.category1.photo2') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 2</h3>
@@ -222,7 +222,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category1.thumb2') }}
+                    {{ config('admin.news.category.category1.thumb2') }}
                   </div>
                 </div>
               </div>
@@ -230,7 +230,7 @@
           @endif
 
           {{-- Photo 3 --}}
-          @if (config('admin.product.category.category1.photo3') === true)
+          @if (config('admin.news.category.category1.photo3') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 3</h3>
@@ -253,7 +253,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category1.thumb3') }}
+                    {{ config('admin.news.category.category1.thumb3') }}
                   </div>
                 </div>
               </div>
@@ -261,7 +261,7 @@
           @endif
 
           {{-- Photo 4 --}}
-          @if (config('admin.product.category.category1.photo4') === true)
+          @if (config('admin.news.category.category1.photo4') === true)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Hình ảnh 4</h3>
@@ -284,7 +284,7 @@
                     <p class="photoUpload-choose btn btn-sm bg-gradient-success">Chọn hình</p>
                   </label>
                   <div class="photoUpload-dimension">
-                    {{ config('admin.product.category.category1.thumb4') }}
+                    {{ config('admin.news.category.category1.thumb4') }}
                   </div>
                 </div>
               </div>
@@ -294,7 +294,7 @@
       </div>
 
       {{-- SEO --}}
-      @if (config('admin.product.category.category1.seo') === true)
+      @if (config('admin.news.category.category1.seo') === true)
         <div class="card card-primary card-outline text-sm">
           <div class="card-header">
             <h3 class="card-title">Nội dung SEO</h3>
@@ -316,7 +316,7 @@
                   <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                     <div class="tab-pane fade show active" id="tabs-seolang-vi" role="tabpanel" aria-labelledby="tabs-lang">
 
-                      @if (config('admin.product.category.category1.seo_title') === true)
+                      @if (config('admin.news.category.category1.seo_title') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="titlevi">SEO Title:</label>
@@ -325,7 +325,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.product.category.category1.seo_keyword') === true)
+                      @if (config('admin.news.category.category1.seo_keyword') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="keywords_seo">SEO Keywords (tối đa 70 ký tự):</label>
@@ -334,7 +334,7 @@
                         </div>
                       @endif
 
-                      @if (config('admin.product.category.category1.seo_desc') === true)
+                      @if (config('admin.news.category.category1.seo_desc') === true)
                         <div class="form-group">
                           <div class="label-seo">
                             <label for="description_seo">SEO Description (tối đa 160 ký tự):</label>

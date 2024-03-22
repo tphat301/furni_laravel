@@ -39,11 +39,11 @@
         </div>
       </div>
       {{-- Tab category --}}
-      @if (config('admin.product.category.active') === true)
+      @if (config('admin.product.category.active') === true && $row1 -> count() > 0)
         <div class="card-footer form-group-category text-sm bg-light row">
 
           {{-- Category 1 --}}
-          @if ($row1 -> count() > 0)
+          @if (config('admin.product.category.category1.active') === true && $row1 -> count() > 0)
             <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
               <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                 <option value="{{ request()->fullUrlWithQuery(['category1' => '']) }}">
@@ -59,7 +59,7 @@
           @endif
 
           {{-- Category 2 --}}
-          @if ($row2 -> count() > 0)
+          @if (config('admin.product.category.category2.active') === true && $row2 -> count() > 0)
             <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
               <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                 <option value="{{ request()->fullUrlWithQuery(['category2' => '']) }}">
@@ -75,7 +75,7 @@
           @endif
 
           {{-- Category 3 --}}
-          @if ($row3 -> count() > 0)
+          @if (config('admin.product.category.category3.active') === true && $row3 -> count() > 0)
             <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
               <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                 <option value="{{ request()->fullUrlWithQuery(['category3' => '']) }}">
@@ -91,7 +91,7 @@
           @endif
 
           {{-- Category 4 --}}
-          @if ($row4 -> count() > 0)
+          @if (config('admin.product.category.category4.active') === true && $row4 -> count() > 0)
             <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
               <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                 <option value="{{ request()->fullUrlWithQuery(['category4' => '']) }}">

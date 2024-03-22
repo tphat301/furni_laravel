@@ -180,7 +180,7 @@
               {{-- Criteria --}}
               @if (config('admin.post.criteria.active') === true)
                 <li class="nav-item">
-                  <a class="nav-link {{session('module_active') === 'criteria_index' ? 'active' : '' }}" href="{{ route('admin.criteria.index') }}" title="{{ config('admin.post.criteria.name') }}">
+                  <a class="nav-link {{session('module_active') === 'criteria_index' || session('module_active') === 'criteria_create' ? 'active' : '' }}" href="{{ route('admin.criteria') }}" title="{{ config('admin.post.criteria.name') }}">
                     <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{ config('admin.post.criteria.name') }}</p>
                   </a>
                 </li>
@@ -189,7 +189,7 @@
               {{-- Policy --}}
               @if (config('admin.post.policy.active') === true)
                 <li class="nav-item">
-                  <a class="nav-link {{session('module_active') === 'policy_index' ? 'active' : '' }}" href="{{ route('admin.policy.index') }}" title="{{ config('admin.post.policy.name') }}">
+                  <a class="nav-link {{session('module_active') === 'policy_index' || session('module_active') === 'policy_create' ? 'active' : '' }}" href="{{ route('admin.policy') }}" title="{{ config('admin.post.policy.name') }}">
                     <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{ config('admin.post.policy.name') }}</p>
                   </a>
                 </li>
@@ -199,8 +199,8 @@
         @endif
 
         {{-- Quản lý hình ảnh --}}
-        <li class="nav-item has-treeview menu-group">
-          <a class="nav-link" title="Quản lý hình ảnh">
+        <li class="nav-item has-treeview menu-group {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'menu-open' : '' }}">
+          <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'active' : '' }}" title="Quản lý hình ảnh">
             <i class="nav-icon text-sm fas fa-photo-video"></i>
             <p>
               Quản lý hình ảnh<i class="right fas fa-angle-left"></i>
@@ -208,13 +208,18 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a class="nav-link" href="" title="Slideshow">
+              <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' ? 'active' : '' }}" href="{{route('admin.photo.slideshow.index')}}" title="Slideshow">
                 <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Slideshow</p>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="" title="Social">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Social</p>
+              <a class="nav-link {{session('module_active') === 'partner_index' || session('module_active') === 'partner_create' ? 'active' : '' }}" href="{{route('admin.photo.partner.index')}}" title="Đối tác">
+                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Đối tác</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'active' : '' }}" href="{{route('admin.photo.social_footer.index')}}" title="Social footer">
+                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Social footer</p>
               </a>
             </li>
           </ul>

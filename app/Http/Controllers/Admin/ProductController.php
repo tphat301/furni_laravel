@@ -37,6 +37,10 @@ class ProductController extends Controller
         $rows = Product::where('type', config('admin.product.type'))->where('id_parent1', $request->category1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
       } elseif ($request->category2) {
         $rows = Product::where('type', config('admin.product.type'))->where('id_parent2', $request->category2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      } elseif ($request->category3) {
+        $rows = Product::where('type', config('admin.product.type'))->where('id_parent3', $request->category3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      } elseif ($request->category4) {
+        $rows = Product::where('type', config('admin.product.type'))->where('id_parent4', $request->category4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
       } else {
         $rows = Product::where('type', config('admin.product.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
       }
@@ -100,7 +104,7 @@ class ProductController extends Controller
         'discount' => !empty($request->input('discount')) ? htmlspecialchars($request->input('discount')) : 0,
         'hash' => $hashKey,
         'type' => config('admin.product.type'),
-        'num' => 0,
+        'num' => !empty($request->input('num')) ? $request->input('num') : 0,
         'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
         'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
         'photo1' => !empty($photo1) ? $photo1 : null,
@@ -123,7 +127,7 @@ class ProductController extends Controller
       Seo::create($dataSeo);
       return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.product'));
     } else {
-      return redirect()->route('admin.product.create')->withErrors($validator)->withInput();;
+      return redirect()->route('admin.product.create')->withErrors($validator)->withInput();
     }
   }
 

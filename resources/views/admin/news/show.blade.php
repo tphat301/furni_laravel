@@ -122,7 +122,7 @@
 
         <div class="col-xl-4">
           {{-- Category --}}
-          @if (config('admin.news.category.active') === true)
+          @if (config('admin.news.category.active') === true && $row1->count() > 0)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Danh mục</h3>
@@ -514,7 +514,7 @@
                 Album hình ảnh: (.jpg|.gif|.png|.jpeg|.gif)
               </label>
             </div>
-            {!! Form::open(['name' => 'dropzoneFrom', 'route' => ['admin.product.gallery', $row->id],'id' => 'dropzoneFrom','style'=>'background: #f9fbfe;', 'class' => ['jFiler','jFiler-theme-dragdropbox', 'dropzone'],'files' => true]) !!}
+            {!! Form::open(['name' => 'dropzoneFrom', 'route' => ['admin.news.gallery', $row->id],'id' => 'dropzoneFrom','style'=>'background: #f9fbfe;', 'class' => ['jFiler','jFiler-theme-dragdropbox', 'dropzone'],'files' => true]) !!}
               <div class="jFiler-input-dragDrop" style="border:0">
                 <div class="jFiler-input-inner">
                   <div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div>

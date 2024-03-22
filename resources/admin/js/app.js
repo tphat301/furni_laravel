@@ -309,6 +309,29 @@ $(document).ready(function () {
     });
   }
 
+  /* Handle update num photo module */
+  if ($(".update-num-photo")) {
+    $(".update-num-photo").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "GET",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).val(),
+          type: $(this).data("type"),
+        },
+        dataType: "text",
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
+
   /* Handle update status */
   if ($(".update-status")) {
     $(".update-status").change(function () {
@@ -318,6 +341,29 @@ $(document).ready(function () {
         data: {
           id: $(this).data("id"),
           value: $(this).attr("name"),
+        },
+        dataType: "text",
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
+
+  /* Handle update status photo */
+  if ($(".update-status-photo")) {
+    $(".update-status-photo").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "GET",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).attr("name"),
+          type: $(this).data("type"),
         },
         dataType: "text",
         success: function (respone) {

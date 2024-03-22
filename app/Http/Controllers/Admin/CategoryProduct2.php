@@ -25,11 +25,10 @@ class CategoryProduct2 extends Controller
     session(['module_active' => 'category_product_level2_index']);
     if ($request->input('keyword')) {
       $rows = CategoryProduct::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.category.category2.number_per_page'));
-      return view('admin.category_product_level2.index', compact('rows'));
     } else {
       $rows = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.category.category2.number_per_page'));
-      return view('admin.category_product_level2.index', compact('rows'));
     }
+    return view('admin.category_product_level2.index', compact('rows'));
   }
 
   /* Category product create */
@@ -87,7 +86,7 @@ class CategoryProduct2 extends Controller
         'photo4' => !empty($photo4) ? $photo4 : null,
         'level' => 2,
         'id_parent' => !empty($request->input('id_parent1')) ? htmlspecialchars($request->input('id_parent1')) : 0,
-        'num' => 0,
+        'num' => !empty($request->input('num')) ? $request->input('num') : 0,
         'hash' => $hashKey
       ];
       $dataSeo = [

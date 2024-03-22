@@ -12,12 +12,14 @@ use App\Http\Controllers\Admin\CategoryNews3;
 use App\Http\Controllers\Admin\CategoryNews4;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryProduct1;
 use App\Http\Controllers\Admin\CategoryProduct2;
 use App\Http\Controllers\Admin\CategoryProduct3;
 use App\Http\Controllers\Admin\CategoryProduct4;
+use App\Http\Controllers\Admin\CriteriaController;
+use App\Http\Controllers\Admin\PhotoController;
+use App\Http\Controllers\Admin\PolicyController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'admin.auth']], function () {
   \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -196,8 +198,79 @@ Route::prefix('admin')->group(function () {
   Route::put('category_news4/update/{id}', [CategoryNews4::class, 'update'])->name('admin.category_news4.update');
 
   // Post Admin
-  Route::get('criteria', [PostController::class, 'criteriaIndex'])->name('admin.criteria.index');
-  Route::get('criteria/create', [PostController::class, 'criteriaCreate'])->name('admin.criteria.create');
-  Route::get('policy', [PostController::class, 'policyIndex'])->name('admin.policy.index');
-  Route::get('policy/create', [PostController::class, 'policyCreate'])->name('admin.policy.create');
+  /*Criteria*/
+  Route::get('criteria', [CriteriaController::class, 'index'])->name('admin.criteria');
+  Route::get('criteria/show/{id}', [CriteriaController::class, 'show'])->name('admin.criteria.show');
+  Route::get('criteria/copy/{id}', [CriteriaController::class, 'copy'])->name('admin.criteria.copy');
+  Route::get('criteria/create', [CriteriaController::class, 'create'])->name('admin.criteria.create');
+  Route::get('criteria/update_number', [CriteriaController::class, 'updateNumber'])->name('admin.criteria.update_number');
+  Route::get('criteria/update_status', [CriteriaController::class, 'updateStatus'])->name('admin.criteria.update_status');
+  Route::get('criteria/destroy', [CriteriaController::class, 'destroy'])->name('admin.criteria.destroy');
+  Route::get('criteria/delete_photo/{id}/{action}', [CriteriaController::class, 'deletePhoto'])->name('admin.criteria.delete_photo');
+  Route::delete('criteria/delete/{id}/{hash}', [CriteriaController::class, 'delete'])->name('admin.criteria.delete');
+  Route::post('criteria/save', [CriteriaController::class, 'save'])->name('admin.criteria.save');
+  Route::put('criteria/update/{id}', [CriteriaController::class, 'update'])->name('admin.criteria.update');
+
+  /*Policy*/
+  Route::get('policy', [PolicyController::class, 'index'])->name('admin.policy');
+  Route::get('policy/show/{id}', [PolicyController::class, 'show'])->name('admin.policy.show');
+  Route::get('policy/copy/{id}', [PolicyController::class, 'copy'])->name('admin.policy.copy');
+  Route::get('policy/create', [PolicyController::class, 'create'])->name('admin.policy.create');
+  Route::get('policy/update_number', [PolicyController::class, 'updateNumber'])->name('admin.policy.update_number');
+  Route::get('policy/update_status', [PolicyController::class, 'updateStatus'])->name('admin.policy.update_status');
+  Route::get('policy/destroy', [PolicyController::class, 'destroy'])->name('admin.policy.destroy');
+  Route::get('policy/delete_photo/{id}/{action}', [PolicyController::class, 'deletePhoto'])->name('admin.policy.delete_photo');
+  Route::delete('policy/delete/{id}/{hash}', [PolicyController::class, 'delete'])->name('admin.policy.delete');
+  Route::post('policy/save', [PolicyController::class, 'save'])->name('admin.policy.save');
+  Route::put('policy/update/{id}', [PolicyController::class, 'update'])->name('admin.policy.update');
+  Route::post('policy/schema/{id}', [PolicyController::class, 'schema'])->name('admin.policy.schema');
+
+  /*Photo multiple admin*/
+  Route::prefix('photo')->group(function () {
+    // Slideshow
+    Route::prefix('slideshow')->group(function () {
+      Route::get('/', [PhotoController::class, 'slideshowIndex'])->name('admin.photo.slideshow.index');
+      Route::get('create', [PhotoController::class, 'slideshowCreate'])->name('admin.photo.slideshow.create');
+      Route::get('show/{id}/{type}', [PhotoController::class, 'show'])->name('admin.photo.slideshow.show');
+      Route::get('destroy/{type}', [PhotoController::class, 'destroy'])->name('admin.photo.slideshow.destroy');
+      Route::get('update_number', [PhotoController::class, 'updateNumber'])->name('admin.photo.slideshow.update_number');
+      Route::get('update_status', [PhotoController::class, 'updateStatus'])->name('admin.photo.slideshow.update_status');
+      Route::get('delete_photo/{id}/{action}/{type}', [PhotoController::class, 'deletePhoto'])->name('admin.photo.slideshow.delete_photo');
+      Route::post('{type}', [PhotoController::class, 'save'])->name('admin.photo.slideshow.save');
+      Route::put('update/{id}/{type}', [PhotoController::class, 'update'])->name('admin.photo.slideshow.update');
+      Route::delete('delete/{id}/{hash}/{type}', [PhotoController::class, 'delete'])->name('admin.photo.slideshow.delete');
+    });
+
+    // Partner
+    Route::prefix('partner')->group(function () {
+      Route::get('/', [PhotoController::class, 'partnerIndex'])->name('admin.photo.partner.index');
+      Route::get('create', [PhotoController::class, 'partnerCreate'])->name('admin.photo.partner.create');
+      Route::get('destroy/{type}', [PhotoController::class, 'destroy'])->name('admin.photo.partner.destroy');
+      Route::get('show/{id}/{type}', [PhotoController::class, 'show'])->name('admin.photo.partner.show');
+      Route::get('update_number', [PhotoController::class, 'updateNumber'])->name('admin.photo.partner.update_number');
+      Route::get('update_status', [PhotoController::class, 'updateStatus'])->name('admin.photo.partner.update_status');
+      Route::get('copy/{id}/{type}', [PhotoController::class, 'copy'])->name('admin.photo.partner.copy');
+      Route::get('delete_photo/{id}/{action}/{type}', [PhotoController::class, 'deletePhoto'])->name('admin.photo.partner.delete_photo');
+      Route::post('{type}', [PhotoController::class, 'save'])->name('admin.photo.partner.save');
+      Route::put('update/{id}/{type}', [PhotoController::class, 'update'])->name('admin.photo.partner.update');
+      Route::delete('delete/{id}/{hash}/{type}', [PhotoController::class, 'delete'])->name('admin.photo.partner.delete');
+    });
+
+    // Social footer
+    Route::prefix('social_footer')->group(function () {
+      Route::get('/', [PhotoController::class, 'socialFooterIndex'])->name('admin.photo.social_footer.index');
+      Route::get('create', [PhotoController::class, 'socialFooterCreate'])->name('admin.photo.social_footer.create');
+      Route::get('destroy/{type}', [PhotoController::class, 'destroy'])->name('admin.photo.social_footer.destroy');
+      Route::get('show/{id}/{type}', [PhotoController::class, 'show'])->name('admin.photo.social_footer.show');
+      Route::get('update_number', [PhotoController::class, 'updateNumber'])->name('admin.photo.social_footer.update_number');
+      Route::get('update_status', [PhotoController::class, 'updateStatus'])->name('admin.photo.social_footer.update_status');
+      Route::get('copy/{id}/{type}', [PhotoController::class, 'copy'])->name('admin.photo.social_footer.copy');
+      Route::get('delete_photo/{id}/{action}/{type}', [PhotoController::class, 'deletePhoto'])->name('admin.photo.social_footer.delete_photo');
+      Route::post('{type}', [PhotoController::class, 'save'])->name('admin.photo.social_footer.save');
+      Route::put('update/{id}/{type}', [PhotoController::class, 'update'])->name('admin.photo.social_footer.update');
+      Route::delete('delete/{id}/{hash}/{type}', [PhotoController::class, 'delete'])->name('admin.photo.social_footer.delete');
+    });
+  });
+
+  /* Photo static admin */
 });

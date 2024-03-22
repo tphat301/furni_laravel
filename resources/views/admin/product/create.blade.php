@@ -133,7 +133,7 @@
         </div>
 
         <div class="col-xl-4">
-          @if (config('admin.product.category.active') === true)
+          @if (config('admin.product.category.active') === true && $row1->count() > 0)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Danh mục</h3>

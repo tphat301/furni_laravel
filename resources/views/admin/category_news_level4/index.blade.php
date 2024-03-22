@@ -1,6 +1,6 @@
 @extends('admin.index')
 
-@section('title', config('admin.product.category.category4.name'))
+@section('title', config('admin.news.category.category4.name'))
 
 @section('content')
   <section class="content-header text-sm">
@@ -13,7 +13,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            {{ config('admin.product.category.category4.name') }}
+            {{ config('admin.news.category.category4.name') }}
           </li>
         </ol>
       </div>
@@ -21,11 +21,11 @@
   </section>
 
   <section class="content">
-    {!! Form::open(['name' => 'form-product-list', 'class' => ['form-product-list'], 'method' => 'GET']) !!}
+    {!! Form::open(['name' => 'form-news-list', 'class' => ['form-product-list'], 'method' => 'GET']) !!}
       <div class="card-footer text-sm sticky-top">
-        <a class="btn btn-sm bg-gradient-primary text-white" href="{{route('admin.category_product4.create')}}" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
+        <a class="btn btn-sm bg-gradient-primary text-white" href="{{route('admin.category_news4.create')}}" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
 
-        <a data-url="{{ route('admin.category_product4.destroy') }}" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+        <a data-url="{{ route('admin.category_news4.destroy') }}" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
 
         <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
@@ -58,7 +58,7 @@
                 <th class="align-middle text-center" width="10%">STT</th>
                 <th class="align-middle">Hình ảnh</th>
                 <th class="align-middle" style="width:30%">Tiêu đề</th>
-                @foreach (config('admin.product.category.category4.status') as $key => $value)
+                @foreach (config('admin.news.category.category4.status') as $key => $value)
                   <th class="align-middle text-center">{{$value}}</th>
                 @endforeach
                 <th class="align-middle text-center">Thao tác</th>
@@ -76,47 +76,47 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <input type="number" class="update-num form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-url="{{ route('admin.category_product4.update_number') }}"/>
+                      <input type="number" class="update-num form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-url="{{ route('admin.category_news4.update_number') }}"/>
                     </td>
                     <td class="align-middle">
-                      <a href="{{ route('admin.category_product4.show', [$row->id]) }}" title="{{ $row->title }}">
+                      <a href="{{ route('admin.category_news4.show', [$row->id]) }}" title="{{ $row->title }}">
                         @if (!empty($row->photo1))
-                          <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_product4/$row->photo1")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
+                          <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_news4/$row->photo1")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
                         @else
                           <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
                         @endif
                       </a>
                     </td>
                     <td class="align-middle">
-                      <a class="text-dark text-break" href="{{ route('admin.category_product4.show', [$row->id]) }}" title="{{ $row->title }}">
+                      <a class="text-dark text-break" href="{{ route('admin.category_news4.show', [$row->id]) }}" title="{{ $row->title }}">
                         {{ $row->title }}
                       </a>
                     </td>
-                    @foreach (config('admin.product.category.category4.status') as $key => $value)
+                    @foreach (config('admin.news.category.category4.status') as $key => $value)
                       <td class="align-middle text-center">
                         <div class="custom-control custom-checkbox">
                           @php
                             $status = !empty($row->status) ? explode(",", $row->status) : [];
                           @endphp
-                          <input type="checkbox" id="update-status-{{$key}}" class="update-status custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route('admin.category_product4.update_status')}}" {{ in_array($key, $status) ? 'checked' : '' }} />
+                          <input type="checkbox" id="update-status-{{$key}}" class="update-status custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route('admin.category_news4.update_status')}}" {{ in_array($key, $status) ? 'checked' : '' }} />
                           <label for="update-status-{{$key}}" class="custom-control-label"></label>
                         </div>
                       </td>
                     @endforeach
                     <td class="align-middle text-center text-md text-nowrap">
-                      <a class="text-primary mr-2" href="{{ route('admin.category_product4.show', [$row->id]) }}" title="Chỉnh sửa">
+                      <a class="text-primary mr-2" href="{{ route('admin.category_news4.show', [$row->id]) }}" title="Chỉnh sửa">
                         <i class="fas fa-edit"></i>
                       </a>
 
-                      @if(config('admin.product.category.category4.copy') === true)
+                      @if(config('admin.news.category.category4.copy') === true)
                         <div class="dropdown d-inline-block align-middle">
-                          <a href="{{ route('admin.category_product4.copy', [$row->id]) }}" class="nav-link text-success p-0 pr-2" title="Copy">
+                          <a href="{{ route('admin.category_news4.copy', [$row->id]) }}" class="nav-link text-success p-0 pr-2" title="Copy">
                             <i class="far fa-clone"></i>
                           </a>
                         </div>
                       @endif
 
-                      <a class="text-danger delete-row" data-url="{{route('admin.category_product4.delete', ['id' => $row->id, 'hash' => $row->hash])}}" title="Xóa" style="cursor: pointer">
+                      <a class="text-danger delete-row" data-url="{{route('admin.category_news4.delete', ['id' => $row->id, 'hash' => $row->hash])}}" title="Xóa" style="cursor: pointer">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>

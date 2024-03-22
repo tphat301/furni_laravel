@@ -156,7 +156,6 @@
                         </option>
                       @endforeach
                     </select>
-                    <input type="hidden" name="_token_filter_category" value="1710336692"/>
                   </div>
                 </div>
               </div>

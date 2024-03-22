@@ -240,8 +240,8 @@ final class Helpers
     $str .= '"name": "' . $companyName . '"';
     $str .= '}';
     $str .= '},';
-    $str .= '"datePublished": "' . date('c', $createdAt) . '",';
-    $str .= '"dateModified": "' . date('c', $updatedAt) . '",';
+    $str .= '"datePublished": "' . $createdAt . '",';
+    $str .= '"dateModified": "' . $updatedAt . '",';
     $str .= '"author":';
     $str .= '{';
     $str .= '"@type": "Organization",';
