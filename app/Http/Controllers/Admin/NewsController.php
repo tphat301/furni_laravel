@@ -19,6 +19,10 @@ class NewsController extends Controller
 {
   protected $helper;
   protected $type;
+  protected $typeCategory1;
+  protected $typeCategory2;
+  protected $typeCategory3;
+  protected $typeCategory4;
   protected $numberPerPage;
   protected $withGallery;
   protected $with1;
@@ -36,6 +40,10 @@ class NewsController extends Controller
     $this->middleware('admin.auth');
     $this->helper = new Helpers();
     $this->type = config('admin.news.type');
+    $this->typeCategory1 = config('admin.news.category.category1.type');
+    $this->typeCategory2 = config('admin.news.category.category2.type');
+    $this->typeCategory3 = config('admin.news.category.category3.type');
+    $this->typeCategory4 = config('admin.news.category.category4.type');
     $this->numberPerPage = config('admin.news.number_per_page');
     $this->withGallery = config("admin.news.gallery.width");
     $this->with1 = config("admin.news.width1");
@@ -55,10 +63,10 @@ class NewsController extends Controller
   {
     $categoryAppendQueryString = ['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4];
     session(['module_active' => 'news_index']);
-    $row1 = CategoryNews::where('type', config('admin.news.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryNews::where('type', config('admin.news.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryNews::where('type', config('admin.news.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryNews::where('type', config('admin.news.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row1 = CategoryNews::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryNews::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryNews::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryNews::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     if ($request->input('keyword')) {
       $rows = News::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', $this->type)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
     } else {
@@ -81,10 +89,10 @@ class NewsController extends Controller
   public function create()
   {
     session(['module_active' => 'product_create']);
-    $row1 = CategoryNews::where('type', config('admin.news.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryNews::where('type', config('admin.news.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryNews::where('type', config('admin.news.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryNews::where('type', config('admin.news.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row1 = CategoryNews::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryNews::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryNews::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryNews::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     return view('admin.news.create', compact('row1', 'row2', 'row3', 'row4'));
   }
 
@@ -164,7 +172,7 @@ class NewsController extends Controller
         'id_parent1' => !empty($request->input('id_parent1')) ? $request->input('id_parent1') : 0,
         'id_parent2' => !empty($request->input('id_parent2')) ? $request->input('id_parent2') : 0,
         'id_parent3' => !empty($request->input('id_parent3')) ? $request->input('id_parent3') : 0,
-        'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0,
+        'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0
       ];
       $dataSeo = [
         'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
@@ -185,10 +193,10 @@ class NewsController extends Controller
   public function show(Request $request)
   {
     $row = News::where('type', $this->type)->find($request->id);
-    $row1 = CategoryNews::where('type', config('admin.news.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryNews::where('type', config('admin.news.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryNews::where('type', config('admin.news.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryNews::where('type', config('admin.news.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row1 = CategoryNews::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryNews::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryNews::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryNews::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $rowSeo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
     $rowGallery = GalleryProduct::where('type', $this->type)->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     return view('admin.news.show', compact('row', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));
@@ -437,7 +445,6 @@ class NewsController extends Controller
         ];
         GalleryProduct::create($dataGallery);
       }
-      return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.news'));
     } else {
       return $this->helper->transfer("Thêm dữ liệu", "danger", route('admin.news'));
     }

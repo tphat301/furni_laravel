@@ -274,4 +274,84 @@ class PhotoController extends Controller
     Photo::where('id', $request->id)->where('type', $request->type)->update([$action => null]);
     return $this->helper->transfer("Xóa dữ liệu", "success", route($direct, ['id' => $request->id, 'type' => $request->type]));
   }
+
+  /* Logo */
+  public function logo()
+  {
+    session(['module_active' => 'logo_create']);
+    $type = config('admin.photo.logo.type');
+    $action = config('admin.photo.logo.action');
+    $row = Photo::where('type', $type)->where('action', $action)->first();
+    return view('admin.photo.photo_static', compact('row', 'type'));
+  }
+
+  /* Photo static save */
+  public function staticSave(Request $request)
+  {
+    if (!file_exists("public/upload/photo")) {
+      mkdir("public/upload/photo", 0777, true);
+    }
+    $direct = "admin.photo." . $request->type;
+    $hashKey = Str::lower(Str::random(4));
+    $action = config("admin.photo." . $request->type . ".action");
+    $with = config("admin.photo." . $request->type . ".with");
+    $height = config("admin.photo." . $request->type . ".height");
+    $validator = Validator::make(
+      $request->all(),
+      [
+        "photo" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+      ],
+      [
+        'image' => ':attribute chỉ cho phép upload định dạng là hình ảnh.',
+        'mimes' => ':attribute chỉ cho phép upload các định dạng :mimes',
+        'max' => ':attribute chỉ cho upload tối đa là :max MB',
+      ],
+      [
+        "photo" => 'Hình ảnh'
+      ]
+    );
+
+    if (isset($_POST['save'])) {
+      if (!$validator->fails()) {
+        if ($request->hasFile("photo")) {
+          $manager = new ImageManager(new Driver());
+          $image = $manager->read($request->photo)->resize($with, $height);
+          $photo = hexdec(uniqid()) . "." . $request->photo->getClientOriginalName();
+          $path = public_path('upload/photo');
+          $image->save($path . "/" . $photo);
+        }
+        $d = array(
+          'title' => !empty($request->input('title')) ? htmlspecialchars($request->input('title')) : null,
+          'status' => !empty($request->input('status')) ? htmlspecialchars(implode(',', $request->input('status'))) : 'hienthi',
+          'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
+          'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
+          'photo' => !empty($photo) ? $photo : null,
+          'type' => $request->type,
+          'action' => $action,
+          'hash' => $hashKey
+        );
+        Photo::create($d);
+        return $this->helper->transfer("Thêm dữ liệu", "success", route($direct));
+      } else {
+        return $this->helper->transfer("Thêm dữ liệu", "danger", route($direct));
+      }
+    } else {
+      if ($request->hasFile("photo")) {
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($request->photo)->resize($with, $height);
+        $photo = hexdec(uniqid()) . "." . $request->photo->getClientOriginalName();
+        $path = public_path('upload/photo');
+        $image->save($path . "/" . $photo);
+      }
+      $d = array(
+        'title' => !empty($request->input('title')) ? htmlspecialchars($request->input('title')) : null,
+        'status' => !empty($request->input('status')) ? htmlspecialchars(implode(',', $request->input('status'))) : null,
+        'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
+        'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
+        'photo' => !empty($photo) ? $photo : null
+      );
+      Photo::where('id', $request->id)->update($d);
+      return $this->helper->transfer("Cập nhật dữ liệu", "success", route($direct));
+    }
+  }
 }

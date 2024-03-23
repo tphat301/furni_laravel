@@ -27,7 +27,7 @@
             <ul class="nav nav-treeview">
               @if (config('admin.product.category.active') === true)
                 <li class="nav-item has-treeview {{session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' ? 'menu-open' : '' }}">
-                  <a class="nav-link" href="#" title="{{ config('admin.product.category.name') }}">
+                  <a class="nav-link {{session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' ? 'active' : '' }}" href="#" title="{{ config('admin.product.category.name') }}">
                     <i class="nav-icon text-sm fas fa-boxes"></i>
                     <p>
                       {{ config('admin.product.category.name') }}
@@ -111,7 +111,7 @@
             <ul class="nav nav-treeview">
               @if (config('admin.news.category.active') === true)
                 <li class="nav-item has-treeview {{session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'menu-open' : '' }}">
-                  <a class="nav-link" href="#" title="{{ config('admin.news.category.name') }}">
+                  <a class="nav-link {{session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'active' : '' }}" href="#" title="{{ config('admin.news.category.name') }}">
                     <i class="nav-icon text-sm fas fa-boxes"></i>
                     <p>
                       {{ config('admin.news.category.name') }}
@@ -200,7 +200,7 @@
 
         {{-- Quản lý hình ảnh --}}
         <li class="nav-item has-treeview menu-group {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'menu-open' : '' }}">
-          <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'active' : '' }}" title="Quản lý hình ảnh">
+          <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' || session('module_active') === 'logo_create' ? 'active' : '' }}" title="Quản lý hình ảnh">
             <i class="nav-icon text-sm fas fa-photo-video"></i>
             <p>
               Quản lý hình ảnh<i class="right fas fa-angle-left"></i>
@@ -222,6 +222,13 @@
                 <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Social footer</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link {{session('module_active') === 'logo_create' ? 'active' : '' }}" href="{{route('admin.photo.logo')}}" title="Logo">
+                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Logo</p>
+              </a>
+            </li>
+
           </ul>
         </li>
 

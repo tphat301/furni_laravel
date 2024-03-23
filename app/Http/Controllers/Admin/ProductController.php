@@ -11,38 +11,76 @@ use App\Utils\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProductController extends Controller
 {
   protected $helper;
+  protected $type;
+  protected $typeCategory1;
+  protected $typeCategory2;
+  protected $typeCategory3;
+  protected $typeCategory4;
+  protected $numberPerPage;
+  protected $withGallery;
+  protected $with1;
+  protected $with2;
+  protected $with3;
+  protected $with4;
+  protected $heightGallery;
+  protected $height1;
+  protected $height2;
+  protected $height3;
+  protected $height4;
+  protected $uploadProduct;
   public function __construct()
   {
     $this->middleware('admin.auth');
     $this->helper = new Helpers();
+    $this->type = config('admin.product.type');
+    $this->typeCategory1 = config('admin.product.category.category1.type');
+    $this->typeCategory2 = config('admin.product.category.category2.type');
+    $this->typeCategory3 = config('admin.product.category.category3.type');
+    $this->typeCategory4 = config('admin.product.category.category4.type');
+    $this->numberPerPage = config('admin.product.number_per_page');
+    $this->withGallery = config("admin.product.gallery.width");
+    $this->with1 = config("admin.product.width1");
+    $this->with2 = config("admin.product.width2");
+    $this->with3 = config("admin.product.width3");
+    $this->with4 = config("admin.product.width4");
+    $this->height1 = config("admin.product.height1");
+    $this->height2 = config("admin.product.height2");
+    $this->height3 = config("admin.product.height3");
+    $this->height4 = config("admin.product.height4");
+    $this->heightGallery = config("admin.product.gallery.height");
+    $this->uploadProduct = "public/upload/product";
   }
 
   /* Product list */
   public function index(Request $request)
   {
     session(['module_active' => 'product_index']);
-    $row1 = CategoryProduct::where('type', config('admin.product.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryProduct::where('type', config('admin.product.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryProduct::where('type', config('admin.product.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $categoryAppendQueryString = ['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4];
+
+    $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
 
     if ($request->input('keyword')) {
-      $rows = Product::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', config('admin.product.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+      $rows = Product::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', $this->type)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
     } else {
       if ($request->category1) {
-        $rows = Product::where('type', config('admin.product.type'))->where('id_parent1', $request->category1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = Product::where('type', $this->type)->where('id_parent1', $request->category1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       } elseif ($request->category2) {
-        $rows = Product::where('type', config('admin.product.type'))->where('id_parent2', $request->category2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = Product::where('type', $this->type)->where('id_parent2', $request->category2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       } elseif ($request->category3) {
-        $rows = Product::where('type', config('admin.product.type'))->where('id_parent3', $request->category3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = Product::where('type', $this->type)->where('id_parent3', $request->category3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       } elseif ($request->category4) {
-        $rows = Product::where('type', config('admin.product.type'))->where('id_parent4', $request->category4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = Product::where('type', $this->type)->where('id_parent4', $request->category4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       } else {
-        $rows = Product::where('type', config('admin.product.type'))->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate(config('admin.product.number_per_page'))->appends(['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4]);
+        $rows = Product::where('type', $this->type)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
       }
     }
     return view('admin.product.index', compact('rows', 'row1', 'row2', 'row3', 'row4'));
@@ -51,10 +89,10 @@ class ProductController extends Controller
   /* Product create */
   public function create()
   {
-    $row1 = CategoryProduct::where('type', config('admin.product.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryProduct::where('type', config('admin.product.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryProduct::where('type', config('admin.product.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     session(['module_active' => 'product_create']);
     return view('admin.product.create', compact('row1', 'row2', 'row3', 'row4'));
   }
@@ -63,36 +101,62 @@ class ProductController extends Controller
   public function save(Request $request)
   {
     $hashKey = Str::lower(Str::random(4));
+    if (!file_exists($this->uploadProduct)) {
+      mkdir($this->uploadProduct, 0777, true);
+    }
     $validator = Validator::make(
       $request->all(),
       [
-        'slug' => ['required', 'unique:products', 'max:255'],
-        'title' => ['required', 'unique:products', 'max:255']
+        'slug' => ['required', 'unique:products'],
+        'title' => ['required', 'unique:products'],
+        "photo1" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+        "photo2" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+        "photo3" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+        "photo4" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520']
       ],
       [
         'required' => ':attribute không được để trống',
         'unique' => ':attribute đã tồn tại. :attribute truy cập mục này có thể bị trùng lặp.',
         'string' => ':attribute phải ở dạng chuỗi ký tự',
-        'max' => ':attribute chỉ cho phép nhập vào tối đa là :max ký tự',
+        'image' => ':attribute chỉ cho phép upload định dạng là hình ảnh.',
+        'mimes' => ':attribute chỉ cho phép upload các định dạng :mimes',
+        'max' => ':attribute chỉ cho upload tối đa là :max MB'
       ],
       [
         'slug' => 'Đường dẫn',
         'title' => 'Tiêu đề',
+        'photo1' => 'Hình ảnh 1',
+        'photo2' => 'Hình ảnh 2',
+        'photo3' => 'Hình ảnh 3',
+        'photo4' => 'Hình ảnh 4'
       ]
     );
-    if ($this->helper->hasFile("photo1")) {
-      $photo1 = $this->helper->uploadFile("photo1", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
-    }
-    if ($this->helper->hasFile("photo2")) {
-      $photo2 = $this->helper->uploadFile("photo2", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
-    }
-    if ($this->helper->hasFile("photo3")) {
-      $photo3 = $this->helper->uploadFile("photo3", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
-    }
-    if ($this->helper->hasFile("photo4")) {
-      $photo4 = $this->helper->uploadFile("photo4", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
-    }
     if (!$validator->fails()) {
+      $manager = new ImageManager(new Driver());
+      if ($request->hasFile('photo1')) {
+        $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+        $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
+        $path = public_path('upload/product');
+        $image->save($path . "/" . $photo1);
+      }
+      if ($request->hasFile('photo2')) {
+        $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+        $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
+        $path = public_path('upload/product');
+        $image->save($path . "/" . $photo2);
+      }
+      if ($request->hasFile('photo3')) {
+        $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+        $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
+        $path = public_path('upload/product');
+        $image->save($path . "/" . $photo3);
+      }
+      if ($request->hasFile('photo4')) {
+        $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+        $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
+        $path = public_path('upload/product');
+        $image->save($path . "/" . $photo4);
+      }
       $data = [
         'slug' => htmlspecialchars($request->input('slug')),
         'title' => htmlspecialchars($request->input('title')),
@@ -103,7 +167,7 @@ class ProductController extends Controller
         'regular_price' => !empty($request->input('regular_price')) ? str_replace(',', '', $request->input('regular_price')) : 0,
         'discount' => !empty($request->input('discount')) ? htmlspecialchars($request->input('discount')) : 0,
         'hash' => $hashKey,
-        'type' => config('admin.product.type'),
+        'type' => $this->type,
         'num' => !empty($request->input('num')) ? $request->input('num') : 0,
         'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
         'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
@@ -114,14 +178,14 @@ class ProductController extends Controller
         'id_parent1' => !empty($request->input('id_parent1')) ? $request->input('id_parent1') : 0,
         'id_parent2' => !empty($request->input('id_parent2')) ? $request->input('id_parent2') : 0,
         'id_parent3' => !empty($request->input('id_parent3')) ? $request->input('id_parent3') : 0,
-        'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0,
+        'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0
       ];
       $dataSeo = [
         'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
         'hash_seo' => $hashKey,
-        'type' => config('admin.product.type'),
+        'type' => $this->type,
         'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
-        'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
+        'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null
       ];
       Product::create($data);
       Seo::create($dataSeo);
@@ -134,30 +198,46 @@ class ProductController extends Controller
   /* Product detail */
   public function show(Request $request)
   {
-    $row = Product::where('type', config('admin.product.type'))->find($request->id);
-    $row1 = CategoryProduct::where('type', config('admin.product.category.category1.type'))->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryProduct::where('type', config('admin.product.category.category2.type'))->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryProduct::where('type', config('admin.product.category.category3.type'))->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryProduct::where('type', config('admin.product.category.category4.type'))->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $rowSeo = Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->first();
-    $rowGallery = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row = Product::where('type', $this->type)->find($request->id);
+    $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $rowSeo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
+    $rowGallery = GalleryProduct::where('type', $this->type)->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     return view('admin.product.show', compact('row', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));
   }
 
   /* Product update */
   public function update(Request $request)
   {
-    if ($this->helper->hasFile("photo1")) {
-      $photo1 = $this->helper->uploadFile("photo1", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
+    if (!file_exists($this->uploadProduct)) {
+      mkdir($this->uploadProduct, 0777, true);
     }
-    if ($this->helper->hasFile("photo2")) {
-      $photo2 = $this->helper->uploadFile("photo2", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
+    $manager = new ImageManager(new Driver());
+    if ($request->hasFile('photo1')) {
+      $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+      $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
+      $path = public_path('upload/product');
+      $image->save($path . "/" . $photo1);
     }
-    if ($this->helper->hasFile("photo3")) {
-      $photo3 = $this->helper->uploadFile("photo3", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
+    if ($request->hasFile('photo2')) {
+      $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+      $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
+      $path = public_path('upload/product');
+      $image->save($path . "/" . $photo2);
     }
-    if ($this->helper->hasFile("photo4")) {
-      $photo4 = $this->helper->uploadFile("photo4", array('png', 'jpg', 'jpeg', 'gif', '.webp'), "public/upload/product/");
+    if ($request->hasFile('photo3')) {
+      $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+      $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
+      $path = public_path('upload/product');
+      $image->save($path . "/" . $photo3);
+    }
+    if ($request->hasFile('photo4')) {
+      $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+      $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
+      $path = public_path('upload/product');
+      $image->save($path . "/" . $photo4);
     }
     $data = [
       'slug' => htmlspecialchars($request->input('slug')),
@@ -178,16 +258,16 @@ class ProductController extends Controller
       'id_parent1' => !empty($request->input('id_parent1')) ? $request->input('id_parent1') : 0,
       'id_parent2' => !empty($request->input('id_parent2')) ? $request->input('id_parent2') : 0,
       'id_parent3' => !empty($request->input('id_parent3')) ? $request->input('id_parent3') : 0,
-      'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0,
+      'id_parent4' => !empty($request->input('id_parent4')) ? $request->input('id_parent4') : 0
     ];
-    $product = Product::where('type', config('admin.product.type'))->find($request->id);
+    $product = Product::where('type', $this->type)->find($request->id);
     $dataSeo = [
       'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
       'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
       'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
       'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
       'hash_seo' => $product->hash,
-      'type' => config('admin.product.type'),
+      'type' => $this->type,
       'id_parent' => !empty($product->id) ? $product->id  : null
     ];
     $product->update($data);
@@ -203,7 +283,7 @@ class ProductController extends Controller
   /* Product duplicate */
   public function copy($id)
   {
-    $row = Product::where('type', config('admin.product.type'))->find($id);
+    $row = Product::where('type', $this->type)->find($id);
     $titleCopy = $row->title . " copy " . str_repeat(Str::lower(Str::random(4)), 1);
     $slugCopy = $this->helper->changeTitle($titleCopy);
     Product::create(
@@ -213,7 +293,7 @@ class ProductController extends Controller
         'code' => !empty($row->code) ? htmlspecialchars($row->code) : null,
         'desc' => !empty($row->desc) ? htmlspecialchars(htmlspecialchars_decode($row->desc)) : null,
         'content' => !empty($row->content) ? htmlspecialchars(htmlspecialchars_decode($row->content)) : null,
-        'type' => config('admin.product.type'),
+        'type' => $this->type,
         'num' => 0,
         'quantity' => 1,
         'hash' => Str::lower(Str::random(4)),
@@ -232,9 +312,9 @@ class ProductController extends Controller
   {
     $uploadProduct = "public/upload/product/";
     $uploadGallery = "public/upload/gallery/";
-    $product = Product::where('type', config('admin.product.type'))->where('hash', $hash)->find($id);
-    $seo = SEO::where('type', config('admin.product.type'))->where('hash_seo', $hash);
-    $gallerys = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $id);
+    $product = Product::where('type', $this->type)->where('hash', $hash)->find($id);
+    $seo = SEO::where('type', $this->type)->where('hash_seo', $hash);
+    $gallerys = GalleryProduct::where('type', $this->type)->where('id_parent', $id);
     $photo1 = isset($product->photo1) && !empty($product->photo1) ? $product->photo1 : "";
     $photo2 = isset($product->photo2) && !empty($product->photo2) ? $product->photo2 : "";
     $photo3 = isset($product->photo3) && !empty($product->photo3) ? $product->photo3 : "";
@@ -249,7 +329,7 @@ class ProductController extends Controller
         if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
       }
     }
-    Product::where('type', config('admin.product.type'))->where('hash', $hash)->delete($id);
+    Product::where('type', $this->type)->where('hash', $hash)->delete($id);
     $seo->delete();
     $gallerys->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
@@ -260,7 +340,7 @@ class ProductController extends Controller
   {
     $uploadProduct = "public/upload/product/";
     $uploadGallery = "public/upload/gallery/";
-    $product = Product::where('type', config('admin.product.type'))->find($request->checkitem);
+    $product = Product::where('type', $this->type)->find($request->checkitem);
     $idParent = [];
     foreach ($product as $v) {
       $photo1 = isset($v->photo1) && !empty($v->photo1) ? $v->photo1 : "";
@@ -275,7 +355,7 @@ class ProductController extends Controller
     }
     if (count($idParent) > 0) {
       foreach ($idParent as $v) {
-        $gallerys = GalleryProduct::where('type', config('admin.product.type'))->where('id_parent', $v);
+        $gallerys = GalleryProduct::where('type', $this->type)->where('id_parent', $v);
         if ($gallerys->get()) {
           foreach ($gallerys->get() as $gallery) {
             $galleryPhoto = isset($gallery->photo) && !empty($gallery->photo) ? $gallery->photo : "";
@@ -285,7 +365,7 @@ class ProductController extends Controller
         $gallerys->delete();
       }
     }
-    Seo::where('type', config('admin.product.type'))->whereIn('hash_seo', $request->hashes)->delete();
+    Seo::where('type', $this->type)->whereIn('hash_seo', $request->hashes)->delete();
     Product::destroy($request->checkitem);
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
   }
@@ -293,13 +373,13 @@ class ProductController extends Controller
   /* Product update number ajax */
   public function updateNumber(Request $request)
   {
-    Product::where('id', $request->id)->where('type', config('admin.product.type'))->update(['num' => $request->value]);
+    Product::where('id', $request->id)->where('type', $this->type)->update(['num' => $request->value]);
   }
 
   /* Product update status ajax */
   public function updateStatus(Request $request)
   {
-    $status = Product::select('status')->where('type', config('admin.product.type'))->find($request->id)->status;
+    $status = Product::select('status')->where('type', $this->type)->find($request->id)->status;
     $status = !empty($status) ? explode(',', $status) : [];
     if (array_search($request->value, $status) !== false) {
       $key = array_search($request->value, $status);
@@ -308,7 +388,7 @@ class ProductController extends Controller
       array_push($status, $request->value);
     }
     $statusStr = implode(',', $status);
-    Product::where('id', $request->id)->where('type', config('admin.product.type'))->update(['status' => $statusStr]);
+    Product::where('id', $request->id)->where('type', $this->type)->update(['status' => $statusStr]);
   }
 
   /* Product delete photo */
@@ -316,22 +396,22 @@ class ProductController extends Controller
   {
     $uploadProduct = "public/upload/product/";
     $action = $request->action;
-    $photo = Product::where('type', config('admin.product.type'))->find($request->id)->$action;
+    $photo = Product::where('type', $this->type)->find($request->id)->$action;
     $photo = isset($photo) && !empty($photo) ? $photo : "";
     if (file_exists($uploadProduct . $photo) && !empty($photo)) unlink($uploadProduct . $photo);
-    Product::where('id', $request->id)->where('type', config('admin.product.type'))->update([$action => null]);
+    Product::where('id', $request->id)->where('type', $this->type)->update([$action => null]);
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product.show', ['id' => $request->id]));
   }
 
   /* Product schema JSON */
   public function schema(Request $request)
   {
-    $row = Product::where('type', config('admin.product.type'))->find($request->id);
-    $seo = Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->first();
+    $row = Product::where('type', $this->type)->find($request->id);
+    $seo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
     $photo = !empty($row->photo1 ? config('app.asset_url') . "upload/product/$row->photo1" : config('app.url') . "resources/images/noimage.png");
     $schemaJSON = $this->helper->buildSchemaProduct($row->id, $row->title, $photo, $row->code, 'Tên hãng', htmlspecialchars_decode($row->desc), $row->sale_price, 'Tên tác giả Developer', config('app.url') . "product/" . $row->slug);
     if ($seo) {
-      Seo::where('type', config('admin.product.type'))->where('hash_seo', $row->hash)->update(['schema' => $schemaJSON]);
+      Seo::where('type', $this->type)->where('hash_seo', $row->hash)->update(['schema' => $schemaJSON]);
       return $this->helper->transfer("Tạo schema JSON", "success", route('admin.product.show', ['id' => $row->id]));
     } else {
       echo "<script>alert('Bạn cần có Data SEO để tạo Schema JSON Product')</script>";
@@ -342,19 +422,43 @@ class ProductController extends Controller
   /* Product gallery */
   public function gallery(Request $request)
   {
-    $typeAllow = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
     $uploadGallery = "public/upload/gallery/";
-    if ($this->helper->hasFile("file")) {
-      $fileResult = $this->helper->uploadFile("file", $typeAllow, $uploadGallery);
-      $dataGallery = [
-        'photo' => $fileResult,
-        'id_parent' => $request->id,
-        'title' => pathinfo($fileResult, PATHINFO_FILENAME),
-        'status' => "hienthi",
-        'num' => 0,
-        'type' => config('admin.product.type')
-      ];
-      GalleryProduct::create($dataGallery);
+    if (!file_exists($uploadGallery)) {
+      mkdir($uploadGallery, 0777, true);
+    }
+    $validator = Validator::make(
+      $request->all(),
+      [
+        "file" => ['image', 'mimes:png,jpg,jpeg,svg,webp', 'max:20971520'],
+      ],
+      [
+        'image' => ':attribute chỉ cho phép upload định dạng là hình ảnh.',
+        'mimes' => ':attribute chỉ cho phép upload các định dạng :mimes',
+        'max' => ':attribute chỉ cho upload tối đa là :max MB',
+      ],
+      [
+        "file" => 'Hình ảnh'
+      ]
+    );
+    if (!$validator->fails()) {
+      $manager = new ImageManager(new Driver());
+      if ($request->hasFile('file')) {
+        $image = $manager->read($request->file)->resize($this->withGallery, $this->heightGallery);
+        $photo = hexdec(uniqid()) . "." . $request->file->getClientOriginalName();
+        $path = public_path('upload/gallery');
+        $image->save($path . "/" . $photo);
+        $dataGallery = [
+          'photo' => $photo,
+          'id_parent' => $request->id,
+          'title' => pathinfo($photo, PATHINFO_FILENAME),
+          'status' => "hienthi",
+          'num' => 0,
+          'type' => $this->type
+        ];
+        GalleryProduct::create($dataGallery);
+      }
+    } else {
+      return $this->helper->transfer("Thêm dữ liệu", "danger", route('admin.product'));
     }
   }
 
@@ -362,10 +466,10 @@ class ProductController extends Controller
   public function deleteGallery(Request $request)
   {
     $uploadGallery = "public/upload/gallery/";
-    $galleryPhoto = GalleryProduct::where('type', config('admin.product.type'))->find($request->id)->photo;
+    $galleryPhoto = GalleryProduct::where('type', $this->type)->find($request->id)->photo;
     $galleryPhoto = isset($galleryPhoto) && !empty($galleryPhoto) ? $galleryPhoto : "";
     if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
-    GalleryProduct::where('type', config('admin.product.type'))->where('id', $request->id)->delete();
+    GalleryProduct::where('type', $this->type)->where('id', $request->id)->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));
   }
 
@@ -374,7 +478,7 @@ class ProductController extends Controller
   {
     @$id = $request->id;
     @$title = $request->value;
-    GalleryProduct::where('type', config('admin.product.type'))->where('id', $id)->update(['title' => $title]);
+    GalleryProduct::where('type', $this->type)->where('id', $id)->update(['title' => $title]);
   }
 
   /* Product gallery update number */
@@ -382,7 +486,7 @@ class ProductController extends Controller
   {
     @$id = $request->id;
     @$num = $request->value;
-    GalleryProduct::where('type', config('admin.product.type'))->where('id', $id)->update(['num' => $num]);
+    GalleryProduct::where('type', $this->type)->where('id', $id)->update(['num' => $num]);
   }
 
   /* Product filter category */
@@ -390,7 +494,7 @@ class ProductController extends Controller
   {
     @$id = $request->id;
     @$level = $request->level;
-    $row = CategoryProduct::where('type', config('admin.product.type'))->where('id_parent', $id)->where('level', $level)->get();
+    $row = CategoryProduct::where('type', $this->type)->where('id_parent', $id)->where('level', $level)->get();
     if ($row->count() > 0) {
       $output = '';
       $output .= '<option>Danh mục cấp ' . $level . '</option>';
@@ -401,7 +505,7 @@ class ProductController extends Controller
       }
       echo $output;
     } else {
-      $row = CategoryProduct::where('type', config('admin.product.type'))->where('level', $level)->get();
+      $row = CategoryProduct::where('type', $this->type)->where('level', $level)->get();
       if ($row) {
         $output = '';
         $output .= '<option>Danh mục cấp ' . $level . '</option>';

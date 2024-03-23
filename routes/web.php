@@ -270,7 +270,8 @@ Route::prefix('admin')->group(function () {
       Route::put('update/{id}/{type}', [PhotoController::class, 'update'])->name('admin.photo.social_footer.update');
       Route::delete('delete/{id}/{hash}/{type}', [PhotoController::class, 'delete'])->name('admin.photo.social_footer.delete');
     });
-  });
 
-  /* Photo static admin */
+    Route::get('logo', [PhotoController::class, 'logo'])->name('admin.photo.logo');
+    Route::post('static/save/{type}/{id?}', [PhotoController::class, 'staticSave'])->name('admin.photo.static.logo.save');
+  });
 });

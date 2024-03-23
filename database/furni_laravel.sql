@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2024 at 05:40 PM
+-- Generation Time: Mar 23, 2024 at 05:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', '5pTsSWwoSorOO9fXc45AJc4qMXsKRgCRTlSj19hsz6lCyYsFDvejFoYK3Bon', NULL, '2024-03-13 03:07:48');
+(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', 'SwkXmELPraXgzHhsf6ebwoCQCZu0a8tfz4pz8aoE2DOGfyVGPxp6GXqklA5E', NULL, '2024-03-13 03:07:48');
 
 -- --------------------------------------------------------
 
@@ -479,13 +479,13 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `category_news`
 --
 ALTER TABLE `category_news`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `category_products`
 --
 ALTER TABLE `category_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -509,7 +509,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -521,19 +521,19 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT for table `seo`
 --
 ALTER TABLE `seo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `users`
