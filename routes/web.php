@@ -18,8 +18,10 @@ use App\Http\Controllers\Admin\CategoryProduct2;
 use App\Http\Controllers\Admin\CategoryProduct3;
 use App\Http\Controllers\Admin\CategoryProduct4;
 use App\Http\Controllers\Admin\CriteriaController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PhotoController;
 use App\Http\Controllers\Admin\PolicyController;
+use App\Http\Controllers\Admin\SeopageController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'admin.auth']], function () {
   \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -271,7 +273,33 @@ Route::prefix('admin')->group(function () {
       Route::delete('delete/{id}/{hash}/{type}', [PhotoController::class, 'delete'])->name('admin.photo.social_footer.delete');
     });
 
+    /*Photo static*/
     Route::get('logo', [PhotoController::class, 'logo'])->name('admin.photo.logo');
-    Route::post('static/save/{type}/{id?}', [PhotoController::class, 'staticSave'])->name('admin.photo.static.logo.save');
+    Route::get('watermark_product', [PhotoController::class, 'watermarkProduct'])->name('admin.photo.watermark_product');
+    Route::get('watermark_news', [PhotoController::class, 'watermarkNews'])->name('admin.photo.watermark_news');
+    Route::get('static/remake/{type}/{id}/{hash}', [PhotoController::class, 'staticRemake'])->name('admin.photo.static.remake');
+    Route::post('static/save/{type}/{id?}', [PhotoController::class, 'staticSave'])->name('admin.photo.static.save');
+  });
+
+  /*Page module*/
+  Route::prefix('page')->group(function () {
+    Route::get('about', [PageController::class, 'about'])->name('admin.page.about');
+    Route::get('footer', [PageController::class, 'footer'])->name('admin.page.footer');
+    Route::get('copyright', [PageController::class, 'copyright'])->name('admin.page.copyright');
+    Route::get('contact', [PageController::class, 'contact'])->name('admin.page.contact');
+    Route::get('delete_photo/{type}/{id}/{action}', [PageController::class, 'deletePhoto'])->name('admin.page.delete_photo');
+    Route::get('remake/{type}/{id}/{hash}', [PageController::class, 'remake'])->name('admin.page.remake');
+    Route::post('save/{type}/{id?}', [PageController::class, 'save'])->name('admin.page.save');
+  });
+
+  /*Seopage module*/
+  Route::prefix('seopage')->group(function () {
+    Route::get('home', [SeopageController::class, 'home'])->name('admin.seopage.home');
+    Route::get('product', [SeopageController::class, 'product'])->name('admin.seopage.product');
+    Route::get('news', [SeopageController::class, 'news'])->name('admin.seopage.news');
+    Route::get('contact', [SeopageController::class, 'contact'])->name('admin.seopage.contact');
+    Route::get('remake/{type}/{id}/{hash}', [SeopageController::class, 'remake'])->name('admin.seopage.remake');
+    Route::get('delete_photo/{type}/{id}/{action}', [SeopageController::class, 'deletePhoto'])->name('admin.seopage.delete_photo');
+    Route::post('save/{type}/{id?}', [SeopageController::class, 'save'])->name('admin.seopage.save');
   });
 });

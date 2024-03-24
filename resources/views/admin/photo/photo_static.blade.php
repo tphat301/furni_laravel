@@ -1,16 +1,18 @@
 @php
-  $route = "admin.photo.static.".$type.".save";
+  $route = "admin.photo.static.save";
   $name = "admin.photo.".$type.".name";
   $noimage = "resources/images/noimage.png";
   $photoConfig = "admin.photo.".$type.".photo";
   $statusConfig = "admin.photo.".$type.".status";
   $thumb = "admin.photo.".$type.".thumb";
+  $title = "admin.photo.".$type.".title";
   $desc = "admin.photo.".$type.".desc";
   $content = "admin.photo.".$type.".content";
+  $watermarkConfig = "admin.photo.".$type.".layout";
 @endphp
 @extends('admin.index')
 
-@section('title', 'Thêm '. config($name))
+@section('title', config($name))
 @section('content')
   <section class="content-header text-sm">
     <div class="container-fluid">
@@ -22,7 +24,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            Quản lý {{config($name)}}
+            {{config($name)}}
           </li>
         </ol>
       </div>
@@ -32,9 +34,15 @@
   <section class="content">
     {!! Form::open(['name' => 'form-photo-static', 'route' => [$route, $type, !empty($row) ? $row->id : ''], 'class' => ['form-photo'], 'files' => true]) !!}
       <div class="card-footer text-sm sticky-top">
-        <button type="submit" name="{{!empty($row) ? 'save-here' : 'save'}}" class="btn btn-sm bg-gradient-primary submit-check">
-          <i class="far fa-save mr-2"></i>Lưu
-        </button>
+        @if ($row)
+          <a href="{{route('admin.photo.static.remake', ['type' => $type, 'id' => $row->id, 'hash' => $row->hash])}}" class="btn btn-sm bg-gradient-secondary">
+            <i class="fas fa-redo mr-2"></i>Làm mới
+          </a>
+        @else
+          <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
+            <i class="far fa-save mr-2"></i>Lưu
+          </button>
+        @endif
       </div>
       <div class="card card-primary card-outline text-sm">
         <div class="card-header">
@@ -57,7 +65,13 @@
                 <label class="upload-file-label mb-2" for="file0">
                   <div class="upload-file-image rounded mb-3">
                     @if (!empty($row->photo))
-                      <img class="rounded img-upload" id="img-preview-static" src="{{url("public/upload/photo/$row->photo")}}" alt="{{$row->title}}"/>
+                      @if ($row->type === 'watermark_product')
+                        <img class="rounded img-upload" id="img-preview-static" src="{{url("public/upload/watermark_product/$row->photo")}}" alt="{{$row->title}}"/>
+                      @elseif($row->type === 'watermark_news')
+                        <img class="rounded img-upload" id="img-preview-static" src="{{url("public/upload/watermark_news/$row->photo")}}" alt="{{$row->title}}"/>
+                      @else
+                        <img class="rounded img-upload" id="img-preview-static" src="{{url("public/upload/photo/$row->photo")}}" alt="{{$row->title}}"/>
+                      @endif
                     @else
                       <img class="rounded img-upload" id="img-preview-static" src="{{ url($noimage) }}" alt="No Image"/>
                     @endif
@@ -76,6 +90,30 @@
               @error("photo")
                 <strong class="text-danger">{{ $message }}</strong>
               @enderror
+            </div>
+          @endif
+
+          @if (config($watermarkConfig) === true)
+            <div class="row">
+              <div class="col-xl-4 row">
+                <div class="form-group col-12">
+                  <label>
+                    Vị trí đóng dấu:
+                  </label>
+                  <div class="watermark-position rounded">
+                    @php
+                      $position = ['top-left', 'top-center', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'center'];
+                    @endphp
+
+                    @for ($i = 0; $i <= 8; $i++)
+                      <label for="{{$position[$i]}}" data-url="{{url($noimage)}}">
+                        <input type="radio" id="{{$position[$i]}}" name="position" value="{{$position[$i]}}"/>
+                        <img class="rounded" src="{{ url($noimage) }}" alt="watermark-cover"/>
+                      </label>
+                    @endfor
+                  </div>
+                </div>
+              </div>
             </div>
           @endif
 

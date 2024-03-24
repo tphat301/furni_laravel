@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\News;
 use App\Models\Admin\Photo;
+use App\Models\Admin\Product;
 use App\Utils\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -170,6 +172,10 @@ class PhotoController extends Controller
   /* Photo update */
   public function update(Request $request)
   {
+    $row = Photo::where('type', $request->type)->find($request->id);
+    if (!file_exists("public/upload/photo")) {
+      mkdir("public/upload/photo", 0777, true);
+    }
     $with = config("admin.photo." . $request->type . ".with");
     $height = config("admin.photo." . $request->type . ".height");
     $directDetail = "admin.photo." . $request->type . ".show";
@@ -192,11 +198,10 @@ class PhotoController extends Controller
         $manager = new ImageManager(new Driver());
         $image = $manager->read($request->file)->resize($with, $height);
         $photo = hexdec(uniqid()) . "." . $request->file->getClientOriginalName();
-        if (!file_exists("public/upload/photo")) {
-          mkdir("public/upload/photo", 0777, true);
-        }
         $path = public_path('upload/photo');
         $image->save($path . "/" . $photo);
+      } else {
+        $photo = isset($row->photo) ? $row->photo : null;
       }
       $d = [
         'title' => !empty($request->input('title')) ? htmlspecialchars($request->input('title')) : null,
@@ -207,7 +212,7 @@ class PhotoController extends Controller
         'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
         'photo' => !empty($photo) ? $photo : null
       ];
-      $row = Photo::where('type', $request->type)->find($request->id);
+
       $row->update($d);
       return $this->helper->transfer("Cập nhật dữ liệu", "success", route($directDetail, ['id' => $request->id, 'type' => $request->type]));
     } else {
@@ -285,11 +290,84 @@ class PhotoController extends Controller
     return view('admin.photo.photo_static', compact('row', 'type'));
   }
 
+  /* Watermark product */
+  public function watermarkProduct()
+  {
+    session(['module_active' => 'watermark_product_create']);
+    $type = config('admin.photo.watermark_product.type');
+    $action = config('admin.photo.watermark_product.action');
+    $row = Photo::where('type', $type)->where('action', $action)->first();
+    return view('admin.photo.photo_static', compact('row', 'type'));
+  }
+
+  /* Watermark news */
+  public function watermarkNews()
+  {
+    session(['module_active' => 'watermark_news_create']);
+    $type = config('admin.photo.watermark_news.type');
+    $action = config('admin.photo.watermark_news.action');
+    $row = Photo::where('type', $type)->where('action', $action)->first();
+    return view('admin.photo.photo_static', compact('row', 'type'));
+  }
+
+  /* Photo static remake */
+  public function staticRemake(Request $request)
+  {
+    if ($request->type === 'watermark_product') {
+      $upload = "public/upload/watermark_product/";
+    } elseif ($request->type === 'watermark_news') {
+      $upload = "public/upload/watermark_news/";
+    } else {
+      $upload = "public/upload/photo/";
+    }
+
+    $direct = "admin.photo." . $request->type;
+    $row = Photo::where('type', $request->type)->where('hash', $request->hash)->find($request->id);
+    $photo = isset($row->photo) && !empty($row->photo) ? $row->photo : "";
+    if (file_exists($upload . $photo) && !empty($photo)) unlink($upload . $photo);
+
+    $rowProducts = Product::where('type', config('admin.product.type'))->get();
+    $uploadProductWatermark = "public/upload/wk_product/";
+    if ($rowProducts) {
+      foreach ($rowProducts as $v) {
+        if (file_exists($uploadProductWatermark . $v->photo1) && !empty($v->photo1)) unlink($uploadProductWatermark . $v->photo1);
+        if (file_exists($uploadProductWatermark . $v->photo2) && !empty($v->photo2)) unlink($uploadProductWatermark . $v->photo2);
+        if (file_exists($uploadProductWatermark . $v->photo3) && !empty($v->photo3)) unlink($uploadProductWatermark . $v->photo3);
+        if (file_exists($uploadProductWatermark . $v->photo4) && !empty($v->photo4)) unlink($uploadProductWatermark . $v->photo4);
+      }
+    }
+
+    $rowNews = News::where('type', config('admin.news.type'))->get();
+    $uploadNewsWatermark = "public/upload/wk_news/";
+    if ($rowNews) {
+      foreach ($rowNews as $v) {
+        if (file_exists($uploadNewsWatermark . $v->photo1) && !empty($v->photo1)) unlink($uploadNewsWatermark . $v->photo1);
+        if (file_exists($uploadNewsWatermark . $v->photo2) && !empty($v->photo2)) unlink($uploadNewsWatermark . $v->photo2);
+        if (file_exists($uploadNewsWatermark . $v->photo3) && !empty($v->photo3)) unlink($uploadNewsWatermark . $v->photo3);
+        if (file_exists($uploadNewsWatermark . $v->photo4) && !empty($v->photo4)) unlink($uploadNewsWatermark . $v->photo4);
+      }
+    }
+    Photo::where('type', $request->type)->where('hash', $request->hash)->delete($request->id);
+    return $this->helper->transfer("Làm mới dữ liệu", "success", route($direct));
+  }
+
   /* Photo static save */
   public function staticSave(Request $request)
   {
     if (!file_exists("public/upload/photo")) {
       mkdir("public/upload/photo", 0777, true);
+    }
+    if (!file_exists("public/upload/watermark_product")) {
+      mkdir("public/upload/wk_product", 0777, true);
+    }
+    if (!file_exists("public/upload/watermark_product")) {
+      mkdir("public/upload/wk_news", 0777, true);
+    }
+    if (!file_exists("public/upload/watermark_product")) {
+      mkdir("public/upload/watermark_product", 0777, true);
+    }
+    if (!file_exists("public/upload/watermark_news")) {
+      mkdir("public/upload/watermark_news", 0777, true);
     }
     $direct = "admin.photo." . $request->type;
     $hashKey = Str::lower(Str::random(4));
@@ -317,11 +395,18 @@ class PhotoController extends Controller
           $manager = new ImageManager(new Driver());
           $image = $manager->read($request->photo)->resize($with, $height);
           $photo = hexdec(uniqid()) . "." . $request->photo->getClientOriginalName();
-          $path = public_path('upload/photo');
+          if ($request->type == 'watermark_product') {
+            $path = public_path('upload/watermark_product');
+          } elseif ($request->type == 'watermark_news') {
+            $path = public_path('upload/watermark_news');
+          } else {
+            $path = public_path('upload/photo');
+          }
           $image->save($path . "/" . $photo);
         }
         $d = array(
           'title' => !empty($request->input('title')) ? htmlspecialchars($request->input('title')) : null,
+          'position' => !empty($request->input('position')) ? htmlspecialchars($request->input('position')) : null,
           'status' => !empty($request->input('status')) ? htmlspecialchars(implode(',', $request->input('status'))) : 'hienthi',
           'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
           'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
@@ -335,23 +420,6 @@ class PhotoController extends Controller
       } else {
         return $this->helper->transfer("Thêm dữ liệu", "danger", route($direct));
       }
-    } else {
-      if ($request->hasFile("photo")) {
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($request->photo)->resize($with, $height);
-        $photo = hexdec(uniqid()) . "." . $request->photo->getClientOriginalName();
-        $path = public_path('upload/photo');
-        $image->save($path . "/" . $photo);
-      }
-      $d = array(
-        'title' => !empty($request->input('title')) ? htmlspecialchars($request->input('title')) : null,
-        'status' => !empty($request->input('status')) ? htmlspecialchars(implode(',', $request->input('status'))) : null,
-        'desc' => !empty($request->input('desc')) ? htmlspecialchars($request->input('desc')) : null,
-        'content' => !empty($request->input('content')) ? htmlspecialchars($request->input('content')) : null,
-        'photo' => !empty($photo) ? $photo : null
-      );
-      Photo::where('id', $request->id)->update($d);
-      return $this->helper->transfer("Cập nhật dữ liệu", "success", route($direct));
     }
   }
 }

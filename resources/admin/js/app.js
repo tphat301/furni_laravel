@@ -418,6 +418,26 @@ $(document).ready(function () {
   //   });
   // });
 
+  if ($(".watermark-position label").length) {
+    $(".watermark-position label").click(function () {
+      const urlNoimage = $(this).data("url");
+      const idInputRadio = $(this).find("input").attr("id");
+      if ($(".upload-file-image img").length) {
+        var img = $(".upload-file-image img").attr("src");
+
+        if (img) {
+          $("#" + idInputRadio).prop("checked", true);
+          $(".watermark-position label img").attr("src", urlNoimage);
+          $(this).find("img").attr("src", img);
+          $(this).find("img").show();
+        } else {
+          $("#" + idInputRadio).prop("checked", false);
+        }
+      }
+      return false;
+    });
+  }
+
   /* Handle Update Title Gallery Image */
   if ($(".gallery-title")) {
     $(".gallery-title").change(function () {
@@ -439,6 +459,7 @@ $(document).ready(function () {
       });
     });
   }
+
   /* Handle Update Number Gallery Image */
   if ($(".update-num-gallery")) {
     $(".update-num-gallery").change(function () {

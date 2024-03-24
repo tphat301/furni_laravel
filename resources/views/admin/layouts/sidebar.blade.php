@@ -198,97 +198,151 @@
           </li>
         @endif
 
-        {{-- Quản lý hình ảnh --}}
-        <li class="nav-item has-treeview menu-group {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'menu-open' : '' }}">
-          <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' || session('module_active') === 'logo_create' ? 'active' : '' }}" title="Quản lý hình ảnh">
-            <i class="nav-icon text-sm fas fa-photo-video"></i>
-            <p>
-              Quản lý hình ảnh<i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' ? 'active' : '' }}" href="{{route('admin.photo.slideshow.index')}}" title="Slideshow">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Slideshow</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {{session('module_active') === 'partner_index' || session('module_active') === 'partner_create' ? 'active' : '' }}" href="{{route('admin.photo.partner.index')}}" title="Đối tác">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Đối tác</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {{session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'active' : '' }}" href="{{route('admin.photo.social_footer.index')}}" title="Social footer">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Social footer</p>
-              </a>
-            </li>
+        {{-- Module photo --}}
+        @if (config('admin.photo.active') === true)
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' || session('module_active') === 'logo_create' || session('module_active') === 'watermark_product_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' || session('module_active') === 'logo_create' || session('module_active') === 'watermark_product_create' ? 'active' : '' }}" title="Quản lý hình ảnh">
+              <i class="nav-icon text-sm fas fa-photo-video"></i>
+              <p>
+                Quản lý hình ảnh<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
 
-            <li class="nav-item">
-              <a class="nav-link {{session('module_active') === 'logo_create' ? 'active' : '' }}" href="{{route('admin.photo.logo')}}" title="Logo">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Logo</p>
-              </a>
-            </li>
+              @if (config('admin.photo.slideshow.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' ? 'active' : '' }}" href="{{route('admin.photo.slideshow.index')}}" title="Slideshow">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Slideshow</p>
+                  </a>
+                </li>
+              @endif
 
-          </ul>
-        </li>
+              @if (config('admin.photo.partner.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'partner_index' || session('module_active') === 'partner_create' ? 'active' : '' }}" href="{{route('admin.photo.partner.index')}}" title="Đối tác">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Đối tác</p>
+                  </a>
+                </li>
+              @endif
 
-        {{-- Quản lý trang tĩnh --}}
-        <li class="nav-item has-treeview menu-group">
-          <a class="nav-link" title="Quản lý trang tĩnh">
-            <i class="nav-icon text-sm fas fa-bookmark"></i>
-            <p>
-              Quản lý trang tĩnh<i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Giới thiệu">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Giới thiệu</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Footer">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Footer</p>
-              </a>
-            </li>
-          </ul>
-        </li>
+              @if (config('admin.photo.social_footer.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' ? 'active' : '' }}" href="{{route('admin.photo.social_footer.index')}}" title="Social footer">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Social footer</p>
+                  </a>
+                </li>
+              @endif
 
-        {{-- Quản lý seopage --}}
-        <li class="nav-item has-treeview menu-group">
-          <a class="nav-link" title="Quản lý seopage">
-            <i class="nav-icon text-sm fas fa-share-alt"></i>
-            <p>
-              Quản lý seopage<i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Trang chủ">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Trang chủ</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Sản phẩm">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Sản phẩm</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Tin tức">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Tin tức</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="" title="Liên hệ">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Liên hệ</p>
-              </a>
-            </li>
-          </ul>
-        </li>
+              @if (config('admin.photo.logo.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'logo_create' ? 'active' : '' }}" href="{{route('admin.photo.logo')}}" title="Logo">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Logo</p>
+                  </a>
+                </li>
+              @endif
 
-        {{-- Thiết lập chung --}}
+              @if (config('admin.photo.watermark_product.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'watermark_product_create' ? 'active' : '' }}" href="{{route('admin.photo.watermark_product')}}" title="Watermark sản phẩm">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Watermark sản phẩm</p>
+                  </a>
+                </li>
+              @endif
+
+              @if (config('admin.photo.watermark_news.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'watermark_news_create' ? 'active' : '' }}" href="{{route('admin.photo.watermark_news')}}" title="Watermark tin tức">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Watermark tin tức</p>
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </li>
+        @endif
+
+        {{-- Module page --}}
+        @if (config('admin.page.active') === true)
+          <li class="nav-item has-treeview menu-group {{ session('module_active') === 'about_create' || session('module_active') === 'footer_create' || session('module_active') === 'contact_create' || session('module_active') === 'copyright_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{ session('module_active') === 'about_create' || session('module_active') === 'footer_create' || session('module_active') === 'contact_create' || session('module_active') === 'copyright_create' ? 'active' : '' }}" title="Quản lý trang tĩnh">
+              <i class="nav-icon text-sm fas fa-bookmark"></i>
+              <p>
+                Quản lý trang tĩnh<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              @if (config('admin.page.about.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'about_create' ? 'active' : ''}}" href="{{route('admin.page.about')}}" title="Giới thiệu">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Giới thiệu</p>
+                  </a>
+                </li>
+              @endif
+
+              @if (config('admin.page.footer.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'footer_create' ? 'active' : ''}}" href="{{route('admin.page.footer')}}" title="Footer">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Footer</p>
+                  </a>
+                </li>
+              @endif
+
+              @if (config('admin.page.contact.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'contact_create' ? 'active' : ''}}" href="{{route('admin.page.contact')}}" title="Liên hệ">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Liên hệ</p>
+                  </a>
+                </li>
+              @endif
+
+              @if (config('admin.page.copyright.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'copyright_create' ? 'active' : ''}}" href="{{route('admin.page.copyright')}}" title="Copyright">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Copyright</p>
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </li>
+        @endif
+
+        {{-- Module seopage --}}
+        @if (config('admin.seopage.active') === true)
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'seopage_home' || session('module_active') === 'seopage_product' || session('module_active') === 'seopage_news' || session('module_active') === 'seopage_contact' ? 'menu-open' : ''}}">
+            <a class="nav-link {{session('module_active') === 'seopage_home' || session('module_active') === 'seopage_product' || session('module_active') === 'seopage_news' || session('module_active') === 'seopage_contact' ? 'active' : ''}}" title="Quản lý seopage">
+              <i class="nav-icon text-sm fas fa-share-alt"></i>
+              <p>
+                Quản lý seopage<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a class="nav-link {{session('module_active') === 'seopage_home' ? 'active' : ''}}" href="{{route('admin.seopage.home')}}" title="Trang chủ">
+                  <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Trang chủ</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{session('module_active') === 'seopage_product' ? 'active' : ''}}" href="{{route('admin.seopage.product')}}" title="Sản phẩm">
+                  <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Sản phẩm</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{session('module_active') === 'seopage_news' ? 'active' : ''}}" href="{{route('admin.seopage.news')}}" title="Tin tức">
+                  <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Tin tức</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{session('module_active') === 'seopage_contact' ? 'active' : ''}}" href="{{route('admin.seopage.contact')}}" title="Liên hệ">
+                  <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Liên hệ</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        @endif
+
+        {{-- Module setting --}}
         <li class="nav-item">
-          <a class="nav-link" href="" title="Thiết lập chung">
+          <a class="nav-link" href="#" title="Thiết lập chung">
             <i class="nav-icon text-sm fas fa-cogs"></i>
             <p>Thiết lập chung</p>
           </a>

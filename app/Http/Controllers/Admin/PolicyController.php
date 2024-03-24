@@ -18,10 +18,10 @@ class PolicyController extends Controller
   protected $helper;
   protected $type;
   protected $numberPerPage;
-  protected $with1;
-  protected $with2;
-  protected $with3;
-  protected $with4;
+  protected $width1;
+  protected $width2;
+  protected $width3;
+  protected $width4;
   protected $height1;
   protected $height2;
   protected $height3;
@@ -33,10 +33,10 @@ class PolicyController extends Controller
     $this->helper = new Helpers();
     $this->type = config('admin.post.policy.type');
     $this->numberPerPage = config('admin.post.policy.number_per_page');
-    $this->with1 = config("admin.post.policy.width1");
-    $this->with2 = config("admin.post.policy.width2");
-    $this->with3 = config("admin.post.policy.width3");
-    $this->with4 = config("admin.post.policy.width4");
+    $this->width1 = config("admin.post.policy.width1");
+    $this->width2 = config("admin.post.policy.width2");
+    $this->width3 = config("admin.post.policy.width3");
+    $this->width4 = config("admin.post.policy.width4");
     $this->height1 = config("admin.post.policy.height1");
     $this->height2 = config("admin.post.policy.height2");
     $this->height3 = config("admin.post.policy.height3");
@@ -100,25 +100,25 @@ class PolicyController extends Controller
     if (!$validator->fails()) {
       $manager = new ImageManager(new Driver());
       if ($request->hasFile('photo1')) {
-        $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+        $image = $manager->read($request->photo1)->resize($this->width1, $this->height1);
         $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
         $path = public_path('upload/post');
         $image->save($path . "/" . $photo1);
       }
       if ($request->hasFile('photo2')) {
-        $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+        $image = $manager->read($request->photo2)->resize($this->width2, $this->height2);
         $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
         $path = public_path('upload/post');
         $image->save($path . "/" . $photo2);
       }
       if ($request->hasFile('photo3')) {
-        $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+        $image = $manager->read($request->photo3)->resize($this->width3, $this->height3);
         $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
         $path = public_path('upload/post');
         $image->save($path . "/" . $photo3);
       }
       if ($request->hasFile('photo4')) {
-        $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+        $image = $manager->read($request->photo4)->resize($this->width4, $this->height4);
         $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
         $path = public_path('upload/post');
         $image->save($path . "/" . $photo4);
@@ -137,15 +137,17 @@ class PolicyController extends Controller
         'photo3' => !empty($photo3) ? $photo3 : null,
         'photo4' => !empty($photo4) ? $photo4 : null
       ];
-      $dataSeo = [
-        'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
-        'hash_seo' => $hashKey,
-        'type' => $this->type,
-        'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
-        'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
-      ];
+      if ($request->input('title_seo')) {
+        $dataSeo = [
+          'title_seo' => htmlspecialchars($request->input('title_seo')),
+          'hash_seo' => $hashKey,
+          'type' => $this->type,
+          'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
+          'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
+        ];
+        Seo::create($dataSeo);
+      }
       News::create($data);
-      Seo::create($dataSeo);
       return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.policy'));
     } else {
       return redirect()->route('admin.policy.create')->withErrors($validator)->withInput();
@@ -163,33 +165,42 @@ class PolicyController extends Controller
   /* Policy update */
   public function update(Request $request)
   {
+    $news = News::where('type', $this->type)->find($request->id);
     if (!file_exists($this->uploadPost)) {
       mkdir($this->uploadPost, 0777, true);
     }
     $manager = new ImageManager(new Driver());
     if ($request->hasFile('photo1')) {
-      $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+      $image = $manager->read($request->photo1)->resize($this->width1, $this->height1);
       $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
       $path = public_path('upload/post');
       $image->save($path . "/" . $photo1);
+    } else {
+      $photo1 = isset($news->photo1) ? $news->photo1 : null;
     }
     if ($request->hasFile('photo2')) {
-      $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+      $image = $manager->read($request->photo2)->resize($this->width2, $this->height2);
       $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
       $path = public_path('upload/post');
       $image->save($path . "/" . $photo2);
+    } else {
+      $photo2 = isset($news->photo2) ? $news->photo2 : null;
     }
     if ($request->hasFile('photo3')) {
-      $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+      $image = $manager->read($request->photo3)->resize($this->width3, $this->height3);
       $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
       $path = public_path('upload/post');
       $image->save($path . "/" . $photo3);
+    } else {
+      $photo3 = isset($news->photo3) ? $news->photo3 : null;
     }
     if ($request->hasFile('photo4')) {
-      $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+      $image = $manager->read($request->photo4)->resize($this->width4, $this->height4);
       $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
       $path = public_path('upload/post');
       $image->save($path . "/" . $photo4);
+    } else {
+      $photo4 = isset($news->photo4) ? $news->photo4 : null;
     }
     $data = [
       'slug' => htmlspecialchars($request->input('slug')),
@@ -203,23 +214,24 @@ class PolicyController extends Controller
       'photo3' => !empty($photo3) ? $photo3 : null,
       'photo4' => !empty($photo4) ? $photo4 : null
     ];
-    $news = News::where('type', $this->type)->find($request->id);
-    $dataSeo = [
-      'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
-      'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
-      'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
-      'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
-      'hash_seo' => $news->hash,
-      'type' => $this->type,
-      'id_parent' => !empty($news->id) ? $news->id  : null
-    ];
-    $news->update($data);
-    $seo = Seo::where('hash_seo', $news->hash)->first();
-    if ($seo) {
-      Seo::where('hash_seo', $news->hash)->update($dataSeo);
-    } else {
-      Seo::create($dataSeo);
+    if ($request->input('title_seo')) {
+      $dataSeo = [
+        'title_seo' => htmlspecialchars($request->input('title_seo')),
+        'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
+        'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
+        'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
+        'hash_seo' => $news->hash,
+        'type' => $this->type,
+        'id_parent' => !empty($news->id) ? $news->id  : null
+      ];
+      $seo = Seo::where('hash_seo', $news->hash)->first();
+      if ($seo) {
+        Seo::where('hash_seo', $news->hash)->update($dataSeo);
+      } else {
+        Seo::create($dataSeo);
+      }
     }
+    $news->update($data);
     return $this->helper->transfer("Cập nhật dữ liệu", "success", route('admin.policy.show', ['id' => $news->id]));
   }
 

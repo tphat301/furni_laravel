@@ -1,20 +1,19 @@
 @php
-  $deletePhoto = "admin.photo.".$type.".delete_photo";
-  $photoConfig = "admin.photo.".$type.".photo";
-  $linkConfig = "admin.photo.".$type.".link";
-  $statusConfig = "admin.photo.".$type.".status";
-  $titleConfig = "admin.photo.".$type.".title";
-  $descConfig = "admin.photo.".$type.".desc";
-  $contentConfig = "admin.photo.".$type.".content";
-  $routeUpdate = "admin.photo.".$type.".update";
+  $nameConfig = "admin.seopage.".$type.".name";
+  $deletePhoto = "admin.seopage.delete_photo";
+  $photoConfig = "admin.seopage.".$type.".photo";
+  $statusConfig = "admin.seopage.".$type.".status";
+  $titleConfig = "admin.seopage.".$type.".title";
+  $keywordsConfig = "admin.seopage.".$type.".keywords";
+  $descConfig = "admin.seopage.".$type.".description";
   $noimage = "resources/images/noimage.png";
-  $thumb = "admin.photo.".$type.".thumb";
-  $direct = "admin.photo.".$type.".index";
+  $thumb = "admin.seopage.".$type.".thumb";
+  $route = "admin.seopage.save";
 @endphp
 
 @extends('admin.index')
 
-@section('title', $row->title)
+@section('title', config($nameConfig))
 
 @section('content')
   <section class="content-header text-sm">
@@ -27,35 +26,29 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            @if ($row->title)
-              {{$row->title}}
-            @else
-              Chi tiết dữ liệu
-            @endif
+            {{config($nameConfig)}}
           </li>
         </ol>
       </div>
     </div>
   </section>
   <section class="content">
-    {!! Form::open(['name' => 'form-photo', 'route' => [$routeUpdate, $row->id, $type], 'class' => ['form-product-detail'], 'files' => true]) !!}
-    @method('PUT')
+    <form action="{{ route($route, ['type' => $type, 'id' => !empty($row->id) ? $row->id : '']) }}" class="validation-form" method="POST" enctype="multipart/form-data">
+    @csrf
       <div class="card-footer text-sm sticky-top">
-        <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
+        <button type="submit" name="{{!empty($row) ? 'update' : 'save'}}" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{route($direct)}}" title="Thoát">
-          <i class="fas fa-sign-out-alt mr-2"></i>Thoát
-        </a>
+        @if ($row)
+          <a href="{{route('admin.seopage.remake', ['type' => $type, 'id' => $row->id, 'hash' => $row->hash])}}" class="btn btn-sm bg-gradient-secondary">
+            <i class="fas fa-redo mr-2"></i>Làm mới
+          </a>
+        @endif
       </div>
       <div class="card card-primary card-outline text-sm">
         <div class="card-header">
           <h3 class="card-title">
-            @if ($row->title)
-              {{$row->title}}
-            @else
-              Chi tiết slideshow
-            @endif
+            {{config($nameConfig)}}
           </h3>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -73,7 +66,7 @@
                 <label class="upload-file-label mb-2" for="file0">
                   <div class="upload-file-image rounded mb-3 position-relative">
                     @if (!empty($row->photo))
-                      <img class="rounded img-upload image-preview" src="{{ url("public/upload/photo/$row->photo")  }}" alt="{{ $row->title }}"/>
+                      <img class="rounded img-upload image-preview" src="{{ url("public/upload/seopage/$row->photo")  }}" alt="{{ $row->title }}"/>
                       <a class="delete-photo" href="{{ route($deletePhoto, ['id' => $row->id, 'action' => 'photo', 'type' => $type]) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
@@ -82,7 +75,7 @@
                     @endif
                   </div>
                   <div class="custom-file my-custom-file">
-                    <input type="file" class="custom-file-input" name="file" id="file" onchange="document.querySelector('.image-preview').src = window.URL.createObjectURL(this.files[0])"/>
+                    <input type="file" class="custom-file-input" name="photo" id="file" onchange="document.querySelector('.image-preview').src = window.URL.createObjectURL(this.files[0])"/>
                     <label class="custom-file-label mb-0" data-browse="Chọn" for="file">
                       Chọn file
                     </label>
@@ -92,16 +85,9 @@
                   {{config($thumb)}}
                 </strong>
               </div>
-            </div>
-          @endif
-
-          {{-- Link --}}
-          @if (config($linkConfig) === true)
-            <div class="form-group">
-              <label for="link">
-                Link:
-              </label>
-              <input type="text" class="form-control text-sm" name="link" id="link" placeholder="Link" value="{{ $row->link }}"/>
+              @error("photo")
+                <strong class="text-danger">{{ $message }}</strong>
+              @enderror
             </div>
           @endif
 
@@ -121,13 +107,6 @@
             @endforeach
           </div>
 
-          <div class="form-group">
-            <label for="num" class="d-inline-block align-middle mb-0 mr-2">
-              Số thứ tự:
-            </label>
-            <input type="number" class="form-control form-control-mini d-inline-block align-middle text-sm" min="0" name="num" id="num" placeholder="Số thứ tự" value="{{ $row->num }}"/>
-          </div>
-
           <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
               <ul class="nav nav-tabs" id="custom-tabs-three-tab-lang" role="tablist">
@@ -145,26 +124,29 @@
                   {{-- Title --}}
                   @if (config($titleConfig) === true)
                     <div class="form-group">
-                      <label for="title">Tiêu đề:</label>
-                      <input type="text" class="form-control text-sm" name="title" id="title" placeholder="Tiêu đề" value="{{ $row->title }}"/>
+                      <label for="title">Title:</label>
+                      <input type="text" class="form-control text-sm" name="title" id="title" placeholder="Title" value="{{ !empty($row->title) ? $row->title : '' }}"/>
+                      @error("title")
+                        <strong class="text-danger">{{ $message }}</strong>
+                      @enderror
                     </div>
                   @endif
 
-                  {{-- Desc --}}
+                  {{-- Keywords --}}
+                  @if (config($keywordsConfig) === true)
+                    <div class="form-group">
+                      <label for="keywords">Keywords:</label>
+                      <input type="text" class="form-control check-seo keywords-seo text-sm" name="keywords" id="keywords" placeholder="Keywords" value="{{ !empty($row->keywords) ? $row->keywords : '' }}"/>
+                    </div>
+                  @endif
+
+                  {{-- Description --}}
                   @if (config($descConfig) === true)
                     <div class="form-group">
-                      <label for="desc">Mô tả:</label>
-                      <textarea class="form-control text-sm" name="desc" id="desc" rows="5" placeholder="Mô tả">{{ $row->desc }}</textarea>
-                    </div>
-                  @endif
-
-                  {{-- Content --}}
-                  @if (config($contentConfig) === true)
-                    <div class="form-group">
-                      <label for="cotnent">
-                        Nội dung:
+                      <label for="description">
+                        Description:
                       </label>
-                      <textarea class="form-control text-sm" name="content" id="cotnent" rows="5" placeholder="Nội dung">{{ $row->content }}</textarea>
+                      <textarea class="form-control check-seo description-seo text-sm" name="description" id="description" rows="5" placeholder="Description">{!! !empty($row->description) ? $row->description : '' !!}</textarea>
                     </div>
                   @endif
                 </div>

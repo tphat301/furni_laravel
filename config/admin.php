@@ -480,9 +480,10 @@ return [
   'photo' => [
     'active' => true,
     'name' => 'Quản lý hình ảnh',
-
+    'tab_info' => true,
     // Slideshow
     'slideshow' => [
+      'active' => true,
       'name' => 'Slideshow',
       'type' => 'slideshow',
       'link' => true,
@@ -504,6 +505,7 @@ return [
 
     // Partner
     'partner' => [
+      'active' => true,
       'name' => 'Đối tác',
       'type' => 'partner',
       'link' => true,
@@ -524,6 +526,7 @@ return [
 
     // Social footer
     'social_footer' => [
+      'active' => true,
       'name' => 'Social footer',
       'type' => 'social_footer',
       'link' => true,
@@ -544,6 +547,7 @@ return [
 
     // Logo
     'logo' => [
+      'active' => true,
       'name' => 'Logo',
       'type' => 'logo',
       'link' => false,
@@ -559,13 +563,265 @@ return [
       'height' => 100,
       'thumb' => 'Width: 100 px - Height: 100 px (.jpg|.gif|.png|.jpeg|.svg|.webp)',
     ],
+
+    // Watermark product
+    'watermark_product' => [
+      'active' => true,
+      'layout' => true,
+      'name' => 'Watermark product',
+      'type' => 'watermark_product',
+      'link' => false,
+      'status' => [],
+      'title' => false,
+      'desc' => false,
+      'content' => false,
+      'action' => 'static',
+      'photo' => true,
+      'with' => 50,
+      'height' => 50,
+      'thumb' => 'Width: 50px - Height: 50px (.jpg|.gif|.png|.jpeg|.svg|.webp)'
+    ],
+
+    // Watermark news
+    'watermark_news' => [
+      'active' => false,
+      'name' => 'Watermark news',
+      'type' => 'watermark_news',
+      'link' => false,
+      'status' => [],
+      'title' => true,
+      'desc' => false,
+      'content' => false,
+      'action' => 'static',
+      'photo' => true,
+      'with' => 50,
+      'height' => 50,
+      'thumb' => 'Width: 50px - Height: 50px (.jpg|.gif|.png|.jpeg|.svg|.webp)'
+    ],
   ],
 
-  /* Configure static module */
-  'static' => [],
+  /* Configure page module */
+  'page' => [
+    'active' => true,
+    'name' => 'Quản lý trang tĩnh',
+
+    // About
+    'about' => [
+      'active' => true,
+      'name' => 'Giới thiệu',
+      'type' => 'about',
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'photo1' => true,
+      'with1' => 300,
+      'height1' => 200,
+      'thumb1' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo2' => false,
+      'with2' => 300,
+      'height2' => 200,
+      'thumb2' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo3' => false,
+      'with3' => 300,
+      'height3' => 200,
+      'thumb3' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo4' => false,
+      'with4' => 300,
+      'height4' => 200,
+      'thumb4' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'slogan' => true,
+      'slug' => true,
+      'title' => true,
+      'desc' => true,
+      'desc_tiny' => true,
+      'content' => true,
+      'content_tiny' => true,
+      'seo' => true,
+      'seo_title' => true,
+      'seo_keyword' => true,
+      'seo_desc' => true
+    ],
+
+    // Footer
+    'footer' => [
+      'active' => true,
+      'type' => 'footer',
+      'name' => "Footer",
+      'slug' => false,
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'title' => true,
+      'desc' => false,
+      'desc_tiny' => false,
+      'content' => true,
+      'content_tiny' => true,
+      'photo1' => false,
+      'with1' => 300,
+      'height1' => 200,
+      'thumb1' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo2' => false,
+      'with2' => 300,
+      'height2' => 200,
+      'thumb2' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo3' => false,
+      'with3' => 300,
+      'height3' => 200,
+      'thumb3' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo4' => false,
+      'with4' => 300,
+      'height4' => 200,
+      'thumb4' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'seo' => false,
+      'seo_title' => false,
+      'seo_keyword' => false,
+      'seo_desc' => false
+    ],
+
+    // Contact
+    'contact' => [
+      'active' => true,
+      'type' => 'contact',
+      'name' => "Contact",
+      'slug' => false,
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'title' => true,
+      'desc' => false,
+      'desc_tiny' => false,
+      'content' => true,
+      'content_tiny' => true,
+      'photo1' => false,
+      'with1' => 300,
+      'height1' => 200,
+      'thumb1' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo2' => false,
+      'with2' => 300,
+      'height2' => 200,
+      'thumb2' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo3' => false,
+      'with3' => 300,
+      'height3' => 200,
+      'thumb3' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo4' => false,
+      'with4' => 300,
+      'height4' => 200,
+      'thumb4' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'seo' => false,
+      'seo_title' => false,
+      'seo_keyword' => false,
+      'seo_desc' => false
+    ],
+
+    // Copyright
+    'copyright' => [
+      'active' => true,
+      'type' => 'copyright',
+      'name' => "Copyright",
+      'slug' => false,
+      'status' => ['hienthi' => "Hiển thị"],
+      'title' => true,
+      'desc' => false,
+      'desc_tiny' => false,
+      'content' => false,
+      'content_tiny' => false,
+      'photo1' => false,
+      'with1' => 300,
+      'height1' => 200,
+      'thumb1' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo2' => false,
+      'with2' => 300,
+      'height2' => 200,
+      'thumb2' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo3' => false,
+      'with3' => 300,
+      'height3' => 200,
+      'thumb3' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'photo4' => false,
+      'with4' => 300,
+      'height4' => 200,
+      'thumb4' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'seo' => false,
+      'seo_title' => false,
+      'seo_keyword' => false,
+      'seo_desc' => false
+    ],
+  ],
 
   /* Configure seopage module */
-  'seopage' => [],
+  'seopage' => [
+    'active' => true,
+    'name' => 'Quản lý seopage',
+
+    // Home
+    'home' => [
+      'active' => true,
+      'name' => 'Trang chủ',
+      'type' => 'home',
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'photo' => true,
+      'with' => 300,
+      'height' => 200,
+      'thumb' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'title' => true,
+      'keywords' => true,
+      'description' => true
+    ],
+
+    // Product
+    'product' => [
+      'active' => true,
+      'name' => 'Sản phẩm',
+      'type' => 'product',
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'photo' => true,
+      'with' => 300,
+      'height' => 200,
+      'thumb' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'title' => true,
+      'keywords' => true,
+      'description' => true
+    ],
+
+    // News
+    'news' => [
+      'active' => true,
+      'name' => 'Tin tức',
+      'type' => 'news',
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'photo' => true,
+      'with' => 300,
+      'height' => 200,
+      'thumb' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'title' => true,
+      'keywords' => true,
+      'description' => true
+    ],
+
+    // Contact
+    'contact' => [
+      'active' => true,
+      'name' => 'Liên hệ',
+      'type' => 'contact',
+      'status' => [
+        'hienthi' => 'Hiển thị'
+      ],
+      'photo' => true,
+      'with' => 300,
+      'height' => 200,
+      'thumb' => 'Width: 300px - Height: 200px (.jpg|.gif|.png|.jpeg|.gif|.webp|.svg)',
+      'title' => true,
+      'keywords' => true,
+      'description' => true
+    ]
+  ],
 
   /* Configure setting module */
   'setting' => [],

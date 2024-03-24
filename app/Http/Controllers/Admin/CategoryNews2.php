@@ -19,10 +19,10 @@ class CategoryNews2 extends Controller
   protected $typeCategory1;
   protected $typeCategory2;
   protected $uploadCategoryNews;
-  protected $with1;
-  protected $with2;
-  protected $with3;
-  protected $with4;
+  protected $width1;
+  protected $width2;
+  protected $width3;
+  protected $width4;
   protected $height1;
   protected $height2;
   protected $height3;
@@ -35,10 +35,10 @@ class CategoryNews2 extends Controller
     $this->typeCategory2 = config('admin.news.category.category2.type');
     $this->numberPerPage = config('admin.news.category.category2.number_per_page');
     $this->uploadCategoryNews = "public/upload/category_news2";
-    $this->with1 = config("admin.news.category.category2.width1");
-    $this->with2 = config("admin.news.category.category2.width2");
-    $this->with3 = config("admin.news.category.category2.width3");
-    $this->with4 = config("admin.news.category.category2.width4");
+    $this->width1 = config("admin.news.category.category2.width1");
+    $this->width2 = config("admin.news.category.category2.width2");
+    $this->width3 = config("admin.news.category.category2.width3");
+    $this->width4 = config("admin.news.category.category2.width4");
     $this->height1 = config("admin.news.category.category2.height1");
     $this->height2 = config("admin.news.category.category2.height2");
     $this->height3 = config("admin.news.category.category2.height3");
@@ -102,25 +102,25 @@ class CategoryNews2 extends Controller
     if (!$validator->fails()) {
       $manager = new ImageManager(new Driver());
       if ($request->hasFile('photo1')) {
-        $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+        $image = $manager->read($request->photo1)->resize($this->width1, $this->height1);
         $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
         $path = public_path('upload/category_news2');
         $image->save($path . "/" . $photo1);
       }
       if ($request->hasFile('photo2')) {
-        $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+        $image = $manager->read($request->photo2)->resize($this->width2, $this->height2);
         $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
         $path = public_path('upload/category_news2');
         $image->save($path . "/" . $photo2);
       }
       if ($request->hasFile('photo3')) {
-        $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+        $image = $manager->read($request->photo3)->resize($this->width3, $this->height3);
         $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
         $path = public_path('upload/category_news2');
         $image->save($path . "/" . $photo3);
       }
       if ($request->hasFile('photo4')) {
-        $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+        $image = $manager->read($request->photo4)->resize($this->width4, $this->height4);
         $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
         $path = public_path('upload/category_news2');
         $image->save($path . "/" . $photo4);
@@ -141,15 +141,17 @@ class CategoryNews2 extends Controller
         'num' => !empty($request->input('num')) ? $request->input('num') : 0,
         'hash' => $hashKey
       ];
-      $dataSeo = [
-        'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
-        'hash_seo' => $hashKey,
-        'type' => $this->typeCategory2,
-        'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
-        'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null
-      ];
+      if ($request->input('title_seo')) {
+        $dataSeo = [
+          'title_seo' => htmlspecialchars($request->input('title_seo')),
+          'hash_seo' => $hashKey,
+          'type' => $this->typeCategory2,
+          'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
+          'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null
+        ];
+        Seo::create($dataSeo);
+      }
       CategoryNews::create($data);
-      Seo::create($dataSeo);
       return $this->helper->transfer("Thêm dữ liệu", "success", route('admin.category_news2'));
     } else {
       return redirect()->route('admin.category_news2.create')->withErrors($validator)->withInput();
@@ -168,33 +170,42 @@ class CategoryNews2 extends Controller
   /* Category news update */
   public function update(Request $request)
   {
+    $categoryNews = CategoryNews::where('type', $this->typeCategory2)->find($request->id);
     if (!file_exists($this->uploadCategoryNews)) {
       mkdir($this->uploadCategoryNews, 0777, true);
     }
     $manager = new ImageManager(new Driver());
     if ($request->hasFile('photo1')) {
-      $image = $manager->read($request->photo1)->resize($this->with1, $this->height1);
+      $image = $manager->read($request->photo1)->resize($this->width1, $this->height1);
       $photo1 = hexdec(uniqid()) . "." . $request->photo1->getClientOriginalName();
       $path = public_path('upload/category_news2');
       $image->save($path . "/" . $photo1);
+    } else {
+      $photo1 = isset($categoryNews->photo1) ? $categoryNews->photo1 : null;
     }
     if ($request->hasFile('photo2')) {
-      $image = $manager->read($request->photo2)->resize($this->with2, $this->height2);
+      $image = $manager->read($request->photo2)->resize($this->width2, $this->height2);
       $photo2 = hexdec(uniqid()) . "." . $request->photo2->getClientOriginalName();
       $path = public_path('upload/category_news2');
       $image->save($path . "/" . $photo2);
+    } else {
+      $photo2 = isset($categoryNews->photo2) ? $categoryNews->photo2 : null;
     }
     if ($request->hasFile('photo3')) {
-      $image = $manager->read($request->photo3)->resize($this->with3, $this->height3);
+      $image = $manager->read($request->photo3)->resize($this->width3, $this->height3);
       $photo3 = hexdec(uniqid()) . "." . $request->photo3->getClientOriginalName();
       $path = public_path('upload/category_news2');
       $image->save($path . "/" . $photo3);
+    } else {
+      $photo3 = isset($categoryNews->photo3) ? $categoryNews->photo3 : null;
     }
     if ($request->hasFile('photo4')) {
-      $image = $manager->read($request->photo4)->resize($this->with4, $this->height4);
+      $image = $manager->read($request->photo4)->resize($this->width4, $this->height4);
       $photo4 = hexdec(uniqid()) . "." . $request->photo4->getClientOriginalName();
       $path = public_path('upload/category_news2');
       $image->save($path . "/" . $photo4);
+    } else {
+      $photo4 = isset($categoryNews->photo4) ? $categoryNews->photo4 : null;
     }
     $data = [
       'slug' => htmlspecialchars($request->input('slug')),
@@ -209,24 +220,25 @@ class CategoryNews2 extends Controller
       'photo4' => !empty($photo4) ? $photo4 : null,
       'id_parent' => !empty($request->input('id_parent1')) ? htmlspecialchars($request->input('id_parent1')) : 0,
     ];
-    $categoryProduct = CategoryNews::where('type', $this->typeCategory2)->find($request->id);
-    $dataSeo = [
-      'title_seo' => !empty($request->input('title_seo')) ? htmlspecialchars($request->input('title_seo')) : null,
-      'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
-      'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
-      'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
-      'hash_seo' => $categoryProduct->hash,
-      'type' => $this->typeCategory2,
-      'id_parent' => !empty($categoryProduct->id) ? $categoryProduct->id  : null
-    ];
-    $categoryProduct->update($data);
-    $seo = Seo::where('hash_seo', $categoryProduct->hash)->first();
-    if ($seo) {
-      Seo::where('hash_seo', $categoryProduct->hash)->update($dataSeo);
-    } else {
-      Seo::create($dataSeo);
+    if ($request->input('title_seo')) {
+      $dataSeo = [
+        'title_seo' => htmlspecialchars($request->input('title_seo')),
+        'keywords' => !empty($request->input('keywords')) ? htmlspecialchars($request->input('keywords')) : null,
+        'description_seo' => !empty($request->input('description_seo')) ? htmlspecialchars($request->input('description_seo')) : null,
+        'schema' => !empty($request->input('schema')) ? htmlspecialchars($request->input('schema')) : null,
+        'hash_seo' => $categoryNews->hash,
+        'type' => $this->typeCategory2,
+        'id_parent' => !empty($categoryNews->id) ? $categoryNews->id  : null
+      ];
+      $seo = Seo::where('hash_seo', $categoryNews->hash)->first();
+      if ($seo) {
+        Seo::where('hash_seo', $categoryNews->hash)->update($dataSeo);
+      } else {
+        Seo::create($dataSeo);
+      }
     }
-    return $this->helper->transfer("Cập nhật dữ liệu", "success", route('admin.category_news2.show', ['id' => $categoryProduct->id]));
+    $categoryNews->update($data);
+    return $this->helper->transfer("Cập nhật dữ liệu", "success", route('admin.category_news2.show', ['id' => $categoryNews->id]));
   }
 
   /* Category news duplicate */

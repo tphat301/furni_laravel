@@ -2,8 +2,51 @@
 
 namespace App\Utils;
 
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 final class Helpers
 {
+
+  /* Create watermark */
+  public function createWatermark($data, $path, $pathInsert, $position, $x, $y, $option)
+  {
+    if ($data) {
+      $manager = new ImageManager(new Driver());
+      foreach ($data as $v) {
+        if ($v->photo1) {
+          $image = $manager->read($path . $v->photo1);
+          $watermark = $manager->read($pathInsert);
+          $image->place($watermark, $position, $x, $y);
+          $publicPath = public_path('upload/wk_' . $option);
+          $image->save($publicPath . "/" . $v->photo1);
+        }
+        if ($v->photo2) {
+          $image = $manager->read($path . $v->photo2);
+          $watermark = $manager->read($pathInsert);
+          $image->place($watermark, $position, $x, $y);
+          $publicPath = public_path('upload/wk_' . $option);
+          $image->save($publicPath . "/" . $v->photo2);
+        }
+        if ($v->photo3) {
+          $image = $manager->read($path . $v->photo3);
+          $watermark = $manager->read($pathInsert);
+          $image->place($watermark, $position, $x, $y);
+          $publicPath = public_path('upload/wk_' . $option);
+          $image->save($publicPath . "/" . $v->photo3);
+        }
+        if ($v->photo4) {
+          $image = $manager->read($path . $v->photo4);
+          $watermark = $manager->read($pathInsert);
+          $image->place($watermark, $position, $x, $y);
+          $publicPath = public_path('upload/wk_' . $option);
+          $image->save($publicPath . "/" . $v->photo4);
+        }
+      }
+      return;
+    }
+  }
+
   /* UTF8 convert */
   public function utf8Convert($str = '')
   {
@@ -98,55 +141,6 @@ final class Helpers
   public function alert(string $notify = '')
   {
     echo '<script language="javascript">alert("' . $notify . '")</script>';
-  }
-
-  /* Upload file */
-  public function uploadFile(string $field = "", array $extensionAllow = [], string $folderUploadFile, $postMaxSize = 20971520)
-  {
-    if (isset($_FILES[$field]) && !$_FILES[$field]['error']) {
-      $filename = $_FILES[$field]['name'];
-      $filesize = $_FILES[$field]['size'];
-      $name = pathinfo($filename, PATHINFO_FILENAME);
-
-      if (!file_exists($folderUploadFile)) {
-        mkdir($folderUploadFile, 0777, true);
-      }
-
-      $uploadfile = $folderUploadFile . $filename;
-
-      $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
-      if (!in_array($extension, $extensionAllow)) {
-        $this->alert('Chỉ hỗ trợ upload file có các định dạng' . implode(",", $extensionAllow));
-        return false;
-      }
-
-      if ($filesize >= $postMaxSize) {
-        $this->alert('Dung lượng file không được vượt quá ' . $postMaxSize . "byte");
-        return false;
-      }
-
-      if (file_exists($uploadfile)) {
-        for ($i = 0; $i < 1000; $i++) {
-          if (!file_exists($folderUploadFile . $name . $i . '.' . $extension)) {
-            $filename = $name . $i . '.' . $extension;
-            $uploadfile = $folderUploadFile . $filename;
-            break;
-          }
-        }
-      } else {
-        $filename = $_FILES[$field]['name'];
-        $uploadfile = $folderUploadFile . $filename;
-      }
-
-      if (!copy($_FILES[$field]['tmp_name'], $uploadfile)) {
-        if (!move_uploaded_file($_FILES[$field]['tmp_name'], $uploadfile)) {
-          return false;
-        }
-      }
-      return $filename;
-    }
-    return FALSE;
   }
 
   /* Check status */
