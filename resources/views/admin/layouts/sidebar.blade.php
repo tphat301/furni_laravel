@@ -361,6 +361,24 @@
           </li>
         @endif
 
+        {{-- Module newsletter --}}
+        <li class="nav-item has-treeview menu-open ">
+            <a class="nav-link active" href="#" title="Quản lý nhận tin">
+              <i class="nav-icon text-sm fas fa-envelope"></i>
+              <p>
+                Quản lý nhận tin
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item ">
+                <a class="nav-link active" href="" title="Đăng ký nhận tin"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                  <p>Đăng ký nhận tin</p>
+                </a>
+              </li>
+            </ul>
+        </li>
+
         {{-- Module setting --}}
         <li class="nav-item">
           <a class="nav-link {{session('module_active') === 'setting_index' ? 'active' : ''}}" href="{{route('admin.setting')}}" title="{{config('admin.setting.name')}}">

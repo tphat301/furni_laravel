@@ -284,4 +284,55 @@ final class Helpers
     $categories .= "</ul>";
     return $categories;
   }
+
+  /* Upload file */
+  public function uploadFile(string $field = "", array $extensionAllow = [], string $folderUploadFile, $postMaxSize = 20971520)
+  {
+    if (isset($_FILES[$field]) && !$_FILES[$field]['error']) {
+      $filename = $_FILES[$field]['name'];
+      $filesize = $_FILES[$field]['size'];
+      $name = pathinfo($filename, PATHINFO_FILENAME);
+
+      if (!file_exists($folderUploadFile)) {
+        mkdir($folderUploadFile, 0777, true);
+      }
+
+      $uploadfile = $folderUploadFile . $filename;
+
+      $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+      if (!in_array($extension, $extensionAllow)) {
+        self::alert('Chỉ hỗ trợ upload file có các định dạng' . implode(",", $extensionAllow));
+        return false;
+      }
+
+      if (
+        $filesize >= $postMaxSize
+      ) {
+        self::alert('Dung lượng file không được vượt quá ' . $postMaxSize . "byte");
+        return false;
+      }
+
+      if (file_exists($uploadfile)) {
+        for ($i = 0; $i < 1000; $i++) {
+          if (!file_exists($folderUploadFile . $name . $i . '.' . $extension)) {
+            $filename = $name . $i . '.' . $extension;
+            $uploadfile = $folderUploadFile . $filename;
+            break;
+          }
+        }
+      } else {
+        $filename = $_FILES[$field]['name'];
+        $uploadfile = $folderUploadFile . $filename;
+      }
+
+      if (!copy($_FILES[$field]['tmp_name'], $uploadfile)) {
+        if (!move_uploaded_file($_FILES[$field]['tmp_name'], $uploadfile)) {
+          return false;
+        }
+      }
+      return $filename;
+    }
+    return FALSE;
+  }
 }

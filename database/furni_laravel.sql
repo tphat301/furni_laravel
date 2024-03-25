@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2024 at 04:16 PM
+-- Generation Time: Mar 25, 2024 at 04:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', 'ER1p7Krwva1ERpZ2uyLOjwwqek86uSCF0UZhkDi0csv5BbOfOIfjq5N3sLqS', NULL, '2024-03-13 03:07:48');
+(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', 'IE0YBUnOOVAVA5arsVwQ58oAbKFS79P56W5x1GeM0w8rwzj0NNRSZh3DrzTm', NULL, '2024-03-13 03:07:48');
 
 -- --------------------------------------------------------
 
@@ -173,14 +173,27 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (12, '2024_03_16_203024_create_seo_table', 6),
 (13, '2024_03_18_161129_add_desc_to_products_table', 7),
 (14, '2024_03_18_161427_add_content_to_products_table', 8),
-(15, '2024_03_20_083349_create_category_products_table', 9),
-(16, '2024_03_20_090531_create_news_table', 10),
-(17, '2024_03_20_091138_create_category_news_table', 11),
-(18, '2024_03_21_192206_add_slogan_to_news_table', 12),
-(20, '2024_03_22_100755_create_photo_table', 13),
-(21, '2024_03_24_102143_add_position_to_photo_table', 14),
-(23, '2024_03_24_162006_create_page_table', 15),
-(24, '2024_03_24_204922_create_seopage_table', 16);
+(30, '2024_03_25_144007_add_hash_tag_to_tag_table', 21),
+(33, '2024_03_25_144301_add_hash_tag_to_tag_table', 22),
+(34, '2024_03_25_144335_add_status_tag_to_tag_table', 22),
+(35, '2024_03_25_144902_add_hash_tag_product_to_tag_product_table', 23),
+(36, '2024_03_25_145047_add_hash_tag_news_to_tag_news_table', 24),
+(37, '2024_03_25_150226_add_photo_to_tag_table', 25),
+(88, '2024_03_20_083349_create_category_products_table', 26),
+(89, '2024_03_20_090531_create_news_table', 26),
+(90, '2024_03_20_091138_create_category_news_table', 26),
+(91, '2024_03_21_192206_add_slogan_to_news_table', 26),
+(92, '2024_03_22_100755_create_photo_table', 26),
+(93, '2024_03_24_102143_add_position_to_photo_table', 26),
+(94, '2024_03_24_162006_create_page_table', 26),
+(95, '2024_03_24_204922_create_seopage_table', 26),
+(96, '2024_03_25_101419_create_setting_table', 26),
+(97, '2024_03_25_110544_create_tag_table', 26),
+(98, '2024_03_25_111027_create_tag_product_table', 26),
+(99, '2024_03_25_111354_create_tag_news_table', 26),
+(100, '2024_03_25_181145_add_status_tag_to_tag_table', 26),
+(101, '2024_03_25_181419_add_photo_to_tag_table', 26),
+(102, '2024_03_25_222901_create_newsletter_table', 27);
 
 -- --------------------------------------------------------
 
@@ -202,8 +215,7 @@ CREATE TABLE `news` (
   `file_youtube` varchar(255) DEFAULT NULL,
   `file_mp4` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
-  `slogan` varchar(255) DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
+  `slug` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   `num` varchar(255) DEFAULT NULL,
@@ -211,6 +223,30 @@ CREATE TABLE `news` (
   `desc` mediumtext DEFAULT NULL,
   `content` mediumtext DEFAULT NULL,
   `options` mediumtext DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `slogan` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `newsletter`
+--
+
+CREATE TABLE `newsletter` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `file_attach` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `confirm_status` varchar(255) DEFAULT NULL,
+  `content` mediumtext DEFAULT NULL,
+  `address` mediumtext DEFAULT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `num` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -242,13 +278,6 @@ CREATE TABLE `page` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `page`
---
-
-INSERT INTO `page` (`id`, `slogan`, `slug`, `title`, `type`, `status`, `hash`, `photo1`, `photo2`, `photo3`, `photo4`, `desc`, `content`, `file_attach`, `file_youtube`, `file_mp4`, `options`, `created_at`, `updated_at`) VALUES
-(5, NULL, NULL, 'Copyright ©2024. All Rights Reserved. — Designed with love by Untree.co Distributed By Phat Developer', 'copyright', 'hienthi', 'zvom', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-03-24 13:20:17', '2024-03-24 13:21:30');
 
 -- --------------------------------------------------------
 
@@ -311,18 +340,10 @@ CREATE TABLE `photo` (
   `num` varchar(255) DEFAULT NULL,
   `desc` mediumtext DEFAULT NULL,
   `content` mediumtext DEFAULT NULL,
-  `position` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `position` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `photo`
---
-
-INSERT INTO `photo` (`id`, `title`, `photo`, `type`, `action`, `link`, `hash`, `status`, `num`, `desc`, `content`, `position`, `created_at`, `updated_at`) VALUES
-(16, 'Facebook', '1794240570359187.mxh1-1-1957-80510.png', 'action_social_footer', NULL, 'https://www.google.com/', 'jsa1', 'hienthi', '1', NULL, NULL, NULL, '2024-03-22 15:25:49', '2024-03-22 15:25:49'),
-(17, 'Google', '1794240570408227.mxh1-2-1178-74341.png', 'action_social_footer', NULL, 'https://www.google.com/', 'jsa2', 'hienthi', '0', NULL, NULL, NULL, '2024-03-22 15:25:49', '2024-03-22 15:25:49');
 
 -- --------------------------------------------------------
 
@@ -367,7 +388,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `id_parent1`, `id_parent2`, `id_parent3`, `id_parent4`, `id_brand`, `slug`, `title`, `photo1`, `photo2`, `photo3`, `photo4`, `code`, `file_attach`, `file_youtube`, `file_mp4`, `status`, `type`, `desc`, `content`, `num`, `hash`, `quantity`, `sale_price`, `regular_price`, `discount`, `options`, `created_at`, `updated_at`) VALUES
-(139, 0, 0, 0, 0, NULL, 'aaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaaaa', '1794410899385213.slide-07.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hienthi', 'product', NULL, NULL, '1', '7da7', '1', 0, 0, 0, NULL, '2024-03-24 12:33:07', '2024-03-24 12:33:07');
+(141, 0, 0, 0, 0, NULL, 'aaa', 'aaa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'banchay,noibat,hienthi', 'product', NULL, NULL, '1', '0m6r', '1', 0, 0, 0, NULL, '2024-03-25 08:51:55', '2024-03-25 10:30:12'),
+(142, 0, 0, 0, 0, NULL, 'bb', 'bb', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'banchay,noibat,hienthi', 'product', NULL, NULL, '2', '6p7e', '1', 0, 0, 0, NULL, '2024-03-25 08:52:01', '2024-03-25 11:45:39');
 
 -- --------------------------------------------------------
 
@@ -406,12 +428,89 @@ CREATE TABLE `seopage` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `seopage`
+-- Table structure for table `setting`
 --
 
-INSERT INTO `seopage` (`id`, `title`, `type`, `photo`, `keywords`, `description`, `hash`, `created_at`, `updated_at`) VALUES
-(1, 'Trang chủ', 'home', '1794421079374097.misc2-4853.jpg', 'Trang chủ', 'Trang chủ', '51kv', '2024-03-24 15:14:56', '2024-03-24 15:14:56');
+CREATE TABLE `setting` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `headjs` mediumtext DEFAULT NULL,
+  `bodyjs` mediumtext DEFAULT NULL,
+  `options` mediumtext DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tag`
+--
+
+CREATE TABLE `tag` (
+  `id_tag` bigint(20) UNSIGNED NOT NULL,
+  `title_tag` varchar(255) NOT NULL,
+  `status_tag` varchar(255) DEFAULT NULL,
+  `id_parent` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `type_tag` varchar(255) DEFAULT NULL,
+  `num_tag` varchar(255) DEFAULT NULL,
+  `hash_tag` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tag`
+--
+
+INSERT INTO `tag` (`id_tag`, `title_tag`, `status_tag`, `id_parent`, `photo`, `type_tag`, `num_tag`, `hash_tag`, `created_at`, `updated_at`) VALUES
+(1, 'tag a', 'hienthi', NULL, NULL, 'product', '1', '6woi', '2024-03-25 11:18:20', '2024-03-25 11:18:20'),
+(2, 'tag b', 'hienthi', NULL, NULL, 'product', '2', 'yhv7', '2024-03-25 11:18:59', '2024-03-25 11:19:02');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tag_news`
+--
+
+CREATE TABLE `tag_news` (
+  `id_tag_news` bigint(20) UNSIGNED NOT NULL,
+  `id_parent` varchar(255) DEFAULT NULL,
+  `id_tag` varchar(255) DEFAULT NULL,
+  `type_tag_news` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tag_product`
+--
+
+CREATE TABLE `tag_product` (
+  `id_tag_product` bigint(20) UNSIGNED NOT NULL,
+  `id_parent` varchar(255) DEFAULT NULL,
+  `id_tag` varchar(255) DEFAULT NULL,
+  `type_tag_product` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tag_product`
+--
+
+INSERT INTO `tag_product` (`id_tag_product`, `id_parent`, `id_tag`, `type_tag_product`, `created_at`, `updated_at`) VALUES
+(13, '141', '1', 'product', '2024-03-25 12:01:55', '2024-03-25 12:01:55'),
+(14, '141', '2', 'product', '2024-03-25 12:01:55', '2024-03-25 12:01:55'),
+(15, '142', '1', 'product', '2024-03-25 12:02:19', '2024-03-25 12:02:19');
 
 -- --------------------------------------------------------
 
@@ -492,6 +591,12 @@ ALTER TABLE `news`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `newsletter`
+--
+ALTER TABLE `newsletter`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `page`
 --
 ALTER TABLE `page`
@@ -542,6 +647,30 @@ ALTER TABLE `seopage`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `setting`
+--
+ALTER TABLE `setting`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tag`
+--
+ALTER TABLE `tag`
+  ADD PRIMARY KEY (`id_tag`);
+
+--
+-- Indexes for table `tag_news`
+--
+ALTER TABLE `tag_news`
+  ADD PRIMARY KEY (`id_tag_news`);
+
+--
+-- Indexes for table `tag_product`
+--
+ALTER TABLE `tag_product`
+  ADD PRIMARY KEY (`id_tag_product`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -562,13 +691,13 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `category_news`
 --
 ALTER TABLE `category_news`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `category_products`
 --
 ALTER TABLE `category_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -580,25 +709,31 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `gallery`
 --
 ALTER TABLE `gallery`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `newsletter`
+--
+ALTER TABLE `newsletter`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `page`
 --
 ALTER TABLE `page`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -610,25 +745,49 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `seo`
 --
 ALTER TABLE `seo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `seopage`
 --
 ALTER TABLE `seopage`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `setting`
+--
+ALTER TABLE `setting`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tag`
+--
+ALTER TABLE `tag`
+  MODIFY `id_tag` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tag_news`
+--
+ALTER TABLE `tag_news`
+  MODIFY `id_tag_news` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tag_product`
+--
+ALTER TABLE `tag_product`
+  MODIFY `id_tag_product` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`

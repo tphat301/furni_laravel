@@ -317,6 +317,9 @@ Route::prefix('admin')->group(function () {
     Route::post('save/{type}/{id?}', [SeopageController::class, 'save'])->name('admin.seopage.save');
   });
 
+  /*Newsletter module*/
+  // Route::get('newsletter')
+
   /*Setting module*/
   Route::get('setting', [SettingController::class, 'index'])->name('admin.setting');
   Route::post('save/{id?}', [SettingController::class, 'save'])->name('admin.setting.save');
