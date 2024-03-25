@@ -190,7 +190,7 @@ class PageController extends Controller
         Page::create($d);
         return $this->helper->transfer("Thêm dữ liệu", "success", route($direct));
       } else {
-        return $this->helper->transfer("Thêm dữ liệu", "danger", route($direct));
+        return redirect()->route($direct)->withErrors($validator)->withInput();
       }
     } else {
       $row = Page::where('type', $request->type)->find($request->id);
@@ -258,7 +258,7 @@ class PageController extends Controller
         $row->update($d);
         return $this->helper->transfer("Cập nhật dữ liệu", "success", route($direct));
       } else {
-        return $this->helper->transfer("Cập nhật dữ liệu", "danger", route($direct));
+        return redirect()->route($direct)->withErrors($validator)->withInput();
       }
     }
   }

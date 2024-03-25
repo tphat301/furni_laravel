@@ -402,22 +402,7 @@ $(document).ready(function () {
     },
   };
 
-  /* Handle Remove Gallery Item */
-  // $(document).on("click", ".remove_image", function () {
-  //   const name = $(this).attr("id");
-  //   const URL = $(this).data("url");
-  //   $.ajax({
-  //     url: `${BASE_URL}${URL}`,
-  //     method: "POST",
-  //     data: {
-  //       name: name,
-  //     },
-  //     success: function (data) {
-  //       renderGalleryList();
-  //     },
-  //   });
-  // });
-
+  /* Handle click position watermark */
   if ($(".watermark-position label").length) {
     $(".watermark-position label").click(function () {
       const urlNoimage = $(this).data("url");
@@ -529,6 +514,18 @@ $(document).ready(function () {
     $(".filter-category-rendering").change(function () {
       const url = $(this).find(":selected").val();
       window.location.href = url;
+    });
+  }
+
+  if ($(".multiselect").length) {
+    window.asd = $(".multiselect").SumoSelect({
+      placeholder: "Chọn danh mục",
+      selectAll: true,
+      search: true,
+      searchText: "Tìm kiếm",
+      locale: ["OK", "Hủy", "Chọn hết"],
+      captionFormat: "Đã chọn {0} mục",
+      captionFormatAllSelected: "Đã chọn tất cả {0} mục",
     });
   }
 });

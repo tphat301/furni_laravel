@@ -7,12 +7,15 @@ use App\Models\Admin\CategoryProduct;
 use App\Models\Admin\GalleryProduct;
 use App\Models\Admin\Product;
 use App\Models\Admin\Seo;
+use App\Models\Admin\Tag;
+use App\Models\Admin\TagProduct;
 use App\Utils\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -201,19 +204,28 @@ class ProductController extends Controller
   public function show(Request $request)
   {
     $row = Product::where('type', $this->type)->find($request->id);
+    $tagProducts = TagProduct::where('type_tag_product', $this->type)->where('id_parent', $request->id)->get();
+    $idTags = [];
+    if ($tagProducts) {
+      foreach ($tagProducts as $v) {
+        $idTags[] = $v->id_tag;
+      }
+    }
+    $tags = DB::table('tag')->where('type_tag', $this->type)->get();
     $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     $rowSeo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
     $rowGallery = GalleryProduct::where('type', $this->type)->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    return view('admin.product.show', compact('row', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));
+    return view('admin.product.show', compact('row', 'tags', 'idTags', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));
   }
 
   /* Product update */
   public function update(Request $request)
   {
     $product = Product::where('type', $this->type)->find($request->id);
+    $tagRow = TagProduct::where('type_tag_product', $this->type)->where('id_parent', $product->id);
     if (!file_exists($this->uploadProduct)) {
       mkdir($this->uploadProduct, 0777, true);
     }
@@ -286,6 +298,17 @@ class ProductController extends Controller
         Seo::where('hash_seo', $product->hash)->update($dataSeo);
       } else {
         Seo::create($dataSeo);
+      }
+    }
+    $tags = $request->dataTags;
+    if ($tags) {
+      if ($tagRow->get()) $tagRow->delete();
+      foreach ($tags as $tag) {
+        TagProduct::create([
+          'id_tag' => $tag,
+          'id_parent' => $product->id,
+          'type_tag_product' => $this->type
+        ]);
       }
     }
     $product->update($data);

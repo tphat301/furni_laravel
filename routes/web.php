@@ -22,6 +22,8 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PhotoController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\SeopageController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TagProductController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'admin.auth']], function () {
   \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -227,6 +229,18 @@ Route::prefix('admin')->group(function () {
   Route::put('policy/update/{id}', [PolicyController::class, 'update'])->name('admin.policy.update');
   Route::post('policy/schema/{id}', [PolicyController::class, 'schema'])->name('admin.policy.schema');
 
+  /*Tag Product*/
+  Route::get('tag_product', [TagProductController::class, 'index'])->name('admin.tag_product');
+  Route::get('tag_product/show/{id}', [TagProductController::class, 'show'])->name('admin.tag_product.show');
+  Route::get('tag_product/create', [TagProductController::class, 'create'])->name('admin.tag_product.create');
+  Route::get('tag_product/update_number', [TagProductController::class, 'updateNumber'])->name('admin.tag_product.update_number');
+  Route::get('tag_product/update_status', [TagProductController::class, 'updateStatus'])->name('admin.tag_product.update_status');
+  Route::get('tag_product/destroy', [TagProductController::class, 'destroy'])->name('admin.tag_product.destroy');
+  Route::get('tag_product/delete_photo/{id}/{action}', [TagProductController::class, 'deletePhoto'])->name('admin.tag_product.delete_photo');
+  Route::delete('tag_product/delete/{id}/{hash}', [TagProductController::class, 'delete'])->name('admin.tag_product.delete');
+  Route::post('tag_product/save', [TagProductController::class, 'save'])->name('admin.tag_product.save');
+  Route::put('tag_product/update/{id}', [TagProductController::class, 'update'])->name('admin.tag_product.update');
+
   /*Photo multiple admin*/
   Route::prefix('photo')->group(function () {
     // Slideshow
@@ -302,4 +316,8 @@ Route::prefix('admin')->group(function () {
     Route::get('delete_photo/{type}/{id}/{action}', [SeopageController::class, 'deletePhoto'])->name('admin.seopage.delete_photo');
     Route::post('save/{type}/{id?}', [SeopageController::class, 'save'])->name('admin.seopage.save');
   });
+
+  /*Setting module*/
+  Route::get('setting', [SettingController::class, 'index'])->name('admin.setting');
+  Route::post('save/{id?}', [SettingController::class, 'save'])->name('admin.setting.save');
 });

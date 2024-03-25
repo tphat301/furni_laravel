@@ -122,7 +122,7 @@
 
         <div class="col-xl-4">
           {{-- Category --}}
-          @if (config('admin.product.category.active') === true && $row1->count() > 0)
+          @if (config('admin.product.category.active') === true || count($tags) > 0)
             <div class="card card-primary card-outline text-sm">
               <div class="card-header">
                 <h3 class="card-title">Danh mục</h3>
@@ -208,11 +208,21 @@
                       </select>
                     </div>
                   @endif
+
+                  @if (config('admin.product.tag.active') === true)
+                    <div class="form-group col-xl-6 col-sm-4">
+                      <label class="d-block" for="id_tags">Danh mục tags:</label>
+                      <select name="dataTags[]" id="dataTags" class="select multiselect" multiple="multiple">
+                        @foreach ($tags as $tag)
+                          <option value="{{$tag->id_tag}}" {{in_array($tag->id_tag,$idTags) ? 'selected' : ''}}>{{$tag->title_tag}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  @endif
                 </div>
               </div>
             </div>
           @endif
-
 
           {{-- Info --}}
           <div class="card card-primary card-outline text-sm">

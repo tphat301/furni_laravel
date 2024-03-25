@@ -1252,8 +1252,9 @@
   border-radius: 4px;
 }
 .SumoSelect > .CaptionCont > span.placeholder {
-  color: #444444;
+  color: #000000;
   font-style: unset;
+  background-color: transparent !important;
 }
 .SumoSelect > .CaptionCont > label > i {
   background-size: 10px;

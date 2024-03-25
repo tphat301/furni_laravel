@@ -51,6 +51,28 @@ return [
     ],
     'size' => false,
     'color' => false,
+
+    // Tag
+    'tag' => [
+      'active' => true,
+      'name' => 'Tag sản phẩm',
+      'type' => 'product',
+      'status' => [
+        'noibat' => 'Nổi bật',
+        'hienthi' => 'Hiển thị'
+      ],
+      'number_per_page' => 10,
+      'photo' => true,
+      'width' => 300,
+      'height' => 300,
+      'thumb' => 'Width: 300 px - Height: 300 px (.jpg|.gif|.png|.jpeg|.gif|.svg|.webp)',
+      'seo' => true,
+      'seo_title' => true,
+      'seo_keyword' => true,
+      'seo_desc' => true
+    ],
+
+    // Category
     'category' => [
       'name' => 'Danh mục sản phẩm',
       'active' => true,
@@ -824,6 +846,22 @@ return [
   ],
 
   /* Configure setting module */
-  'setting' => [],
-
+  'setting' => [
+    'active' => true,
+    'type' => 'setting',
+    'name' => 'Thiết lập chung',
+    'title' => true,
+    'address' => true,
+    'fanpage_facebook' => true,
+    'email' => true,
+    'zalo' => true,
+    'website' => true,
+    'hotline' => true,
+    'phone' => true,
+    'headjs' => true,
+    'bodyjs' => true,
+    'link_ggmap' => true,
+    'iframe_ggmap' => true,
+    'worktime' => false
+  ]
 ];

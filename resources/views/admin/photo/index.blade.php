@@ -83,7 +83,7 @@
             </thead>
             <tbody>
               @if ($rows->total() > 0)
-                @foreach ($rows as $key => $row)
+                @foreach ($rows as $k => $row)
                   <tr>
                     <td class="align-middle">
                       <div class="custom-control custom-checkbox my-checkbox">
@@ -115,8 +115,8 @@
                           @php
                             $status = !empty($row->status) ? explode(",", $row->status) : [];
                           @endphp
-                          <input type="checkbox" id="update-status-{{$key}}" class="update-status-photo custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route($updateStatus)}}" data-type="{{$type}}" {{ in_array($key, $status) ? 'checked' : '' }} />
-                          <label for="update-status-{{$key}}" class="custom-control-label"></label>
+                          <input type="checkbox" id="update-status-{{$key}}-{{$k}}" class="update-status-photo custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route($updateStatus)}}" data-type="{{$type}}" {{ in_array($key, $status) ? 'checked' : '' }} />
+                          <label for="update-status-{{$key}}-{{$k}}" class="custom-control-label"></label>
                         </div>
                       </td>
                     @endforeach
