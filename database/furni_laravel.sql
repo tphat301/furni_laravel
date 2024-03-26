@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2024 at 04:52 PM
+-- Generation Time: Mar 26, 2024 at 01:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', 'IE0YBUnOOVAVA5arsVwQ58oAbKFS79P56W5x1GeM0w8rwzj0NNRSZh3DrzTm', NULL, '2024-03-13 03:07:48');
+(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', 'kqfaFCAlC72nzvUb8ql5PxZyzrSJrGXhUSfrU4UBtdHjk6tsYouEKbid9wT0', NULL, '2024-03-13 03:07:48');
 
 -- --------------------------------------------------------
 
@@ -193,7 +193,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (99, '2024_03_25_111354_create_tag_news_table', 26),
 (100, '2024_03_25_181145_add_status_tag_to_tag_table', 26),
 (101, '2024_03_25_181419_add_photo_to_tag_table', 26),
-(102, '2024_03_25_222901_create_newsletter_table', 27);
+(102, '2024_03_25_222901_create_newsletter_table', 27),
+(103, '2024_03_26_190738_create_place_table', 28);
 
 -- --------------------------------------------------------
 
@@ -250,6 +251,13 @@ CREATE TABLE `newsletter` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `newsletter`
+--
+
+INSERT INTO `newsletter` (`id`, `fullname`, `file_attach`, `email`, `phone`, `subject`, `type`, `confirm_status`, `content`, `address`, `notes`, `num`, `created_at`, `updated_at`) VALUES
+(34, 'Đỗ Lâm Thành Phát', NULL, 'dolamthanhphat@gmail.com', '0704138356', NULL, 'newsletter', '0', NULL, '30', NULL, '1', '2024-03-26 10:07:33', '2024-03-26 10:21:45');
 
 -- --------------------------------------------------------
 
@@ -348,6 +356,23 @@ CREATE TABLE `photo` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `place`
+--
+
+CREATE TABLE `place` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_parent` varchar(255) DEFAULT NULL,
+  `level` varchar(255) DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `num` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
@@ -382,14 +407,6 @@ CREATE TABLE `products` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `id_parent1`, `id_parent2`, `id_parent3`, `id_parent4`, `id_brand`, `slug`, `title`, `photo1`, `photo2`, `photo3`, `photo4`, `code`, `file_attach`, `file_youtube`, `file_mp4`, `status`, `type`, `desc`, `content`, `num`, `hash`, `quantity`, `sale_price`, `regular_price`, `discount`, `options`, `created_at`, `updated_at`) VALUES
-(141, 0, 0, 0, 0, NULL, 'aaa', 'aaa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'banchay,noibat,hienthi', 'product', NULL, NULL, '1', '0m6r', '1', 0, 0, 0, NULL, '2024-03-25 08:51:55', '2024-03-25 10:30:12'),
-(142, 0, 0, 0, 0, NULL, 'bb', 'bb', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'banchay,noibat,hienthi', 'product', NULL, NULL, '2', '6p7e', '1', 0, 0, 0, NULL, '2024-03-25 08:52:01', '2024-03-25 11:45:39');
 
 -- --------------------------------------------------------
 
@@ -445,6 +462,13 @@ CREATE TABLE `setting` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `setting`
+--
+
+INSERT INTO `setting` (`id`, `title`, `type`, `address`, `headjs`, `bodyjs`, `options`, `created_at`, `updated_at`) VALUES
+(1, 'Furni', 'setting', 'HCM', NULL, NULL, '{\"email\":\"dltphat301@gmail.com\",\"hotline\":\"0987654321\",\"phone\":null,\"zalo\":\"0987654321\",\"website\":\"www.abc.com\",\"fanpage\":\"https:\\/\\/www.facebook.com\\/facebook\",\"link_ggmap\":\"https:\\/\\/maps.app.goo.gl\\/eaGpgUXcozRhFCVy7\",\"iframe_ggmap\":null}', '2024-03-26 09:43:29', '2024-03-26 11:30:41');
 
 -- --------------------------------------------------------
 
@@ -629,6 +653,12 @@ ALTER TABLE `photo`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `place`
+--
+ALTER TABLE `place`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
@@ -697,7 +727,7 @@ ALTER TABLE `category_news`
 -- AUTO_INCREMENT for table `category_products`
 --
 ALTER TABLE `category_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -715,25 +745,25 @@ ALTER TABLE `gallery`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `newsletter`
 --
 ALTER TABLE `newsletter`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `page`
 --
 ALTER TABLE `page`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -745,6 +775,12 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `place`
+--
+ALTER TABLE `place`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -769,7 +805,7 @@ ALTER TABLE `seopage`
 -- AUTO_INCREMENT for table `setting`
 --
 ALTER TABLE `setting`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tag`
