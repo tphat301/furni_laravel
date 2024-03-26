@@ -21,13 +21,12 @@
   </section>
 
   <section class="content">
-    {!! Form::open(['name' => 'form-newsletter-detail', 'route' => ['admin.news.update', $row->id], 'class' => ['form-product-detail'], 'files' => true]) !!}
-    @method('PUT')
+    {!! Form::open(['name' => 'form-newsletter-detail', 'route' => ['admin.newsletter.save'], 'class' => ['form-product-detail'], 'files' => true, 'novalidate' => true]) !!}
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
           <i class="far fa-save mr-2"></i>Lưu
         </button>
-        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.news') }}" title="Thoát">
+        <a class="btn btn-sm bg-gradient-danger" href="{{ route('admin.newsletter.index') }}" title="Thoát">
           <i class="fas fa-sign-out-alt mr-2"></i>Thoát
         </a>
       </div>
@@ -52,16 +51,14 @@
                   </label>
                 </div>
               </label>
-              {{--  --}}
-              {{-- <div class="file-uploaded mb-2">
-                <a href="" class="btn btn-sm bg-gradient-primary text-white d-inline-block align-middle rounded p-2" title="Download tập tin hiện tại">
-                  <i class="fas fa-download mr-2"></i>
-                  Download tập tin hiện tại
-                </a>
-              </div> --}}
               <strong class="d-block text-sm">
-                .doc|.docx|.pdf|.rar|.zip|.ppt|.pptx|.xls|.xlsx|.jpg|.png|.gif
+                {{config('admin.message.newsletter.file_upload')}}
               </strong>
+              @error('file_attach')
+                <small class="text-sm text-danger">
+                  {{ $message }}
+                </small>
+              @enderror
             </div>
           </div>
           <div class="form-group-category row">
@@ -69,45 +66,56 @@
               <label for="fullname">
                 Họ tên:
               </label>
-              <input type="text" class="form-control text-sm" name="fullname" id="fullname" placeholder="Họ tên" value="Đỗ Lâm Thành Phát"/>
+              <input type="text" class="form-control text-sm" name="fullname" id="fullname" placeholder="Họ tên"/>
             </div>
             <div class="form-group col-md-4">
               <label for="email">Email:</label>
-              <input type="email" class="form-control text-sm" name="email" id="email" placeholder="Email" value="dolamthanhphat@gmail.com"/>
+              <input type="email" class="form-control text-sm" name="email" id="email" placeholder="Email"/>
+              @error('email')
+                <small class="text-sm text-danger">
+                  {{ $message }}
+                </small>
+              @enderror
             </div>
             <div class="form-group col-md-4">
               <label for="phone">Điện thoại:</label>
-              <input type="text" class="form-control text-sm" name="phone" id="phone" placeholder="Điện thoại" value="0704138356" />
+              <input type="text" class="form-control text-sm" name="phone" id="phone" placeholder="Điện thoại"/>
+              @error('phone')
+                <small class="text-sm text-danger">
+                  {{ $message }}
+                </small>
+              @enderror
             </div>
             <div class="form-group col-md-4">
               <label for="address">Địa chỉ:</label>
-              <input type="text" class="form-control text-sm" name="address" id="address" placeholder="Địa chỉ" value="Q12 TPHCM" />
+              <input type="text" class="form-control text-sm" name="address" id="address" placeholder="Địa chỉ"/>
             </div>
             <div class="form-group col-md-4">
               <label for="subject">Chủ đề:</label>
-              <input type="text" class="form-control text-sm" name="subject" id="subject" placeholder="Chủ đề" value="âdadad" />
+              <input type="text" class="form-control text-sm" name="subject" id="subject" placeholder="Chủ đề"/>
             </div>
             <div class="form-group col-md-4">
               <label for="confirm_status">Tình trạng:</label>
-              <select name="confirm_status" id="" class="form-control">
-                <option value="">Chọn tình trạng</option>
-                <option value="">1</option>
-                <option value="">2</option>
+              <select name="confirm_status" id="confirm_status" class="form-select">
+                <option value="0">Cập nhật tình trạng</option>
+                <option value="1">Đã xem</option>
+                <option value="2">Đã liên hệ</option>
+                <option value="3">Đã thông báo</option>
               </select>
             </div>
             <div class="form-group">
               <label for="content">
                 Nội dung:
               </label>
-              <textarea name="content" id="content" class="form-control text-sm" cols="30" rows="10" placeholder="Nội dung">abc</textarea>
+              <textarea name="content" id="content" class="form-control text-sm" rows="5" placeholder="Nội dung"></textarea>
             </div>
             <div class="form-group">
               <label for="notes">Ghi chú:</label>
-              <textarea class="form-control text-sm" name="notes" id="notes" rows="5" placeholder="Ghi chú">ádad</textarea>
+              <textarea class="form-control text-sm" name="notes" id="notes" rows="5" placeholder="Ghi chú"></textarea>
             </div>
             <div class="form-group">
               <label for="num" class="d-inline-block align-middle mb-0 mr-2">Số thứ tự:</label>
-              <input type="number" class="form-control form-control-mini d-inline-block align-middle" min="0" name="data[num]" id="num" placeholder="Số thứ tự" value="1">
+              <input type="number" class="form-control form-control-mini d-inline-block align-middle" min="0" name="num" id="num" placeholder="Số thứ tự" value="1">
             </div>
           </div>
         </div>

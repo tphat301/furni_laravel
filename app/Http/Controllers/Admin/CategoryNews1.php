@@ -273,7 +273,7 @@ class CategoryNews1 extends Controller
     if (file_exists($upload . $photo2) && !empty($photo2)) unlink($upload . $photo2);
     if (file_exists($upload . $photo3) && !empty($photo3)) unlink($upload . $photo3);
     if (file_exists($upload . $photo4) && !empty($photo4)) unlink($upload . $photo4);
-    CategoryNews::where('type', $this->typeCategory1)->where('hash', $hash)->delete($id);
+    $categoryNews->delete();
     $seo->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.category_news1'));
   }

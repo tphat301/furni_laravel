@@ -207,6 +207,28 @@
           </li>
         @endif
 
+        {{-- Module newsletter --}}
+        @if (config('admin.message.active') === true)
+          <li class="nav-item has-treeview {{session('module_active') === 'newsletter_index' || session('module_active') === 'newsletter_create' ? 'menu-open' : ''}}">
+            <a class="nav-link {{session('module_active') === 'newsletter_index' || session('module_active') === 'newsletter_create' ? 'active' : ''}}" href="#" title="{{config('admin.message.name')}}">
+              <i class="nav-icon text-sm fas fa-envelope"></i>
+              <p>
+                {{config('admin.message.name')}}
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              @if (config('admin.message.newsletter.active') === true)
+                <li class="nav-item ">
+                  <a class="nav-link {{session('module_active') === 'newsletter_index' || session('module_active') === 'newsletter_create' ? 'active' : ''}}" href="{{route('admin.newsletter.index')}}" title="{{config('admin.message.newsletter.name')}}"><i class="nav-icon text-sm far fa-caret-square-right"></i>
+                    <p>{{config('admin.message.newsletter.name')}}</p>
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </li>
+        @endif
+
         {{-- Module photo --}}
         @if (config('admin.photo.active') === true)
           <li class="nav-item has-treeview menu-group {{session('module_active') === 'slideshow_index' || session('module_active') === 'slideshow_create' || session('module_active') === 'partner_index' || session('module_active') === 'partner_create' || session('module_active') === 'social_footer_index' || session('module_active') === 'social_footer_create' || session('module_active') === 'logo_create' || session('module_active') === 'watermark_product_create' ? 'menu-open' : '' }}">
@@ -268,6 +290,42 @@
             </ul>
           </li>
         @endif
+
+        {{-- Module place --}}
+        <li class="nav-item has-treeview menu-group ">
+          <a class="nav-link " title="Quản lý địa điểm">
+            <i class="nav-icon text-sm fas fa-building"></i>
+            <p>
+              Quản lý địa điểm<i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+
+            <li class="nav-item">
+              <a class="nav-link " href="#" title="Tỉnh thành">
+                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Tỉnh thành</p>
+              </a>
+            </li>
+            {{-- @if (config('admin.photo.slideshow.active') === true)
+            @endif --}}
+
+            <li class="nav-item">
+              <a class="nav-link " href="#" title="Quận huyện">
+                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Quận huyện</p>
+              </a>
+            </li>
+            {{-- @if (config('admin.photo.partner.active') === true)
+            @endif --}}
+
+            <li class="nav-item">
+              <a class="nav-link " href="#" title="Phường xã">
+                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Phường xã</p>
+              </a>
+            </li>
+            {{-- @if (config('admin.photo.social_footer.active') === true)
+            @endif --}}
+          </ul>
+        </li>
 
         {{-- Module page --}}
         @if (config('admin.page.active') === true)
@@ -360,24 +418,6 @@
             </ul>
           </li>
         @endif
-
-        {{-- Module newsletter --}}
-        <li class="nav-item has-treeview menu-open ">
-            <a class="nav-link active" href="#" title="Quản lý nhận tin">
-              <i class="nav-icon text-sm fas fa-envelope"></i>
-              <p>
-                Quản lý nhận tin
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item ">
-                <a class="nav-link active" href="" title="Đăng ký nhận tin"><i class="nav-icon text-sm far fa-caret-square-right"></i>
-                  <p>Đăng ký nhận tin</p>
-                </a>
-              </li>
-            </ul>
-        </li>
 
         {{-- Module setting --}}
         <li class="nav-item">

@@ -24,6 +24,25 @@
     </li>
 
     <li class="nav-item dropdown">
+      <a data-toggle="dropdown" data-bs-toggle="dropdown" class="nav-link"><i class="fas fa-cogs"></i></a>
+      <ul aria-labelledby="dropdownSubMenu-info" class="dropdown-menu dropdown-menu-right border-0 shadow" style="left: inherit; right: 0px;">
+        <li>
+          <a href="{{ route('admin.password.request') }}" class="dropdown-item">
+            <i class="fas fa-key"></i>
+            <span>Làm mới mật khẩu</span>
+          </a>
+        </li>
+        <div class="dropdown-divider"></div>
+        <li>
+          <a href="{{route('admin.clear_cache')}}" class="dropdown-item">
+            <i class="far fa-trash-alt"></i>
+            <span>Xóa bộ nhớ tạm</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item dropdown">
       <a class="nav-link" data-toggle="dropdown" data-bs-toggle="dropdown" href="#">
         <i class="fas fa-bell"></i>
         <span class="badge badge-danger">0</span>

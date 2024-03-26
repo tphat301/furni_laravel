@@ -328,7 +328,7 @@ class NewsController extends Controller
         if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
       }
     }
-    News::where('type', $this->type)->where('hash', $hash)->delete($id);
+    $news->delete();
     $seo->delete();
     $gallerys->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.news'));

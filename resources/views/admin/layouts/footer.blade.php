@@ -1,3 +1,1 @@
-<footer class="main-footer text-center text-sm">
-  <p>Copyright 2024 Design by Phat</p>
-</footer>
+<footer class="main-footer text-center text-sm">Furni@2024</footer>

@@ -66,7 +66,7 @@ class TagProductController extends Controller
     $seo = SEO::where('type', $this->type)->where('hash_seo', $hash);
     $photo = isset($tagProduct->photo) && !empty($tagProduct->photo) ? $tagProduct->photo : "";
     if (file_exists($upload . $photo) && !empty($photo)) unlink($upload . $photo);
-    Tag::where('type_tag', $this->type)->where('hash_tag', $hash)->delete($id);
+    $tagProduct->delete();
     $seo->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.tag_product'));
   }

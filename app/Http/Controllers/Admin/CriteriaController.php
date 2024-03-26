@@ -235,7 +235,7 @@ class CriteriaController extends Controller
     if (file_exists($uploadNews . $photo2) && !empty($photo2)) unlink($uploadNews . $photo2);
     if (file_exists($uploadNews . $photo3) && !empty($photo3)) unlink($uploadNews . $photo3);
     if (file_exists($uploadNews . $photo4) && !empty($photo4)) unlink($uploadNews . $photo4);
-    News::where('type', $this->type)->where('hash', $hash)->delete($id);
+    $news->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.criteria'));
   }
 

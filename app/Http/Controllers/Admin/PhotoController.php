@@ -263,7 +263,7 @@ class PhotoController extends Controller
     $row = Photo::where('type', $request->type)->where('hash', $request->hash)->find($request->id);
     $photo = isset($row->photo) && !empty($row->photo) ? $row->photo : "";
     if (file_exists($uploadPhoto . $photo) && !empty($photo)) unlink($uploadPhoto . $photo);
-    Photo::where('type', $request->type)->where('hash', $request->hash)->delete($request->id);
+    $row->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route($direct));
   }
 

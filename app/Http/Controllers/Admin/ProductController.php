@@ -364,7 +364,7 @@ class ProductController extends Controller
         if (file_exists($uploadGallery . $galleryPhoto) && !empty($galleryPhoto)) unlink($uploadGallery . $galleryPhoto);
       }
     }
-    Product::where('type', $this->type)->where('hash', $hash)->delete($id);
+    $product->delete();
     $seo->delete();
     $gallerys->delete();
     return $this->helper->transfer("Xóa dữ liệu", "success", route('admin.product'));

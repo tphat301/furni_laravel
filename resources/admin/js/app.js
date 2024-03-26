@@ -276,8 +276,27 @@ $(document).ready(function () {
     });
   }
 
+  /*Handle request delete all*/
+  if ($(".delete-all-request")) {
+    $(".delete-all-request").click(function () {
+      const url = $(this).data("url");
+      const itemIsChecked = $('input[name="checkitem[]"]:checked');
+      if (itemIsChecked.length === 0) {
+        confirm("Bạn hãy chọn ít nhất 1 mục để xóa");
+        return false;
+      } else {
+        $(".form-newsletter-request").attr("action", url);
+        const message = confirm("Bạn có chắc muốn xóa mục này không ?");
+        if (message) {
+          $(".form-newsletter-request").submit();
+        }
+        return false;
+      }
+    });
+  }
+
+  /* Handle delete one row */
   if ($(".delete-row")) {
-    /* Handle delete one row */
     $(".delete-row").click(function () {
       const message = confirm("Bạn có chắc muốn xóa mục này không ?");
       const url = $(this).data("url");
@@ -298,6 +317,27 @@ $(document).ready(function () {
           value: $(this).val(),
         },
         dataType: "text",
+        success: function (respone) {
+          return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert(xhr.status);
+          alert(thrownError);
+        },
+      });
+    });
+  }
+  /* Handle update num newsletter*/
+  if ($(".update-num-newsletter")) {
+    $(".update-num-newsletter").change(function () {
+      $.ajax({
+        url: $(this).data("url"),
+        method: "POST",
+        data: {
+          id: $(this).data("id"),
+          value: $(this).val(),
+          _token: $(this).data("token"),
+        },
         success: function (respone) {
           return false;
         },
@@ -514,6 +554,20 @@ $(document).ready(function () {
     $(".filter-category-rendering").change(function () {
       const url = $(this).find(":selected").val();
       window.location.href = url;
+    });
+  }
+
+  if ($(".keyword-request")) {
+    $(".keyword-request").keypress(function (e) {
+      const url = $(this).data("url");
+      if (e.which == 13 || e.keyCode == 13) {
+        let data = $(this).serialize();
+        if (url) {
+          const redirect = `${url}?${data}`;
+          window.location.href = redirect;
+        }
+        return false;
+      }
     });
   }
 

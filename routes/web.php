@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\CacheController;
 use App\Http\Controllers\Admin\CategoryNews1;
 use App\Http\Controllers\Admin\CategoryNews2;
 use App\Http\Controllers\Admin\CategoryNews3;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Admin\CategoryProduct2;
 use App\Http\Controllers\Admin\CategoryProduct3;
 use App\Http\Controllers\Admin\CategoryProduct4;
 use App\Http\Controllers\Admin\CriteriaController;
+use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PhotoController;
 use App\Http\Controllers\Admin\PolicyController;
@@ -36,6 +38,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 /*ADMIN*/
 Route::prefix('admin')->group(function () {
+  // Clear cache web
+  Route::get('clear_cache', [CacheController::class, 'index'])->name('admin.clear_cache');
+
   // Login
   Route::get('login', [LoginController::class, 'showLoginForm']);
   Route::post('login', [LoginController::class, 'login'])->name('admin.login');
@@ -318,7 +323,17 @@ Route::prefix('admin')->group(function () {
   });
 
   /*Newsletter module*/
-  // Route::get('newsletter')
+  Route::prefix('newsletter')->group(function () {
+    Route::get('/', [NewsletterController::class, 'index'])->name('admin.newsletter.index');
+    Route::get('create', [NewsletterController::class, 'create'])->name('admin.newsletter.create');
+    Route::get('{id}', [NewsletterController::class, 'show'])->name('admin.newsletter.show');
+    Route::post('update_number', [NewsletterController::class, 'updateNumber'])->name('admin.newsletter.update_number');
+    Route::post('destroy', [NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
+    Route::post('/', [NewsletterController::class, 'save'])->name('admin.newsletter.save');
+    Route::post('sendmail', [NewsletterController::class, 'sendmail'])->name('admin.newsletter.sendmail');
+    Route::put('update/{id}', [NewsletterController::class, 'update'])->name('admin.newsletter.update');
+    Route::delete('news/delete/{id}', [NewsletterController::class, 'delete'])->name('admin.newsletter.delete');
+  });
 
   /*Setting module*/
   Route::get('setting', [SettingController::class, 'index'])->name('admin.setting');

@@ -863,5 +863,30 @@ return [
     'link_ggmap' => true,
     'iframe_ggmap' => true,
     'worktime' => false
+  ],
+
+  /* Configure newsletter module */
+  'message' => [
+    'active' => true,
+    'name' => 'Quản lý nhận tin',
+    'newsletter' => [
+      'active' => true,
+      'type' => 'newsletter',
+      'name' => 'Đăng ký nhận tin',
+      'fullname' => true,
+      'file_attach' => true,
+      'email' => true,
+      'phone' => true,
+      'address' => true,
+      'file' => true,
+      'content' => true,
+      'content_tiny' => true,
+      'subject' => true,
+      'notes' => true,
+      'confirm_status' => true,
+      'number_per_page' => 10,
+      'file_upload' => '.doc|.docx|.pdf|.rar|.zip|.ppt|.pptx|.xls|.xlsx'
+    ],
   ]
+
 ];
