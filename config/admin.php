@@ -516,6 +516,7 @@ return [
       'title' => true,
       'desc' => false,
       'content' => false,
+
       'number_per_page' => 10,
       'loop' => 4,
       'action' => 'multiple',
@@ -887,6 +888,36 @@ return [
       'number_per_page' => 10,
       'file_upload' => '.doc|.docx|.pdf|.rar|.zip|.ppt|.pptx|.xls|.xlsx'
     ],
-  ]
+  ],
+
+  /* Configure place module */
+  'place' => [
+    'active' => true,
+    'name' => 'Quản lý địa điểm',
+
+    //City
+    'city' => [
+      'active' => true,
+      'name' => 'Tỉnh thành',
+      'type' => 'city',
+      'number_per_page' => 10,
+    ],
+
+    //District
+    'district' => [
+      'active' => true,
+      'name' => 'Quận huyện',
+      'type' => 'district',
+      'number_per_page' => 10,
+    ],
+
+    // Ward
+    'ward' => [
+      'active' => true,
+      'name' => 'Phường xã',
+      'type' => 'ward',
+      'number_per_page' => 10,
+    ],
+  ],
 
 ];

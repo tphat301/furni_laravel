@@ -5,7 +5,6 @@
   $deleteAll = "admin.photo.".$type.".destroy";
   $statusConfig = "admin.photo.".$type.".status";
   $show = "admin.photo.".$type.".show";
-  $actionConfig = "admin.photo.".$type.".action";
   $updateNumber = "admin.photo.".$type.".update_number";
   $updateStatus = "admin.photo.".$type.".update_status";
 @endphp

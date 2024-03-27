@@ -292,40 +292,42 @@
         @endif
 
         {{-- Module place --}}
-        <li class="nav-item has-treeview menu-group ">
-          <a class="nav-link " title="Quản lý địa điểm">
-            <i class="nav-icon text-sm fas fa-building"></i>
-            <p>
-              Quản lý địa điểm<i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
+        @if (config('admin.place.active') === true)
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'city_index' || session('module_active') === 'city_create' || session('module_active') === 'district_index' || session('module_active') === 'district_create' || session('module_active') === 'ward_index' || session('module_active') === 'ward_create' ? 'menu-open' : '' }}">
+            <a class="nav-link {{session('module_active') === 'city_index' || session('module_active') === 'city_create' || session('module_active') === 'district_index' || session('module_active') === 'district_create' || session('module_active') === 'ward_index' || session('module_active') === 'ward_create' ? 'active' : '' }}" title="{{config('admin.place.name')}}">
+              <i class="nav-icon text-sm fas fa-building"></i>
+              <p>
+                {{config('admin.place.name')}}<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
 
-            <li class="nav-item">
-              <a class="nav-link " href="#" title="Tỉnh thành">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Tỉnh thành</p>
-              </a>
-            </li>
-            {{-- @if (config('admin.photo.slideshow.active') === true)
-            @endif --}}
+              @if (config('admin.place.city.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'city_index' || session('module_active') === 'city_create' ? 'active' : '' }}" href="{{route('admin.place.city.index',['type' => config('admin.place.city.type')])}}" title="{{config('admin.place.city.name')}}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.place.city.name')}}</p>
+                  </a>
+                </li>
+              @endif
 
-            <li class="nav-item">
-              <a class="nav-link " href="#" title="Quận huyện">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Quận huyện</p>
-              </a>
-            </li>
-            {{-- @if (config('admin.photo.partner.active') === true)
-            @endif --}}
+              @if (config('admin.place.district.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'district_index' || session('module_active') === 'district_create' ? 'active' : '' }}" href="{{route('admin.place.district.index',['type' => config('admin.place.district.type')])}}" title="{{config('admin.place.district.name')}}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.place.district.name')}}</p>
+                  </a>
+                </li>
+              @endif
 
-            <li class="nav-item">
-              <a class="nav-link " href="#" title="Phường xã">
-                <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Phường xã</p>
-              </a>
-            </li>
-            {{-- @if (config('admin.photo.social_footer.active') === true)
-            @endif --}}
-          </ul>
-        </li>
+              @if (config('admin.place.ward.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'ward_index' || session('module_active') === 'ward_create' ? 'active' : '' }}" href="{{route('admin.place.ward.index',['type' => config('admin.place.ward.type')])}}" title="{{config('admin.place.ward.name')}}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.place.ward.name')}}</p>
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </li>
+        @endif
 
         {{-- Module page --}}
         @if (config('admin.page.active') === true)

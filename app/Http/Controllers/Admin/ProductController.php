@@ -60,17 +60,39 @@ class ProductController extends Controller
     $this->uploadProduct = "public/upload/product";
   }
 
+  /* Select Category with level no pagging */
+  public function getCategory($level)
+  {
+    switch ($level) {
+      case 1:
+        $type = $this->typeCategory1;
+        break;
+      case 2:
+        $type = $this->typeCategory2;
+        break;
+      case 3:
+        $type = $this->typeCategory3;
+        break;
+      case 4:
+        $type = $this->typeCategory4;
+        break;
+
+      default:
+        break;
+    }
+    $row = CategoryProduct::where('type', $type)->where('level', $level)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    return $row;
+  }
+
   /* Product list */
   public function index(Request $request)
   {
     session(['module_active' => 'product_index']);
     $categoryAppendQueryString = ['category1' => $request->category1, 'category2' => $request->category2, 'category3' => $request->category3, 'category4' => $request->category4];
-
-    $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-
+    $row1 = $this->getCategory(1);
+    $row2 = $this->getCategory(2);
+    $row3 = $this->getCategory(3);
+    $row4 = $this->getCategory(4);
     if ($request->input('keyword')) {
       $rows = Product::where("title", "LIKE", "%{$request->input('keyword')}%")->where('type', $this->type)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->paginate($this->numberPerPage)->appends($categoryAppendQueryString);
     } else {
@@ -92,10 +114,10 @@ class ProductController extends Controller
   /* Product create */
   public function create()
   {
-    $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row1 = $this->getCategory(1);
+    $row2 = $this->getCategory(2);
+    $row3 = $this->getCategory(3);
+    $row4 = $this->getCategory(4);
     session(['module_active' => 'product_create']);
     return view('admin.product.create', compact('row1', 'row2', 'row3', 'row4'));
   }
@@ -212,10 +234,10 @@ class ProductController extends Controller
       }
     }
     $tags = DB::table('tag')->where('type_tag', $this->type)->get();
-    $row1 = CategoryProduct::where('type', $this->typeCategory1)->where('level', 1)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row2 = CategoryProduct::where('type', $this->typeCategory2)->where('level', 2)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row3 = CategoryProduct::where('type', $this->typeCategory3)->where('level', 3)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
-    $row4 = CategoryProduct::where('type', $this->typeCategory4)->where('level', 4)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
+    $row1 = $this->getCategory(1);
+    $row2 = $this->getCategory(2);
+    $row3 = $this->getCategory(3);
+    $row4 = $this->getCategory(4);
     $rowSeo = Seo::where('type', $this->type)->where('hash_seo', $row->hash)->first();
     $rowGallery = GalleryProduct::where('type', $this->type)->where('id_parent', $request->id)->orderBy('num', 'ASC')->orderBy('id', 'ASC')->get();
     return view('admin.product.show', compact('row', 'tags', 'idTags', 'row1', 'row2', 'row3', 'row4', 'rowSeo', 'rowGallery'));

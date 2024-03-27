@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PhotoController;
+use App\Http\Controllers\Admin\PlaceController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\SeopageController;
 use App\Http\Controllers\Admin\SettingController;
@@ -245,6 +246,46 @@ Route::prefix('admin')->group(function () {
   Route::delete('tag_product/delete/{id}/{hash}', [TagProductController::class, 'delete'])->name('admin.tag_product.delete');
   Route::post('tag_product/save', [TagProductController::class, 'save'])->name('admin.tag_product.save');
   Route::put('tag_product/update/{id}', [TagProductController::class, 'update'])->name('admin.tag_product.update');
+
+  /*Place module*/
+  Route::prefix('place')->group(function () {
+
+    // City
+    Route::prefix('city')->group(function () {
+      Route::get('index/{type}', [PlaceController::class, 'index'])->name('admin.place.city.index');
+      Route::get('create/{type}', [PlaceController::class, 'create'])->name('admin.place.city.create');
+      Route::get('show/{id}/{type}', [PlaceController::class, 'show'])->name('admin.place.city.show');
+      Route::get('destroy/{type}', [PlaceController::class, 'destroy'])->name('admin.place.city.destroy');
+      Route::get('update_number', [PlaceController::class, 'updateNumber'])->name('admin.place.city.update_number');
+      Route::post('{type}', [PlaceController::class, 'save'])->name('admin.place.city.save');
+      Route::put('update/{id}/{type}', [PlaceController::class, 'update'])->name('admin.place.city.update');
+      Route::delete('delete/{id}/{type}', [PlaceController::class, 'delete'])->name('admin.place.city.delete');
+    });
+
+    // District
+    Route::prefix('district')->group(function () {
+      Route::get('index/{type}', [PlaceController::class, 'index'])->name('admin.place.district.index');
+      Route::get('create/{type}', [PlaceController::class, 'create'])->name('admin.place.district.create');
+      Route::get('show/{id}/{type}', [PlaceController::class, 'show'])->name('admin.place.district.show');
+      Route::get('destroy/{type}', [PlaceController::class, 'destroy'])->name('admin.place.district.destroy');
+      Route::get('update_number', [PlaceController::class, 'updateNumber'])->name('admin.place.district.update_number');
+      Route::post('{type}', [PlaceController::class, 'save'])->name('admin.place.district.save');
+      Route::put('update/{id}/{type}', [PlaceController::class, 'update'])->name('admin.place.district.update');
+      Route::delete('delete/{id}/{type}', [PlaceController::class, 'delete'])->name('admin.place.district.delete');
+    });
+
+    // Ward
+    Route::prefix('ward')->group(function () {
+      Route::get('index/{type}', [PlaceController::class, 'index'])->name('admin.place.ward.index');
+      Route::get('create/{type}', [PlaceController::class, 'create'])->name('admin.place.ward.create');
+      Route::get('show/{id}/{type}', [PlaceController::class, 'show'])->name('admin.place.ward.show');
+      Route::get('destroy/{type}', [PlaceController::class, 'destroy'])->name('admin.place.ward.destroy');
+      Route::get('update_number', [PlaceController::class, 'updateNumber'])->name('admin.place.ward.update_number');
+      Route::post('{type}', [PlaceController::class, 'save'])->name('admin.place.ward.save');
+      Route::put('update/{id}/{type}', [PlaceController::class, 'update'])->name('admin.place.ward.update');
+      Route::delete('delete/{id}/{type}', [PlaceController::class, 'delete'])->name('admin.place.ward.delete');
+    });
+  });
 
   /*Photo multiple admin*/
   Route::prefix('photo')->group(function () {
