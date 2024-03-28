@@ -14,7 +14,6 @@ class DashboardController extends Controller
 
   public function dashboard()
   {
-    session(['module_active' => 'dashboard']);
     return view('admin.dashboard.index');
   }
 }

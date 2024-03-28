@@ -19,7 +19,7 @@
         @if (config('admin.product.active') === true)
           <li class="nav-item has-treeview menu-group {{session('module_active') === 'product_index' || session('module_active') === 'product_create' || session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' || session('module_active') === 'tag_product_index' || session('module_active') === 'tag_product_create' ? 'menu-open' : '' }}">
             <a class="nav-link {{session('module_active') === 'product_index' || session('module_active') === 'product_create' || session('module_active') === 'category_product_level1_index' || session('module_active') === 'category_product_level1_create' || session('module_active') === 'category_product_level2_index' || session('module_active') === 'category_product_level2_create' || session('module_active') === 'category_product_level3_index' || session('module_active') === 'category_product_level3_create' || session('module_active') === 'category_product_level4_index' || session('module_active') === 'category_product_level4_create' || session('module_active') === 'tag_product_index' || session('module_active') === 'tag_product_create' ? 'active' : '' }}" title="{{ config('admin.product.name') }}">
-              <i class="nav-icon text-sm fas fa-layer-group"></i>
+              <i class="nav-icon text-sm fa-solid fa-burger"></i>
               <p>
                 {{ config('admin.product.name') }}<i class="right fas fa-angle-left"></i>
               </p>
@@ -94,14 +94,14 @@
               @if (config('admin.product.tag.active') === true)
                 <li class="nav-item">
                   <a class="nav-link {{session('module_active') === 'tag_product_index' || session('module_active') === 'tag_product_create' ? 'active' : '' }}" href="{{route('admin.tag_product')}}" title="{{config('admin.product.tag.name')}}">
-                    <i class="nav-icon text-sm fas fa-boxes"></i><p>{{config('admin.product.tag.name')}}</p>
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.product.tag.name')}}</p>
                   </a>
                 </li>
               @endif
 
               <li class="nav-item">
                 <a class="nav-link {{session('module_active') === 'product_index' || session('module_active') === 'product_create' ? 'active' : '' }}" href="{{url('admin/product')}}" title="Sản phẩm">
-                  <i class="nav-icon text-sm fas fa-boxes"></i><p>Sản phẩm</p>
+                  <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Sản phẩm</p>
                 </a>
               </li>
             </ul>
@@ -112,7 +112,7 @@
         @if (config('admin.news.active') === true)
           <li class="nav-item has-treeview menu-group {{session('module_active') === 'news_index' || session('module_active') === 'news_create' || session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'menu-open' : '' }}">
             <a class="nav-link {{session('module_active') === 'news_index' || session('module_active') === 'news_create' || session('module_active') === 'category_news_level1_index' || session('module_active') === 'category_news_level1_create' || session('module_active') === 'category_news_level2_index' || session('module_active') === 'category_news_level2_create' || session('module_active') === 'category_news_level3_index' || session('module_active') === 'category_news_level3_create' || session('module_active') === 'category_news_level4_index' || session('module_active') === 'category_news_level4_create' ? 'active' : '' }}" title="{{ config('admin.news.name') }}">
-              <i class="nav-icon text-sm fas fa-layer-group"></i>
+              <i class="nav-icon text-sm fa-solid fa-newspaper"></i>
               <p>
                 {{ config('admin.news.name') }}<i class="right fas fa-angle-left"></i>
               </p>
@@ -168,19 +168,18 @@
               @endif
               <li class="nav-item">
                 <a class="nav-link {{session('module_active') === 'news_index' || session('module_active') === 'news_create' ? 'active' : '' }}" href="{{url('admin/news')}}" title="Tin tức">
-                  <i class="nav-icon text-sm fas fa-boxes"></i><p>Tin tức</p>
+                  <i class="nav-icon text-sm far fa-caret-square-right"></i><p>Tin tức</p>
                 </a>
               </li>
             </ul>
           </li>
         @endif
 
-
         {{-- Module post --}}
         @if (config('admin.post.active') === true)
           <li class="nav-item has-treeview menu-group {{session('module_active') === 'policy_index' || session('module_active') === 'policy_create' || session('module_active') === 'criteria_index' || session('module_active') === 'criteria_create' ? 'menu-open' : '' }}">
             <a class="nav-link {{session('module_active') === 'policy_index' || session('module_active') === 'policy_create' || session('module_active') === 'criteria_index' || session('module_active') === 'criteria_create' ? 'active' : '' }}" title="{{ config('admin.post.name') }}">
-              <i class="nav-icon text-sm fas fa-boxes"></i>
+              <i class="nav-icon text-sm fa-solid fa-book"></i>
               <p>
                 {{ config('admin.post.name') }}<i class="right fas fa-angle-left"></i>
               </p>
@@ -284,6 +283,34 @@
                 <li class="nav-item">
                   <a class="nav-link {{session('module_active') === 'watermark_news_create' ? 'active' : '' }}" href="{{route('admin.photo.watermark_news')}}" title="{{config('admin.photo.watermark_news.name')}}">
                     <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.photo.watermark_news.name')}}</p>
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </li>
+        @endif
+
+        {{-- Module video --}}
+        @if (config('admin.video.active') === true)
+          <li class="nav-item has-treeview menu-group {{session('module_active') === 'video_multiple_index' || session('module_active') === 'video_multiple_create' || session('module_active') === 'video_static_index' ? 'menu-open' : '' }}" title="{{config('admin.video.name')}}">
+            <a class="nav-link {{session('module_active') === 'video_multiple_index' || session('module_active') === 'video_multiple_create' || session('module_active') === 'video_static_index' ? 'active' : '' }}" title="{{config('admin.video.name')}}">
+              <i class="nav-icon text-sm fa-solid fa-video"></i>
+              <p>
+                {{config('admin.video.name')}}<i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              @if (config('admin.video.video_multiple.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'video_multiple_index' || session('module_active') === 'video_multiple_create' ? 'active' : '' }}" href="{{route('admin.video.video_multiple.index')}}" title="{{config('admin.video.video_multiple.name')}}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.video.video_multiple.name')}}</p>
+                  </a>
+                </li>
+              @endif
+              @if (config('admin.video.video_static.active') === true)
+                <li class="nav-item">
+                  <a class="nav-link {{session('module_active') === 'video_static_index' ? 'active' : '' }}" href="{{route('admin.video.video_static.index')}}" title="{{config('admin.video.video_static.name')}}">
+                    <i class="nav-icon text-sm far fa-caret-square-right"></i><p>{{config('admin.video.video_static.name')}}</p>
                   </a>
                 </li>
               @endif

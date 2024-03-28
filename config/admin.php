@@ -1,12 +1,12 @@
 <?php
 
 return [
-  /* Configure dashboard module */
+  /* DASHBOARD MODULE */
   'dashboard' => [
     'name' => 'Dashboard'
   ],
 
-  /* Configure product module */
+  /* PRODUCT MODULE */
   'product' => [
     'active' => true,
     'name' => 'Quản lý sản phẩm',
@@ -228,7 +228,7 @@ return [
     'schema' => true
   ],
 
-  /* Configure news module */
+  /* NEWS MODULE */
   'news' => [
     'active' => true,
     'name' => 'Quản lý tin tức',
@@ -421,7 +421,7 @@ return [
     'schema' => true
   ],
 
-  /* Configure post module */
+  /* POST MODULE */
   'post' => [
     'active' => true,
     'name' => 'Quản lý bài viết',
@@ -498,7 +498,7 @@ return [
     ]
   ],
 
-  /* Configure photo module */
+  /* PHOTO MODULE */
   'photo' => [
     'active' => true,
     'name' => 'Quản lý hình ảnh',
@@ -623,7 +623,7 @@ return [
     ],
   ],
 
-  /* Configure page module */
+  /* PAGE MODULE */
   'page' => [
     'active' => true,
     'name' => 'Quản lý trang tĩnh',
@@ -772,7 +772,7 @@ return [
     ],
   ],
 
-  /* Configure seopage module */
+  /* SEOPAGE MODULE */
   'seopage' => [
     'active' => true,
     'name' => 'Quản lý seopage',
@@ -846,27 +846,7 @@ return [
     ]
   ],
 
-  /* Configure setting module */
-  'setting' => [
-    'active' => true,
-    'type' => 'setting',
-    'name' => 'Thiết lập chung',
-    'title' => true,
-    'address' => true,
-    'fanpage_facebook' => true,
-    'email' => true,
-    'zalo' => true,
-    'website' => true,
-    'hotline' => true,
-    'phone' => true,
-    'headjs' => true,
-    'bodyjs' => true,
-    'link_ggmap' => true,
-    'iframe_ggmap' => true,
-    'worktime' => false
-  ],
-
-  /* Configure newsletter module */
+  /* NEWSLETTER MODULE */
   'message' => [
     'active' => true,
     'name' => 'Quản lý nhận tin',
@@ -890,7 +870,56 @@ return [
     ],
   ],
 
-  /* Configure place module */
+  /* VIDEO MODULE */
+  'video' => [
+    'active' => true,
+    'name' => 'Quản lý video',
+    'tab_info' => true,
+    // Videos
+    'video_multiple' => [
+      'active' => true,
+      'name' => 'Video multiple',
+      'action' => 'multiple',
+      'type' => 'video_multiple',
+      'link' => true,
+      'status' => [
+        'noibat' => 'Nổi bật',
+        'hienthi' => 'Hiển thị'
+      ],
+      'title' => true,
+      'desc' => false,
+      'content' => false,
+      'number_per_page' => 10,
+      'action' => 'multiple',
+      'photo' => false,
+      'with' => 300,
+      'height' => 300,
+      'thumb' => 'Width: 282 px - Height: 370 px (.jpg|.gif|.png|.jpeg|.gif)',
+    ],
+
+    // Video static
+    'video_static' => [
+      'active' => true,
+      'name' => 'Video static',
+      'action' => 'static',
+      'type' => 'video_static',
+      'link' => true,
+      'status' => [
+        'noibat' => 'Nổi bật',
+        'hienthi' => 'Hiển thị'
+      ],
+      'title' => true,
+      'desc' => true,
+      'content' => false,
+      'action' => 'static',
+      'photo' => true,
+      'with' => 250,
+      'height' => 150,
+      'thumb' => 'Width: 250 px - Height: 150 px (.jpg|.gif|.png|.jpeg|.svg|.webp)',
+    ]
+  ],
+
+  /* PLACE MODULE */
   'place' => [
     'active' => true,
     'name' => 'Quản lý địa điểm',
@@ -918,6 +947,26 @@ return [
       'type' => 'ward',
       'number_per_page' => 10,
     ],
+  ],
+
+  /* SETTING MODULE */
+  'setting' => [
+    'active' => true,
+    'type' => 'setting',
+    'name' => 'Thiết lập chung',
+    'title' => true,
+    'address' => true,
+    'fanpage_facebook' => true,
+    'email' => true,
+    'zalo' => true,
+    'website' => true,
+    'hotline' => true,
+    'phone' => true,
+    'headjs' => true,
+    'bodyjs' => true,
+    'link_ggmap' => true,
+    'iframe_ggmap' => true,
+    'worktime' => false
   ],
 
 ];

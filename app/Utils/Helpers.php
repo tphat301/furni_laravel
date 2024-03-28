@@ -7,6 +7,36 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 final class Helpers
 {
+  /* Get Youtube */
+  public function getYoutube($url = '')
+  {
+    if ($url != '') {
+      $parts = parse_url($url);
+      if (isset($parts['query'])) {
+        parse_str($parts['query'], $qs);
+        if (isset($qs['v'])) return $qs['v'];
+        else if ($qs['vi']) return $qs['vi'];
+      }
+      if (isset($parts['path'])) {
+        $path = explode('/', trim($parts['path'], '/'));
+        return $path[count($path) - 1];
+      }
+    }
+    return false;
+  }
+
+  /* Get short video */
+  public function getShortVideo($url = '')
+  {
+    if ($url != '') {
+      $parseString = parse_url($url);
+      if (isset($parseString['path'])) {
+        $short = str_replace('/shorts/', '', $parseString['path']);
+        return $short;
+      }
+    }
+    return false;
+  }
 
   /* Create watermark */
   public function createWatermark($data, $path, $pathInsert, $position, $x, $y, $option)

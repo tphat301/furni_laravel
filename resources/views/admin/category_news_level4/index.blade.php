@@ -29,7 +29,7 @@
 
         <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" name="keyword" value=""/>
+            <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" name="keyword" value="{{!empty(request()->keyword) ? request()->keyword : ''}}"/>
             <div class="input-group-append bg-primary rounded-right">
               <button class="btn btn-navbar text-white" type="submit">
                 <i class="fas fa-search"></i>

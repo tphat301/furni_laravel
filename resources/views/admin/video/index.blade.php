@@ -1,6 +1,17 @@
+@php
+  $name = "admin.video.".$type.".name";
+  $create = "admin.video.".$type.".create";
+  $delete = "admin.video.".$type.".delete";
+  $deleteAll = "admin.video.".$type.".destroy";
+  $statusConfig = "admin.video.".$type.".status";
+  $show = "admin.video.".$type.".show";
+  $updateNumber = "admin.video.".$type.".update_number";
+  $updateStatus = "admin.video.".$type.".update_status";
+@endphp
+
 @extends('admin.index')
 
-@section('title', config('admin.news.category.category1.name'))
+@section('title', config($name))
 
 @section('content')
   <section class="content-header text-sm">
@@ -13,7 +24,7 @@
             </a>
           </li>
           <li class="breadcrumb-item active">
-            {{ config('admin.news.category.category1.name') }}
+            {{ config($name)}}
           </li>
         </ol>
       </div>
@@ -21,11 +32,15 @@
   </section>
 
   <section class="content">
-    {!! Form::open(['name' => 'form-news-list', 'class' => ['form-product-list'], 'method' => 'GET']) !!}
+    {!! Form::open(['name' => 'form-video-list', 'class' => ['form-product-list'], 'method' => 'GET']) !!}
       <div class="card-footer text-sm sticky-top">
-        <a class="btn btn-sm bg-gradient-primary text-white" href="{{route('admin.category_news1.create')}}" title="Thêm mới"><i class="fas fa-plus mr-2"></i>Thêm mới</a>
+        <a class="btn btn-sm bg-gradient-primary text-white" href="{{route($create)}}" title="Thêm mới">
+          <i class="fas fa-plus mr-2"></i>Thêm mới
+        </a>
 
-        <a data-url="{{ route('admin.category_news1.destroy') }}" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all"><i class="far fa-trash-alt mr-2"></i>Xóa tất cả</a>
+        <a data-url="{{ route($deleteAll, ['type' => $type]) }}" class="btn btn-sm bg-gradient-danger text-white delete-all" id="delete-all">
+          <i class="far fa-trash-alt mr-2"></i>Xóa tất cả
+        </a>
 
         <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
@@ -39,10 +54,11 @@
         </div>
       </div>
 
+      {{-- Data item --}}
       <div class="card card-primary card-outline text-sm mb-0 rendering">
         <div class="card-header">
           <h3 class="card-title">
-            Danh sách danh mục cấp 1
+            Danh sách {{config($name)}}
           </h3>
         </div>
         <div class="card-body table-responsive p-0">
@@ -56,9 +72,11 @@
                   </div>
                 </th>
                 <th class="align-middle text-center" width="10%">STT</th>
-                <th class="align-middle">Hình ảnh</th>
+                @if (config("admin.video.".$type.".photo") === true)
+                  <th class="align-middle">Hình ảnh</th>
+                @endif
                 <th class="align-middle" style="width:30%">Tiêu đề</th>
-                @foreach (config('admin.news.category.category1.status') as $key => $value)
+                @foreach (config($statusConfig) as $key => $value)
                   <th class="align-middle text-center">{{$value}}</th>
                 @endforeach
                 <th class="align-middle text-center">Thao tác</th>
@@ -76,47 +94,40 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <input type="number" class="update-num form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-url="{{ route('admin.category_news1.update_number') }}"/>
+                      <input type="number" class="update-num-photo form-control form-control-mini m-auto" min="0" value="{{ $row->num }}" data-id="{{ $row->id }}" data-type="{{$type}}" data-url="{{ route($updateNumber) }}"/>
                     </td>
+                    @if (config("admin.video.".$type.".photo") === true)
+                      <td class="align-middle">
+                        <a href="{{ route($show, ['id' => $row->id, 'type' => $type]) }}" title="{{ $row->title }}">
+                          @if (!empty($row->photo))
+                            <img class="rounded img-preview img-fluid" src="{{ url("public/upload/video/$row->photo")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
+                          @else
+                            <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
+                          @endif
+                        </a>
+                      </td>
+                    @endif
                     <td class="align-middle">
-                      <a href="{{ route('admin.category_news1.show', [$row->id]) }}" title="{{ $row->title }}">
-                        @if (!empty($row->photo1))
-                          <img class="rounded img-preview img-fluid" src="{{ url("public/upload/category_news1/$row->photo1")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
-                        @else
-                          <img class="rounded img-preview img-fluid" src="{{ url("resources/images/noimage.png")  }}" alt="{{ $row->title }}" width="70" height="50" style="object-fit: contain;"/>
-                        @endif
-                      </a>
-                    </td>
-                    <td class="align-middle">
-                      <a class="text-dark text-break" href="{{ route('admin.category_news1.show', [$row->id]) }}" title="{{ $row->title }}">
+                      <a class="text-dark text-break" href="{{ route($show, ['id' => $row->id, 'type' => $type]) }}" title="{{ $row->title }}">
                         {{ $row->title }}
                       </a>
                     </td>
-                    @foreach (config('admin.news.category.category1.status') as $key => $value)
+                    @foreach (config($statusConfig) as $key => $value)
                       <td class="align-middle text-center">
                         <div class="custom-control custom-checkbox">
                           @php
                             $status = !empty($row->status) ? explode(",", $row->status) : [];
                           @endphp
-                          <input type="checkbox" id="update-status-{{$key}}-{{$k}}" class="update-status custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route('admin.category_news1.update_status')}}" {{ in_array($key, $status) ? 'checked' : '' }} />
+                          <input type="checkbox" id="update-status-{{$key}}-{{$k}}" class="update-status-photo custom-control-input" name="{{ $key }}" data-id="{{ $row->id }}" data-url="{{route($updateStatus)}}" data-type="{{$type}}" {{ in_array($key, $status) ? 'checked' : '' }} />
                           <label for="update-status-{{$key}}-{{$k}}" class="custom-control-label"></label>
                         </div>
                       </td>
                     @endforeach
                     <td class="align-middle text-center text-md text-nowrap">
-                      <a class="text-primary mr-2" href="{{ route('admin.category_news1.show', [$row->id]) }}" title="Chỉnh sửa">
+                      <a class="text-primary mr-2" href="{{ route($show, ['id' => $row->id, 'type' => $type]) }}" title="Chỉnh sửa">
                         <i class="fas fa-edit"></i>
                       </a>
-
-                      @if(config('admin.news.category.category1.copy') === true)
-                        <div class="dropdown d-inline-block align-middle">
-                          <a href="{{ route('admin.category_news1.copy', [$row->id]) }}" class="nav-link text-success p-0 pr-2" title="Copy">
-                            <i class="far fa-clone"></i>
-                          </a>
-                        </div>
-                      @endif
-
-                      <a class="text-danger delete-row" data-url="{{route('admin.category_news1.delete', ['id' => $row->id, 'hash' => $row->hash])}}" title="Xóa" style="cursor: pointer">
+                      <a class="text-danger delete-row" data-url="{{route($delete, ['id' => $row->id, 'hash' => $row->hash, 'type' => $type])}}" title="Xóa" style="cursor: pointer">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
@@ -124,7 +135,7 @@
                 @endforeach
               @else
               <tr>
-                <td colspan="12"><span class="text-danger">Danh sách danh mục cấp 1 trống</span></td>
+                <td colspan="12"><span class="text-danger">Danh sách {{ config($name) }} trống</span></td>
               </tr>
               @endif
             </tbody>
@@ -133,6 +144,7 @@
       </div>
     {!! Form::close() !!}
 
+    {{-- Phân trang --}}
     {!! $rows -> links() !!}
 
     {!! Form::open(['name' => 'form_delete_row', 'class' => ['card__body','form_delete_row']]) !!}
@@ -140,3 +152,4 @@
     {!! Form::close() !!}
   </section>
 @endsection
+

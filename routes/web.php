@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\SeopageController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TagProductController;
+use App\Http\Controllers\Admin\VideoController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'admin.auth']], function () {
   \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -35,7 +36,6 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'admin.
 Auth::routes(['verify' => true]);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 
 /*ADMIN*/
 Route::prefix('admin')->group(function () {
@@ -249,7 +249,6 @@ Route::prefix('admin')->group(function () {
 
   /*Place module*/
   Route::prefix('place')->group(function () {
-
     // City
     Route::prefix('city')->group(function () {
       Route::get('index/{type}', [PlaceController::class, 'index'])->name('admin.place.city.index');
@@ -257,7 +256,7 @@ Route::prefix('admin')->group(function () {
       Route::get('show/{id}/{type}', [PlaceController::class, 'show'])->name('admin.place.city.show');
       Route::get('destroy/{type}', [PlaceController::class, 'destroy'])->name('admin.place.city.destroy');
       Route::get('update_number', [PlaceController::class, 'updateNumber'])->name('admin.place.city.update_number');
-      Route::post('{type}', [PlaceController::class, 'save'])->name('admin.place.city.save');
+      Route::post('save/{type}', [PlaceController::class, 'save'])->name('admin.place.city.save');
       Route::put('update/{id}/{type}', [PlaceController::class, 'update'])->name('admin.place.city.update');
       Route::delete('delete/{id}/{type}', [PlaceController::class, 'delete'])->name('admin.place.city.delete');
     });
@@ -269,7 +268,7 @@ Route::prefix('admin')->group(function () {
       Route::get('show/{id}/{type}', [PlaceController::class, 'show'])->name('admin.place.district.show');
       Route::get('destroy/{type}', [PlaceController::class, 'destroy'])->name('admin.place.district.destroy');
       Route::get('update_number', [PlaceController::class, 'updateNumber'])->name('admin.place.district.update_number');
-      Route::post('{type}', [PlaceController::class, 'save'])->name('admin.place.district.save');
+      Route::post('save/{type}', [PlaceController::class, 'save'])->name('admin.place.district.save');
       Route::put('update/{id}/{type}', [PlaceController::class, 'update'])->name('admin.place.district.update');
       Route::delete('delete/{id}/{type}', [PlaceController::class, 'delete'])->name('admin.place.district.delete');
     });
@@ -281,7 +280,7 @@ Route::prefix('admin')->group(function () {
       Route::get('show/{id}/{type}', [PlaceController::class, 'show'])->name('admin.place.ward.show');
       Route::get('destroy/{type}', [PlaceController::class, 'destroy'])->name('admin.place.ward.destroy');
       Route::get('update_number', [PlaceController::class, 'updateNumber'])->name('admin.place.ward.update_number');
-      Route::post('{type}', [PlaceController::class, 'save'])->name('admin.place.ward.save');
+      Route::post('save/{type}', [PlaceController::class, 'save'])->name('admin.place.ward.save');
       Route::put('update/{id}/{type}', [PlaceController::class, 'update'])->name('admin.place.ward.update');
       Route::delete('delete/{id}/{type}', [PlaceController::class, 'delete'])->name('admin.place.ward.delete');
     });
@@ -339,6 +338,29 @@ Route::prefix('admin')->group(function () {
     Route::get('watermark_news', [PhotoController::class, 'watermarkNews'])->name('admin.photo.watermark_news');
     Route::get('static/remake/{type}/{id}/{hash}', [PhotoController::class, 'staticRemake'])->name('admin.photo.static.remake');
     Route::post('static/save/{type}/{id?}', [PhotoController::class, 'staticSave'])->name('admin.photo.static.save');
+  });
+
+  /*Video*/
+  Route::prefix('video')->group(function () {
+    // Multiple
+    Route::prefix('video_multiple')->group(function () {
+      Route::get('/', [VideoController::class, 'videoMultipleIndex'])->name('admin.video.video_multiple.index');
+      Route::get('create', [VideoController::class, 'videoMultipleCreate'])->name('admin.video.video_multiple.create');
+      Route::get('show/{id}/{type}', [VideoController::class, 'show'])->name('admin.video.video_multiple.show');
+      Route::get('destroy/{type}', [VideoController::class, 'destroy'])->name('admin.video.video_multiple.destroy');
+      Route::get('update_number', [VideoController::class, 'updateNumber'])->name('admin.video.video_multiple.update_number');
+      Route::get('update_status', [VideoController::class, 'updateStatus'])->name('admin.video.video_multiple.update_status');
+      Route::post('{type}', [VideoController::class, 'save'])->name('admin.video.video_multiple.save');
+      Route::put('update/{id}/{type}', [VideoController::class, 'update'])->name('admin.video.video_multiple.update');
+      Route::delete('delete/{id}/{hash}/{type}', [VideoController::class, 'delete'])->name('admin.video.video_multiple.delete');
+    });
+
+    // Static
+    Route::prefix('video_static')->group(function () {
+      Route::get('/', [VideoController::class, 'videoStaticIndex'])->name('admin.video.video_static.index');
+      Route::get('static/remake/{type}/{id}/{hash}', [VideoController::class, 'videoStaticRemake'])->name('admin.video.video_static.remake');
+      Route::post('save/{type}/{id?}', [VideoController::class, 'videoStaticSave'])->name('admin.video.video_static.save');
+    });
   });
 
   /*Page module*/

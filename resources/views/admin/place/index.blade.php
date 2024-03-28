@@ -43,7 +43,7 @@
 
         <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" name="keyword" value=""/>
+            <input class="form-control form-control-navbar text-sm keyword" type="text" placeholder="Tìm kiếm" name="keyword" value="{{!empty(request()->keyword) ? request()->keyword : ''}}"/>
             <div class="input-group-append bg-primary rounded-right">
               <button class="btn btn-navbar text-white" type="submit">
                 <i class="fas fa-search"></i>
@@ -51,6 +51,37 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="card-footer form-group-category text-sm bg-light row">
+        @if ($type == 'district')
+          <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+            <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+              <option value="{{ request()->fullUrlWithQuery(['code_city' => '']) }}">
+                {{ config('admin.place.city.name') }}
+              </option>
+              @foreach ($rowSelect as $v)
+                <option value="{{ request()->fullUrlWithQuery(['code_city' => $v->code_city]) }}" {{ request()->code_city ==  $v->code_city ? 'selected' : ''}}>
+                  {{ $v->name_city }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        @endif
+        @if ($type == 'ward')
+          <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-4 mb-2">
+            <select id="id_parent1" name="id_parent1" class="form-control filter-category-rendering select2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+              <option value="{{ request()->fullUrlWithQuery(['code_city' => '']) }}">
+                {{ config('admin.place.district.name') }}
+              </option>
+              @foreach ($rowSelect as $v)
+                <option value="{{ request()->fullUrlWithQuery(['code_district' => $v->code_district]) }}" {{ request()->code_district ==  $v->code_district ? 'selected' : ''}}>
+                  {{ $v->name_district }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        @endif
       </div>
 
       {{-- Data item --}}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2024 at 06:13 AM
+-- Generation Time: Mar 28, 2024 at 11:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', 'sOL89L6XhKIDV3WDoWsIuMEfzuaBT5NPlCMhBzHLrAwM8SfsWta5S1lHcWnw', NULL, '2024-03-13 03:07:48');
+(2, 'dltphat301@gmail.com', '$2y$12$ymf40Y9JLVtYLUdAERMUmeM7Q2Mu8q7ijVMo7mG6aaeVIc/UGCOQS', '931JpiVgthx5t9ktbQQQrE3yfTxEZtkCCTEc8L6tYBOuoGgn338vxsVAYIz1', NULL, '2024-03-13 03:07:48');
 
 -- --------------------------------------------------------
 
@@ -1188,15 +1188,22 @@ CREATE TABLE `photo` (
   `type` varchar(255) DEFAULT NULL,
   `action` varchar(255) DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
+  `position` varchar(255) DEFAULT NULL,
   `hash` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `num` varchar(255) DEFAULT NULL,
   `desc` mediumtext DEFAULT NULL,
   `content` mediumtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `position` varchar(255) DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `photo`
+--
+
+INSERT INTO `photo` (`id`, `title`, `photo`, `type`, `action`, `link`, `position`, `hash`, `status`, `num`, `desc`, `content`, `created_at`, `updated_at`) VALUES
+(3, 'Tiêu đề Slideshow 1', NULL, 'slideshow', 'multiple', 'https://www.google.com/', NULL, 'fbq1', 'hienthi', '1', NULL, NULL, '2024-03-28 07:48:32', '2024-03-28 07:53:28');
 
 -- --------------------------------------------------------
 
@@ -12783,13 +12790,13 @@ ALTER TABLE `category_products`
 -- AUTO_INCREMENT for table `city`
 --
 ALTER TABLE `city`
-  MODIFY `id_city` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id_city` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `district`
 --
 ALTER TABLE `district`
-  MODIFY `id_district` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=714;
+  MODIFY `id_district` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=715;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -12837,7 +12844,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -12891,7 +12898,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `ward`
 --
 ALTER TABLE `ward`
-  MODIFY `id_ward` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11163;
+  MODIFY `id_ward` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11165;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,15 +1,16 @@
 @php
-  $deletePhoto = "admin.photo.".$type.".delete_photo";
-  $photoConfig = "admin.photo.".$type.".photo";
-  $linkConfig = "admin.photo.".$type.".link";
-  $statusConfig = "admin.photo.".$type.".status";
-  $titleConfig = "admin.photo.".$type.".title";
-  $descConfig = "admin.photo.".$type.".desc";
-  $contentConfig = "admin.photo.".$type.".content";
-  $routeUpdate = "admin.photo.".$type.".update";
+  $deletePhoto = "admin.video.".$type.".delete_photo";
+  $photoConfig = "admin.video.".$type.".photo";
+  $linkConfig = "admin.video.".$type.".link";
+  $statusConfig = "admin.video.".$type.".status";
+  $titleConfig = "admin.video.".$type.".title";
+  $descConfig = "admin.video.".$type.".desc";
+  $contentConfig = "admin.video.".$type.".content";
+  $routeUpdate = "admin.video.".$type.".update";
   $noimage = "resources/images/noimage.png";
-  $thumb = "admin.photo.".$type.".thumb";
-  $direct = "admin.photo.".$type.".index";
+  $thumb = "admin.video.".$type.".thumb";
+  $direct = "admin.video.".$type.".index";
+  $helper = new App\Utils\Helpers;
 @endphp
 
 @extends('admin.index')
@@ -30,7 +31,7 @@
             @if ($row->title)
               {{$row->title}}
             @else
-              Chi tiết dữ liệu
+              Chi tiết video
             @endif
           </li>
         </ol>
@@ -38,7 +39,7 @@
     </div>
   </section>
   <section class="content">
-    {!! Form::open(['name' => 'form-photo', 'route' => [$routeUpdate, $row->id, $type], 'class' => ['form-product-detail'], 'files' => true]) !!}
+    {!! Form::open(['name' => 'form-video', 'route' => [$routeUpdate, $row->id, $type], 'class' => ['form-product-detail'], 'files' => true]) !!}
     @method('PUT')
       <div class="card-footer text-sm sticky-top">
         <button type="submit" name="save" class="btn btn-sm bg-gradient-primary submit-check">
@@ -54,7 +55,7 @@
             @if ($row->title)
               {{$row->title}}
             @else
-              Chi tiết dữ liệu
+              Chi tiết video
             @endif
           </h3>
           <div class="card-tools">
@@ -73,7 +74,7 @@
                 <label class="upload-file-label mb-2" for="file0">
                   <div class="upload-file-image rounded mb-3 position-relative">
                     @if (!empty($row->photo))
-                      <img class="rounded img-upload image-preview" src="{{ url("public/upload/photo/$row->photo")  }}" alt="{{ $row->title }}"/>
+                      <img class="rounded img-upload image-preview" src="{{ url("public/upload/video/$row->photo")  }}" alt="{{ $row->title }}"/>
                       <a class="delete-photo" href="{{ route($deletePhoto, ['id' => $row->id, 'action' => 'photo', 'type' => $type]) }}" style="cursor: pointer" title="Xóa hình ảnh">
                         <i class="far fa-trash-alt text-white"></i>
                       </a>
@@ -95,17 +96,27 @@
             </div>
           @endif
 
-          {{-- Link --}}
           @if (config($linkConfig) === true)
             <div class="form-group">
               <label for="link">
                 Link:
               </label>
               <input type="text" class="form-control text-sm" name="link" id="link" placeholder="Link" value="{{ !empty($row->link) ? $row->link : '' }}"/>
+              @error("link")
+                <small class="text-sm text-danger">
+                  {{ $message }}
+                </small>
+              @enderror
             </div>
           @endif
 
-          {{-- Status --}}
+          <div class="form-group">
+            <label for="link_video">Video preview:</label>
+            <div>
+              <iframe id="loadVideo" width="250" src="//www.youtube.com/embed/{{$helper->getYoutube($row->link)}}" {{!empty($row->link) ? "height='150'" : ""}} frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+
           <div class="form-group">
             @php
               $status = !empty($row->status) ? explode(",", $row->status) : [];
@@ -142,7 +153,6 @@
               <div class="tab-content" id="custom-tabs-three-tabContent-lang">
                 <div class="tab-pane fade show active" id="tabs-lang-vi-0" role="tabpanel" aria-labelledby="tabs-lang">
 
-                  {{-- Title --}}
                   @if (config($titleConfig) === true)
                     <div class="form-group">
                       <label for="title">Tiêu đề:</label>
@@ -150,7 +160,6 @@
                     </div>
                   @endif
 
-                  {{-- Desc --}}
                   @if (config($descConfig) === true)
                     <div class="form-group">
                       <label for="desc">Mô tả:</label>
@@ -158,7 +167,6 @@
                     </div>
                   @endif
 
-                  {{-- Content --}}
                   @if (config($contentConfig) === true)
                     <div class="form-group">
                       <label for="cotnent">

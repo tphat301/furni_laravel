@@ -3,5 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-  <div>Trang dashboard</div>
+  <div>
+    Trang dashboard
+  </div>
 @endsection

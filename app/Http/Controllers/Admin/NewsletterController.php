@@ -7,7 +7,6 @@ use App\Mail\NewsletterMail;
 use App\Models\Admin\Newsletter;
 use App\Models\Admin\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Utils\Helpers;
 use Illuminate\Support\Facades\Mail;
@@ -85,7 +84,6 @@ class NewsletterController extends Controller
   public function sendmail(Request $request)
   {
     $row = Setting::where('type', config('admin.setting.type'))->first();
-    $options = isset($row->options) ? json_decode($row->options) : [];
     $nameCompany = isset($row) ? $row->title : 'Name company';
     $hotline = isset($row) ? $row->hotline : '0987654321';
     if ($request->checkitem) {

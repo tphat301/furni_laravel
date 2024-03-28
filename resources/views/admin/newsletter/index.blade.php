@@ -34,7 +34,7 @@
         </a>
         <div class="form-inline form-search d-inline-block align-middle ml-3">
           <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar text-sm keyword keyword-request" type="text" placeholder="Tìm kiếm" name="keyword" value="" data-url="{{route('admin.newsletter.index')}}"/>
+            <input class="form-control form-control-navbar text-sm keyword keyword-request" type="text" placeholder="Tìm kiếm" name="keyword" value="{{!empty(request()->keyword) ? request()->keyword : ''}}" data-url="{{route('admin.newsletter.index')}}"/>
             <div class="input-group-append bg-primary rounded-right">
               <button class="btn btn-navbar text-white" type="submit">
                 <i class="fas fa-search"></i>
